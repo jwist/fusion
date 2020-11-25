@@ -1,0 +1,14 @@
+.Rproj.user
+.Rhistory
+.Rdata
+.DS_Store
+.lintr
+.Rbuildignore
+.travus.yml
+codecov.yml
+*.Rproj
+data/*
+*.rda
+*.Rda
+
+.RData

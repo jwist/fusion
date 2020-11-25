@@ -1,0 +1,16 @@
+citHeader("To cite fusion in publications use:")
+
+citEntry(
+  entry    = "Article",
+  title    = {Fusion}: an integrated dataset library for metabolic profiling,
+  author   = "Wist, Julien",
+  journal  = ,
+  year     = "2020",
+  volume   = ,
+  number   = ,
+  pages    = ,
+  url      = ,
+  textVersion = paste(
+
+  )
+)
