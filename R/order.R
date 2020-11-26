@@ -3,10 +3,9 @@
 #' @param daA first dataElement
 #' @param idx the index
 #' @return the reordered dataElement
-#' @example
 #'
 #' @export
-setGeneric("order", function(da) {
+setGeneric("order", function(da, idx) {
   standardGeneric("order")
 })
 
@@ -15,16 +14,15 @@ setGeneric("order", function(da) {
 #' @param daA first dataElement
 #' @param idx the index
 #' @return the reordered dataElement
-#' @example
 #'
 #' @export
 setMethod("order",
-          c(da = "dataElement"),
-          function(da) {
+          c(da = "dataElement", idx = "numeric"),
+          function(da, idx) {
             if (length(idx) == nrow(da)) {
-              setDataPart(da) <- getDataPart(da)[idx,]
+              setDataPart(da, getDataPart(da)[idx,])
               da@experimentalParameter <- da@experimentalParameter[idx,]
+              return(da)
             }
-            return(da)
           }
 )

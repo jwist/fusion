@@ -3,7 +3,6 @@
 #' @param daA first dataElement
 #' @param daB second dataElement
 #' @return two dataElement with matched samples
-#' @example
 #'
 #' @export
 match <- function(daA, daB) {
