@@ -16,7 +16,7 @@
 setClass("dataElement",
          slots = list(.Data = "matrix",
                       variableName = "numeric",
-                      experimentalParameters = "data.frame",
+                      experimentalParameter = "data.frame",
                       type = "character"),
          contains = list("matrix")
 )
