@@ -5,11 +5,12 @@
 #' @return two dataElement with matched samples
 #'
 #' @export
-match <- function(daA, daB) {
+fusion <- function(daA, daB) {
   if (class(daA) == class(daB) & class(da) == "dataElement") {
     fi <- match(getID(daA), getID(daB))
     idx <- sort(fi, index.return = TRUE)$ix
-    daA <- sort(daA, idx)
+    daA <- order(daA, idx)
+    return(daA)
   } else {
     stop("fusion: both objects to match must be of class dataElement")
   }

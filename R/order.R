@@ -20,8 +20,8 @@ setMethod("order",
           c(da = "dataElement", idx = "numeric"),
           function(da, idx) {
             if (length(idx) == nrow(da)) {
-              setDataPart(da, getDataPart(da)[idx,])
-              da@experimentalParameter <- da@experimentalParameter[idx,]
+              setDataPart(da, getDataPart(da)[idx,, drop = FALSE])
+              da@experimentalParameter <- da@experimentalParameter[idx,, drop = FALSE]
               return(da)
             }
           }
