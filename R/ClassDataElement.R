@@ -13,7 +13,6 @@
 #' a = new("dataElement", x, variableName = rep(1, 10), type = "MS")
 #'
 #' @export
-
 setClass("dataElement",
          slots = list(.Data = "matrix",
                       variableName = "numeric",
@@ -22,10 +21,28 @@ setClass("dataElement",
          contains = list("matrix")
 )
 
+#' S4 method to check dataElement
+#'#'
+#' @param da dataElement object to be checked
+#' @return void
+#' @examples
+#'
+#' check("dataElement")
+#'
+#' @export
 setGeneric("check", function(da) {
   standardGeneric("check")
 })
 
+#' SS4 method to check dataElement
+#'
+#' @param da dataElement object to be checked
+#' @return void
+#' @examples
+#'
+#' check("dataElement")
+#'
+#' @export
 setMethod("check",
           c(da = "dataElement"),
           function(da) {
