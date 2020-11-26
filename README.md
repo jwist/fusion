@@ -2,6 +2,8 @@
 # fusion
 
 <!-- badges: start -->
+[![Codecov test coverage](https://codecov.io/gh/jwist/fusion/branch/master/graph/badge.svg)](https://codecov.io/gh/jwist/fusion?branch=master)
+[![Travis build status](https://travis-ci.com/jwist/fusion.svg?branch=master)](https://travis-ci.com/jwist/fusion)
 <!-- badges: end -->
 
 The goal of fusion is to ...

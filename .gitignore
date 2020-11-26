@@ -4,7 +4,7 @@
 .DS_Store
 .lintr
 .Rbuildignore
-.travus.yml
+.travis.yml
 codecov.yml
 *.Rproj
 data/*
@@ -12,3 +12,4 @@ data/*
 *.Rda
 
 .RData
+.travis
