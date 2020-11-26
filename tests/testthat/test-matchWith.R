@@ -9,7 +9,7 @@ sampleID <- getID(da)
 idx <- sort(sampleID, decreasing = TRUE,
             index.return = TRUE)$ix
 orderedDa <- order(da, idx)
-matchedDa <- fusion(orderedDa, da)
+matchedDa <- matchWith(orderedDa, da)
 
 test_that("ordering ID", {
   expect_equal(getID(da), getID(matchedDa))

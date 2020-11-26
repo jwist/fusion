@@ -5,7 +5,7 @@
 #' @return two dataElement with matched samples
 #'
 #' @export
-fusion <- function(daA, daB) {
+matchWith <- function(daA, daB) {
   if (class(daA) == class(daB) & class(da) == "dataElement") {
     fi <- match(getID(daA), getID(daB))
     idx <- sort(fi, index.return = TRUE)$ix
