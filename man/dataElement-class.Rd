@@ -3,12 +3,12 @@
 \docType{class}
 \name{dataElement-class}
 \alias{dataElement-class}
-\title{An S4 class for dataElements}
+\title{An S4 class for dataElement}
 \value{
 a dataElement
 }
 \description{
-An S4 class for dataElements
+An S4 class for dataElement
 }
 \section{Slots}{
 

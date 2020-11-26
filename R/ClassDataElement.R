@@ -1,4 +1,4 @@
-#' An S4 class for dataElements
+#' An S4 class for dataElement
 #'
 #' @slot .Data the data matrix
 #' @slot variableName a vector containing the name of each variable

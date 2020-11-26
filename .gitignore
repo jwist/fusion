@@ -12,4 +12,4 @@ data/*
 *.Rda
 
 .RData
-.travis
+
