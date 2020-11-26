@@ -7,7 +7,7 @@ test_that("ordering is working", {
            experimentalParameter = param)
   sampleID <- getID(da)
   idx <- sort(sampleID, decreasing = TRUE, index.return = TRUE)$ix
-  orderedDa <- order(da, idx)
+  orderedDa <- orderWith(da, idx)
   expect_equal(length(sampleID), 10)
   expect_equal(getID(orderedDa), seq(10, 1))
 })
@@ -21,7 +21,7 @@ test_that("ordering is working even with a single column data frame", {
            experimentalParameter = param)
   sampleID <- getID(da)
   idx <- sort(sampleID, decreasing = TRUE, index.return = TRUE)$ix
-  orderedDa <- order(da, idx)
+  orderedDa <- orderWith(da, idx)
   expect_equal(length(sampleID), 10)
   expect_equal(getID(orderedDa), seq(10, 1))
 })

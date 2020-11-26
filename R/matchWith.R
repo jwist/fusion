@@ -6,10 +6,10 @@
 #'
 #' @export
 matchWith <- function(daA, daB) {
-  if (class(daA) == class(daB) & class(da) == "dataElement") {
+  if (class(daA) == class(daB) & class(daA) == "dataElement") {
     fi <- match(getID(daA), getID(daB))
     idx <- sort(fi, index.return = TRUE)$ix
-    daA <- order(daA, idx)
+    daA <- orderWith(daA, idx)
     return(daA)
   } else {
     stop("fusion: both objects to match must be of class dataElement")

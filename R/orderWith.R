@@ -5,8 +5,8 @@
 #' @return the reordered dataElement
 #'
 #' @export
-setGeneric("order", function(da, idx) {
-  standardGeneric("order")
+setGeneric("orderWith", function(da, idx) {
+  standardGeneric("orderWith")
 })
 
 #' S4 method to reorder a dataElement
@@ -16,7 +16,7 @@ setGeneric("order", function(da, idx) {
 #' @return the reordered dataElement
 #'
 #' @export
-setMethod("order",
+setMethod("orderWith",
           c(da = "dataElement", idx = "numeric"),
           function(da, idx) {
             if (length(idx) == nrow(da)) {
