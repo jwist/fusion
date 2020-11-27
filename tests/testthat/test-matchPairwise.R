@@ -26,7 +26,22 @@ fi <- seq(1, 10) > 1
 filteredDa <- filterWith(da, fi)
 matchedDa <- matchPairwise(filteredDa, da)
 
-test_that("matching two, same dimension", {
+test_that("matching two, different dimension", {
+  expect_equal(getID(filteredDa), getID(matchedDa))
+  expect_equal(getDataPart(filteredDa), getDataPart(matchedDa))
+})
+
+x = matrix(rep(c(1:10), 10), 10, 10)
+param = data.frame(sampleID = seq(1, 10))
+da = new("dataElement", x,
+         variableName = seq(1, 10),
+         type = "NMR",
+         experimentalParameter = param)
+fi <- seq(1, 10) > 1
+filteredDa <- filterWith(da, fi)
+matchedDa <- matchPairwise(da, filteredDa)
+
+test_that("matching two, different dimension, bigger first", {
   expect_equal(getID(filteredDa), getID(matchedDa))
   expect_equal(getDataPart(filteredDa), getDataPart(matchedDa))
 })
