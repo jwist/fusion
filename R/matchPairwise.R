@@ -5,9 +5,15 @@
 #' @return two dataElement with matched samples
 #'
 #' @export
-matchWith <- function(daA, daB) {
+matchPairwise <- function(daA, daB) {
   if (class(daA) == class(daB) & class(daA) == "dataElement") {
     fi <- match(getID(daA), getID(daB))
+
+    # check for diffs (NA)
+    fn <- is.na(fi)
+    daA <- filterWith(daA, !fn)
+
+    # sort and order
     idx <- sort(fi, index.return = TRUE)$ix
     daA <- orderWith(daA, idx)
     return(daA)
