@@ -3,6 +3,7 @@
 export(check)
 export(filterWith)
 export(getID)
+export(matchAll)
 export(matchPairwise)
 export(orderWith)
 exportClasses(dataElement)
