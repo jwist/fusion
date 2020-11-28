@@ -2,7 +2,7 @@
 % Please edit documentation in R/matchPairwise.R
 \name{matchPairwise}
 \alias{matchPairwise}
-\title{function to match two dataElement}
+\title{function to match two dataElement pairwise}
 \usage{
 matchPairwise(daA, daB)
 }
@@ -15,5 +15,5 @@ matchPairwise(daA, daB)
 two dataElement with matched samples
 }
 \description{
-function to match two dataElement
+function to match two dataElement pairwise
 }

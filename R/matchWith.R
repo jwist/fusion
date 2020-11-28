@@ -6,6 +6,8 @@
 #'
 #' @export
 matchWith <- function(daA, daB) {
+  check(daA)
+  check(daB)
   if (is(daA, "dataElement") == is(daB, "dataElement")) {
 
     fi <- match(getID(daA), getID(daB))

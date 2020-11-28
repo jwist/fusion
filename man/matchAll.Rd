@@ -2,16 +2,16 @@
 % Please edit documentation in R/matchAll.R
 \name{matchAll}
 \alias{matchAll}
-\title{function to match all dataElement}
+\title{function to match all dataElements}
 \usage{
 matchAll(list)
 }
 \arguments{
-\item{list}{list of dataElement}
+\item{list}{list of dataElements}
 }
 \value{
-all dataElement matched by sampleID
+all dataElements matched by sampleID
 }
 \description{
-function to match all dataElement
+function to match all dataElements
 }
