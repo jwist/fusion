@@ -36,6 +36,9 @@ setMethod("check",
               stop("the sampleID are not unique, run
                    'duplicated(sampleID)' to find dups")
             }
+            if (!da@type %in% c("NMR", "MS", "ANN")) {
+              stop("un supported type")
+            }
             return(da)
           }
 )

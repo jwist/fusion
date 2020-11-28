@@ -10,5 +10,5 @@ matchPairwise <- function(daA, daB) {
     A <- matchWith(daA, daB)
     B <- matchWith(daB, A)
 
-    return(list(B, A))
+    return(list(A, B))
 }

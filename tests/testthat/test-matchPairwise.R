@@ -1,62 +1,45 @@
-x = matrix(rep(c(1:10), 10), 10, 10)
-param = data.frame(sampleID = seq(1, 10),
-                   testAnn = LETTERS[1:10])
-daA = new("dataElement", x,
-          variableName = seq(1, 10),
-          type = "NMR",
-          experimentalParameter = param)
-sampleID <- getID(daA)
-idx <- sort(sampleID, decreasing = TRUE,
-            index.return = TRUE)$ix
-orderedDa <- orderWith(daA, idx)
-matchedDa <- matchPairwise(orderedDa, daA)
 
 test_that("matching two, same dimension", {
-  expect_equal(matchedDa[[1]], matchedDa[[2]])
+  x = matrix(rep(c(1:10), 10), 10, 10)
+  param = data.frame(sampleID = seq(1, 10),
+                     testAnn = LETTERS[1:10])
+  da = new("dataElement", x,
+           variableName = seq(1, 10),
+           type = "NMR",
+           experimentalParameter = param)
+  sampleID <- getID(da)
+
+  idx <- sort(sampleID, decreasing = TRUE,
+              index.return = TRUE)$ix
+  oDa <- orderWith(da, idx)
+  mDa <- matchPairwise(orderedDa, da)
+
+  expect_equal(mDa[[1]], mDa[[2]])
 })
-
-x = matrix(rep(c(1:10), 10), 10, 10)
-param = data.frame(sampleID = seq(1, 10))
-da = new("dataElement", x,
-         variableName = seq(1, 10),
-         type = "NMR",
-         experimentalParameter = param)
-fi <- seq(1, 10) > 1
-filteredDa <- filterWith(da, fi)
-matchedDa <- matchPairwise(filteredDa, da)
-
-test_that("matching two, different dimension", {
-  expect_equal(matchedDa[[1]], matchedDa[[2]])
-})
-
-x = matrix(rep(c(1:10), 10), 10, 10)
-param = data.frame(sampleID = seq(1, 10))
-da = new("dataElement", x,
-         variableName = seq(1, 10),
-         type = "NMR",
-         experimentalParameter = param)
-fi <- seq(1, 10) > 3
-filteredDa <- filterWith(da, fi)
-matchedDa <- matchPairwise(da, filteredDa)
 
 test_that("matching two, different dimension, bigger first", {
-  expect_equal(matchedDa[[1]], matchedDa[[2]])
+  fi <- seq(1, 10) > 1
+  fDa <- filterWith(da, fi)
+  mDa <- matchPairwise(fDa, da)
+
+  test_that("matching two, different dimension", {
+    expect_equal(mDa[[1]], mDa[[2]])
+  })
+
+  fi <- seq(1, 10) > 3
+  fDa <- filterWith(da, fi)
+  mDa <- matchPairwise(da, fDa)
+
+  expect_equal(mDa[[1]], mDa[[2]])
 })
 
-x = matrix(rep(c(1:10), 10), 10, 10)
-param = data.frame(sampleID = seq(1, 10))
-da = new("dataElement", x,
-         variableName = seq(1, 10),
-         type = "NMR",
-         experimentalParameter = param)
-fi <- seq(1, 10) > 3
-fDa <- filterWith(da, fi)
-fi <- seq(1, 10) < 7
-fDb <- filterWith(da, fi)
-
-matchedDa <- matchPairwise(fDb, fDa)
-
 test_that("matching two, different dimension, bigger first", {
-  expect_equal(matchedDa[[1]], matchedDa[[2]])
+  fi <- seq(1, 10) > 3
+  fDa <- filterWith(da, fi)
+  fi <- seq(1, 10) < 7
+  fDb <- filterWith(da, fi)
+
+  mDa <- matchPairwise(fDb, fDa)
+  expect_equal(mDa[[1]], mDa[[2]])
 })
 
