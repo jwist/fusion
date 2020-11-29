@@ -1,5 +1,9 @@
 #' S4 method to reorder a dataElement
 #'
+#' a dataElement is ordered using the index provided as second
+#' argument. This is to ensure that both the .Data and the
+#' experimentalParameters slots are rotated accordingly
+#'
 #' @param daA first dataElement
 #' @param idx the index
 #' @return the reordered dataElement

@@ -3,6 +3,7 @@
 export(check)
 export(filterWith)
 export(getID)
+export(makeUnique)
 export(matchAll)
 export(matchPairwise)
 export(matchWith)
