@@ -7,9 +7,9 @@
 \S4method{filterWith}{dataElement,logical}(da, fi)
 }
 \arguments{
-\item{fi}{the filter}
+\item{da}{first dataElement}
 
-\item{daA}{first dataElement}
+\item{fi}{the filter}
 }
 \value{
 the reordered dataElement

@@ -6,15 +6,12 @@
 \usage{
 \S4method{getID}{dataElement}(da)
 }
+\arguments{
+\item{da}{dataElement}
+}
 \value{
 the sampleID
 }
 \description{
 S4 method get sampleID from dataElement
 }
-\section{Slots}{
-
-\describe{
-\item{\code{da}}{dataElement}
-}}
-

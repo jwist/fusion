@@ -7,9 +7,9 @@
 filterWith(da, fi)
 }
 \arguments{
-\item{fi}{the filter}
+\item{da}{first dataElement}
 
-\item{daA}{first dataElement}
+\item{fi}{the filter}
 }
 \value{
 the reordered dataElement

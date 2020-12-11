@@ -4,7 +4,7 @@
 #' argument. This is to ensure that both the .Data and the
 #' experimentalParameters slots are rotated accordingly
 #'
-#' @param daA first dataElement
+#' @param da first dataElement
 #' @param idx the index
 #' @return the reordered dataElement
 #'
@@ -15,7 +15,7 @@ setGeneric("orderWith", function(da, idx) {
 
 #' S4 method to reorder a dataElement
 #'
-#' @param daA first dataElement
+#' @param da first dataElement
 #' @param idx the index
 #' @return the reordered dataElement
 #'
@@ -25,7 +25,7 @@ setMethod("orderWith",
           function(da, idx) {
             if (length(idx) == nrow(da)) {
               da <- setDataPart(da, getDataPart(da)[idx,, drop = FALSE])
-              da@experimentalParameter <- da@experimentalParameter[idx,, drop = FALSE]
+              da@obsDescr <- da@obsDescr[idx,, drop = FALSE]
               return(da)
             } else {
               stop("dimension mismatch")

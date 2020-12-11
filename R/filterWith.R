@@ -1,6 +1,6 @@
 #' S4 method to filter a dataElement
 #'
-#' @param daA first dataElement
+#' @param da first dataElement
 #' @param fi the filter
 #' @return the reordered dataElement
 #'
@@ -11,7 +11,7 @@ setGeneric("filterWith", function(da, fi) {
 
 #' S4 method to filter a dataElement
 #'
-#' @param daA first dataElement
+#' @param da first dataElement
 #' @param fi the filter
 #' @return the reordered dataElement
 #'
@@ -21,7 +21,7 @@ setMethod("filterWith",
           function(da, fi) {
             if (length(fi) == nrow(da)) {
               da <- setDataPart(da, getDataPart(da)[fi,, drop = FALSE])
-              da@experimentalParameter <- da@experimentalParameter[fi,, drop = FALSE]
+              da@obsDescr <- da@obsDescr[fi,, drop = FALSE]
               return(da)
             } else {
               stop("dimension mismatch")

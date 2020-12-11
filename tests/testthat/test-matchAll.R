@@ -1,13 +1,11 @@
-
-
 test_that("matching two, same dimension", {
   x = matrix(rep(c(1:10), 10), 10, 10)
   param = data.frame(sampleID = seq(1, 10),
                      testAnn = LETTERS[1:10])
   da = new("dataElement", x,
-           variableName = seq(1, 10),
+           varName = seq(1, 10),
            type = "NMR",
-           experimentalParameter = param)
+           obsDescr = param)
 
   fi <- seq(1, 10) > 3
   fDa <- filterWith(da, fi)
@@ -27,9 +25,9 @@ test_that("matching two, same dimension", {
   param = data.frame(sampleID = seq(1, 10),
                      testAnn = LETTERS[1:10])
   da = new("dataElement", x,
-           variableName = seq(1, 10),
+           varName = seq(1, 10),
            type = "NMR",
-           experimentalParameter = param)
+           obsDescr = param)
 
   fi <- seq(1, 10) > 3
   fDa <- filterWith(da, fi)

@@ -1,9 +1,9 @@
 x = matrix(rep(c(1:10), 10), 10, 10)
 param = data.frame(sampleID = seq(1, 10), testAnn = LETTERS[1:10])
 da = new("dataElement", x,
-         variableName = seq(1, 10),
+         varName = seq(1, 10),
          type = "NMR",
-         experimentalParameter = param)
+         obsDescr = param)
 sampleID <- getID(da)
 idx <- sort(sampleID, decreasing = TRUE, index.return = TRUE)$ix
 orderedDa <- orderWith(da, idx)
@@ -17,9 +17,9 @@ test_that("ordering is working", {
 x = matrix(rep(c(1:10), 10), 10, 10)
 param = data.frame(sampleID = seq(1, 10))
 da = new("dataElement", x,
-         variableName = seq(1, 10),
+         varName = seq(1, 10),
          type = "NMR",
-         experimentalParameter = param)
+         obsDescr = param)
 sampleID <- getID(da)
 idx <- sort(sampleID, decreasing = TRUE, index.return = TRUE)$ix
 orderedDa <- orderWith(da, idx)

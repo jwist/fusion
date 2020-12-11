@@ -21,18 +21,18 @@ setGeneric("check", function(da) {
 setMethod("check",
           c(da = "dataElement"),
           function(da) {
-            if (length(da@variableName) != ncol(da@.Data)) {
+            if (length(da@varName) != ncol(da@.Data)) {
               stop("the length of variableName vector does't
               match the number of columns of the data matrix")
             }
-            if (!"sampleID" %in% names(da@experimentalParameter)) {
+            if (!"sampleID" %in% names(da@obsDescr)) {
               stop("experimentalParameter MUST contain a field 'sampleID'")
             }
-            if (length(da@experimentalParameter$sampleID) != nrow(da@.Data)) {
+            if (length(da@obsDescr$sampleID) != nrow(da@.Data)) {
               stop("the length of sampleID vector does't
               match the number of rows of the data matrix")
             }
-            if (sum(duplicated(da@experimentalParameter$sampleID)) > 0) {
+            if (sum(duplicated(da@obsDescr$sampleID)) > 0) {
               stop("the sampleID are not unique, run
                    'duplicated(sampleID)' to find dups")
             }

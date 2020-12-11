@@ -1,6 +1,6 @@
 #' S4 method get sampleID from dataElement
 #'
-#' @slot da dataElement
+#' @param da dataElement
 #' @return the sampleID
 #'
 #' @export
@@ -11,7 +11,7 @@ setGeneric("getID", function(da) {
 
 #' S4 method get sampleID from dataElement
 #'
-#' @slot da dataElement
+#' @param da dataElement
 #' @return the sampleID
 #'
 #' @export
@@ -19,7 +19,7 @@ setGeneric("getID", function(da) {
 setMethod("getID",
           c(da = "dataElement"),
           function(da) {
-            sampleID <- da@experimentalParameter$sampleID
+            sampleID <- da@obsDescr$sampleID
             return(sampleID)
           }
 )

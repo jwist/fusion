@@ -7,9 +7,9 @@
 \S4method{orderWith}{dataElement,numeric}(da, idx)
 }
 \arguments{
-\item{idx}{the index}
+\item{da}{first dataElement}
 
-\item{daA}{first dataElement}
+\item{idx}{the index}
 }
 \value{
 the reordered dataElement

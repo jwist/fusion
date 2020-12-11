@@ -15,9 +15,9 @@ An S4 class for dataElement
 \describe{
 \item{\code{.Data}}{the data matrix}
 
-\item{\code{variableName}}{a vector containing the name of each variable}
+\item{\code{varName}}{a vector containing the name of each variable}
 
-\item{\code{experimentalParameter}}{a data.frame containing experimental
+\item{\code{obsDescr}}{a data.frame containing experimental
 conditions and a field called sampleID that MUST be unique.}
 
 \item{\code{type}}{type can be NMR, MSU, MST, ANN}
@@ -28,6 +28,6 @@ conditions and a field called sampleID that MUST be unique.}
 \examples{
 
 x = matrix(sample(100), 10, 10)
-a = new("dataElement", x, variableName = rep(1, 10), type = "MS")
+a = new("dataElement", x, varName = rep(1, 10), type = "MS")
 
 }
