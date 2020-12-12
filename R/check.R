@@ -26,7 +26,8 @@ setMethod("check",
             }
             if (sum(duplicated(da@obsDescr$sampleID)) > 0) {
               stop("the sampleID are not unique, run
-                   'duplicated(sampleID)' to find dups")
+                   'duplicated(sampleID)' to find dups or
+                   make.unique(x, '_') to solve the issue")
             }
             if (!da@type %in% c("NMR", "MS", "ANN")) {
               stop("unsupported type")
