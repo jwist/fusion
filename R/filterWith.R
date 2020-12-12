@@ -19,7 +19,7 @@ setGeneric("filterWith", function(da, fi) {
 setMethod("filterWith",
           c(da = "dataElement", fi = "logical"),
           function(da, fi) {
-            if (length(fi) == nrow(da)) {
+            if (length(fi) == nrow(da@obsDescr)) {
               if (da@type != "ANN") {
                 da <- setDataPart(da, getDataPart(da)[fi,, drop = FALSE])
               }

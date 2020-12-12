@@ -67,4 +67,23 @@ test_that("matching two, different dimension", {
   expect_equal(getID(mDa), c(4:6))
 })
 
+test_that("matching with annotations", {
+  x = matrix(rep(c(1:10), 10), 10, 10)
+  param = data.frame(sampleID = seq(1, 10),
+                     testAnn = LETTERS[1:10])
+  da = new("dataElement", x,
+           varName = seq(1, 10),
+           type = "NMR",
+           obsDescr = param)
+
+  param = data.frame(sampleID = seq(10, 1),
+                     testAnn = LETTERS[10:1])
+  ann = new("dataElement",
+            type = "ANN",
+            obsDescr = param)
+
+  mDa <- matchTo(ann, da)
+
+  expect_equal(getID(mDa), c(1:10))
+})
 

@@ -66,3 +66,22 @@ test_that("matching two, different dimension, bigger first", {
   expect_equal(mDa[[1]], mDa[[2]])
 })
 
+test_that("matching annotations", {
+  x = matrix(rep(c(1:10), 10), 10, 10)
+  param = data.frame(sampleID = seq(1, 10),
+                     testAnn = LETTERS[1:10])
+  da = new("dataElement", x,
+           varName = seq(1, 10),
+           type = "NMR",
+           obsDescr = param)
+
+  param = data.frame(sampleID = seq(10, 1),
+                     testAnn = LETTERS[10:1])
+  ann = new("dataElement",
+           type = "ANN",
+           obsDescr = param)
+
+  mDa <- matchPairwise(ann, da)
+  expect_equal(mDa[[1]]@obsDescr$sampleID,
+               mDa[[2]]@obsDescr$sampleID)
+})

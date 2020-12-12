@@ -23,7 +23,7 @@ setGeneric("orderWith", function(da, idx) {
 setMethod("orderWith",
           c(da = "dataElement", idx = "numeric"),
           function(da, idx) {
-            if (length(idx) == nrow(da)) {
+            if (length(idx) == nrow(da@obsDescr)) {
               if (da@type != "ANN") {
                 da <- setDataPart(da, getDataPart(da)[idx,, drop = FALSE])
               }
