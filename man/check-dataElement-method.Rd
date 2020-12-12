@@ -4,7 +4,7 @@
 \alias{check,dataElement-method}
 \title{SS4 method to check dataElement}
 \usage{
-\S4method{check}{dataElement}(da)
+\S4method{check}{dataElement}(da, using = "sampleID")
 }
 \arguments{
 \item{da}{dataElement object to be checked}

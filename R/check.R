@@ -6,7 +6,7 @@
 #' check("dataElement")
 #'
 #' @export
-setGeneric("check", function(da) {
+setGeneric("check", function(da, using = "sampleID") {
   standardGeneric("check")
 })
 
@@ -20,10 +20,7 @@ setGeneric("check", function(da) {
 #' @export
 setMethod("check",
           c(da = "dataElement"),
-          function(da) {
-            if (!"sampleID" %in% names(da@obsDescr)) {
-              stop("obsDescr MUST contain a field 'sampleID'")
-            }
+          function(da, using = "sampleID") {
             if (sum(duplicated(da@obsDescr$sampleID)) > 0) {
               stop("the sampleID are not unique, run
                    'duplicated(sampleID)' to find dups or
@@ -36,7 +33,13 @@ setMethod("check",
               if (is.null(da@.Data)) {
                 stop("dataElement of type ANN cannot contain data")
               }
+              if (!using %in% names(da@obsDescr)) {
+                stop("obsDescr MUST contain a field with unique ID")
+              }
             } else {
+              if (!"sampleID" %in% names(da@obsDescr)) {
+                stop("obsDescr MUST contain a field 'sampleID'")
+              }
               if (length(da@varName) != ncol(da@.Data)) {
                 stop("the length of varName vector does't
               match the number of columns of the data matrix")

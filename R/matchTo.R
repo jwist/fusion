@@ -6,8 +6,8 @@
 #'
 #' @export
 matchTo <- function(daA, daB, using = "sampleID") {
-  check(daA)
-  check(daB)
+  check(daA, using)
+  check(daB, using)
   if (is(daA, "dataElement") == is(daB, "dataElement")) {
 
     fi <- match(getID(daA, using), getID(daB, using))

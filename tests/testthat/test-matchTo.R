@@ -87,3 +87,21 @@ test_that("matching with annotations", {
   expect_equal(getID(mDa), c(1:10))
 })
 
+test_that("matching with annotations", {
+  param = data.frame(UID = seq(1, 10),
+                     testAnn = LETTERS[1:10])
+  da = new("dataElement",
+           type = "ANN",
+           obsDescr = param)
+
+  param = data.frame(UID = seq(10, 1),
+                     testAnn = LETTERS[10:1])
+  ann = new("dataElement",
+            type = "ANN",
+            obsDescr = param)
+
+  mDa <- matchTo(ann, da, using = "UID")
+
+  expect_equal(getID(mDa, using = "UID"), c(1:10))
+})
+

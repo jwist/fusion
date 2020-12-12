@@ -5,7 +5,7 @@
 \title{S4 method to check dataElement
 #'}
 \usage{
-check(da)
+check(da, using = "sampleID")
 }
 \arguments{
 \item{da}{dataElement object to be checked}
