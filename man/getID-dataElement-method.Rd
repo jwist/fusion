@@ -4,7 +4,7 @@
 \alias{getID,dataElement-method}
 \title{S4 method get sampleID from dataElement}
 \usage{
-\S4method{getID}{dataElement}(da)
+\S4method{getID}{dataElement}(da, using = "sampleID")
 }
 \arguments{
 \item{da}{dataElement}

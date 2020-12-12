@@ -24,7 +24,9 @@ setMethod("orderWith",
           c(da = "dataElement", idx = "numeric"),
           function(da, idx) {
             if (length(idx) == nrow(da)) {
-              da <- setDataPart(da, getDataPart(da)[idx,, drop = FALSE])
+              if (da@type != "ANN") {
+                da <- setDataPart(da, getDataPart(da)[idx,, drop = FALSE])
+              }
               da@obsDescr <- da@obsDescr[idx,, drop = FALSE]
               return(da)
             } else {

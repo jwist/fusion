@@ -4,7 +4,7 @@
 \alias{matchTo}
 \title{function to match one dataElement against a second one}
 \usage{
-matchTo(daA, daB)
+matchTo(daA, daB, using = "sampleID")
 }
 \arguments{
 \item{daA}{first dataElement}

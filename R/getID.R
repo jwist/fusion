@@ -5,7 +5,7 @@
 #'
 #' @export
 #'
-setGeneric("getID", function(da) {
+setGeneric("getID", function(da, using = "sampleID") {
   standardGeneric("getID")
 })
 
@@ -18,8 +18,8 @@ setGeneric("getID", function(da) {
 #'
 setMethod("getID",
           c(da = "dataElement"),
-          function(da) {
-            sampleID <- da@obsDescr$sampleID
+          function(da, using = "sampleID") {
+            sampleID <- unlist(unname(da@obsDescr[using]))
             return(sampleID)
           }
 )

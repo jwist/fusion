@@ -5,12 +5,12 @@
 #' @return dataElement with matched samples
 #'
 #' @export
-matchTo <- function(daA, daB) {
+matchTo <- function(daA, daB, using = "sampleID") {
   check(daA)
   check(daB)
   if (is(daA, "dataElement") == is(daB, "dataElement")) {
 
-    fi <- match(getID(daA), getID(daB))
+    fi <- match(getID(daA, using), getID(daB, using))
 
     # check for diffs (NA)
     fn <- is.na(fi)
