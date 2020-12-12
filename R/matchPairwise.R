@@ -7,8 +7,8 @@
 #' @export
 matchPairwise <- function(daA, daB) {
 
-    A <- matchWith(daA, daB)
-    B <- matchWith(daB, A)
+    A <- matchTo(daA, daB)
+    B <- matchTo(daB, A)
 
     return(list(A, B))
 }

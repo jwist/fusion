@@ -5,8 +5,8 @@ da = new("dataElement", x,
          type = "NMR",
          obsDescr = param)
 
-test_that("creation of dataElement", {
-  expect_equal(length(da@obsDescr$sampleID), 10)
+test_that("check dataElement", {
+  expect_equal(check(da), TRUE)
 })
 
 param = data.frame(sampleID = seq(1, 10), testAnn = LETTERS[1:10])
@@ -15,6 +15,6 @@ da = new("dataElement",
          type = "ANN",
          obsDescr = param)
 
-test_that("creation of annotations", {
-  expect_equal(length(da@obsDescr$sampleID), 10)
+test_that("check annotations", {
+  expect_equal(check(da), TRUE)
 })

@@ -1,6 +1,6 @@
 citHeader("To cite fusion in publications use:")
 
-citEntry(
+bibEntry(
   entry    = "Article",
   title    = "Fusion: an integrated dataset library for metabolic profiling",
   author   = "Wist, Julien",

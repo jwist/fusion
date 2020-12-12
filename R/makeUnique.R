@@ -8,7 +8,7 @@
 #'
 #' @param sampleID - a vector of characters
 #' @return a vector of unique characters
-#'
+#' @import methods
 #' @export
 
 makeUnique <- function(sampleID){

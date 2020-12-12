@@ -11,7 +11,7 @@ test_that("matching two, same dimension", {
   idx <- sort(sampleID, decreasing = TRUE,
               index.return = TRUE)$ix
   oDa <- orderWith(da, idx)
-  mDa <- matchWith(oDa, da)
+  mDa <- matchTo(oDa, da)
 
   expect_equal(mDa, da)
 })
@@ -27,7 +27,7 @@ test_that("matching two, different dimension, smaller first", {
 
   fi <- seq(1, 10) > 1
   fDa <- filterWith(da, fi)
-  mDa <- matchWith(fDa, da)
+  mDa <- matchTo(fDa, da)
 
   expect_equal(mDa, fDa)
 })
@@ -43,7 +43,7 @@ test_that("matching two, different dimension, bigger first", {
 
   fi <- seq(1, 10) > 3
   fDa <- filterWith(da, fi)
-  mDa <- matchWith(da, fDa)
+  mDa <- matchTo(da, fDa)
 
   expect_equal(mDa, fDa)
 })
@@ -62,7 +62,7 @@ test_that("matching two, different dimension", {
   fi <- seq(1, 10) < 7
   fDb <- filterWith(da, fi)
 
-  mDa <- matchWith(fDb, fDa)
+  mDa <- matchTo(fDb, fDa)
 
   expect_equal(getID(mDa), c(4:6))
 })

@@ -5,7 +5,7 @@
 #' @return dataElement with matched samples
 #'
 #' @export
-matchWith <- function(daA, daB) {
+matchTo <- function(daA, daB) {
   check(daA)
   check(daB)
   if (is(daA, "dataElement") == is(daB, "dataElement")) {

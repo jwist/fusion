@@ -21,8 +21,6 @@ An S4 class for dataElement
 conditions and a field called sampleID that MUST be unique.}
 
 \item{\code{type}}{type can be NMR, MSU, MST, ANN}
-
-\item{\code{name}}{the name of this dataElement}
 }}
 
 \examples{

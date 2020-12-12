@@ -5,7 +5,6 @@
 #' @slot obsDescr a data.frame containing experimental
 #' conditions and a field called sampleID that MUST be unique.
 #' @slot type type can be NMR, MSU, MST, ANN
-#' @slot name the name of this dataElement
 #' @return a dataElement
 #' @examples
 #'
@@ -18,5 +17,6 @@ setClass("dataElement",
                       varName = "numeric",
                       obsDescr = "data.frame",
                       type = "character"),
+         prototype = NULL,
          contains = list("matrix")
 )
