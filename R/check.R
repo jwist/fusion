@@ -22,7 +22,7 @@ setMethod("check",
           c(da = "dataElement"),
           function(da) {
             if (!"sampleID" %in% names(da@obsDescr)) {
-              stop("experimentalParameter MUST contain a field 'sampleID'")
+              stop("obsDescr MUST contain a field 'sampleID'")
             }
             if (sum(duplicated(da@obsDescr$sampleID)) > 0) {
               stop("the sampleID are not unique, run
@@ -37,7 +37,7 @@ setMethod("check",
               }
             } else {
               if (length(da@varName) != ncol(da@.Data)) {
-                stop("the length of variableName vector does't
+                stop("the length of varName vector does't
               match the number of columns of the data matrix")
               }
               if (length(da@obsDescr$sampleID) != nrow(da@.Data)) {
