@@ -5,10 +5,10 @@
 #'
 #' @export
 matchAll <- function(list) {
-  res <- lapply(list[-1],
-                function(x) matchPairwise(list[[1]], x)[[2]])
-  firstEl <- matchPairwise(list[[1]], res[[1]])[1]
-  res <- c(firstEl, res)
+  firstMatch <- matchPairwise(list[[1]], list[[2]])
+  res <- lapply(list[-c(1, 2)],
+                function(x) matchPairwise(firstMatch[[1]], x)[[2]])
+  res <- c(firstMatch, res)
   return(res)
 
 }
