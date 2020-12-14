@@ -2,6 +2,7 @@
 #'
 #' @param daA first dataElement
 #' @param daB second dataElement
+#' @param using the name of the column used as UID
 #' @return dataElement with matched samples
 #'
 #' @export

@@ -10,6 +10,8 @@ matchTo(daA, daB, using = "sampleID")
 \item{daA}{first dataElement}
 
 \item{daB}{second dataElement}
+
+\item{using}{the name of the column used as UID}
 }
 \value{
 dataElement with matched samples

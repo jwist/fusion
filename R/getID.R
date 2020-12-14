@@ -1,6 +1,7 @@
 #' S4 method get sampleID from dataElement
 #'
 #' @param da dataElement
+#' @param using the name of the column used as UID
 #' @return the sampleID
 #'
 #' @export
@@ -12,6 +13,7 @@ setGeneric("getID", function(da, using = "sampleID") {
 #' S4 method get sampleID from dataElement
 #'
 #' @param da dataElement
+#' @param using the name of the column used as UID
 #' @return the sampleID
 #'
 #' @export

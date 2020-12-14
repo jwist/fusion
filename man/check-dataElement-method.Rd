@@ -8,6 +8,8 @@
 }
 \arguments{
 \item{da}{dataElement object to be checked}
+
+\item{using}{the name of the column used as UID}
 }
 \value{
 void

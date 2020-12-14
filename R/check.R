@@ -1,6 +1,7 @@
 #' S4 method to check dataElement
 #'#'
 #' @param da dataElement object to be checked
+#' @param using the name of the column used as UID
 #' @return void
 #'
 #' check("dataElement")
@@ -13,6 +14,7 @@ setGeneric("check", function(da, using = "sampleID") {
 #' SS4 method to check dataElement
 #'
 #' @param da dataElement object to be checked
+#' @param using the name of the column used as UID
 #' @return void
 #'
 #' check("dataElement")

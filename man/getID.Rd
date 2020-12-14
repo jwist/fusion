@@ -8,6 +8,8 @@ getID(da, using = "sampleID")
 }
 \arguments{
 \item{da}{dataElement}
+
+\item{using}{the name of the column used as UID}
 }
 \value{
 the sampleID
