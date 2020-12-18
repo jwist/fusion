@@ -2,7 +2,7 @@ test_that("sampleID is retrieved", {
   x = matrix(rep(c(1:10), 10), 10, 10)
   param = data.frame(sampleID = seq(1, 10))
   da = new("dataElement", x,
-          varName = seq(1, 10),
+          varName = as.character(seq(1, 10)),
           type = "NMR",
           obsDescr = param)
   sampleID <- getID(da)
@@ -14,7 +14,7 @@ test_that("UID is retrieved", {
   x = matrix(rep(c(1:10), 10), 10, 10)
   param = data.frame(UID = seq(1, 10))
   da = new("dataElement", x,
-           varName = seq(1, 10),
+           varName = as.character(seq(1, 10)),
            type = "NMR",
            obsDescr = param)
   UID <- getID(da, using = "UID")

@@ -1,7 +1,7 @@
 x = matrix(rep(c(1:10), 10), 10, 10)
 param = data.frame(sampleID = seq(1, 10), testAnn = LETTERS[1:10])
 da = new("dataElement", x,
-         varName = seq(1, 10),
+         varName = as.character(seq(1, 10)),
          type = "NMR",
          obsDescr = param)
 sampleID <- getID(da)
@@ -17,7 +17,7 @@ test_that("ordering is working", {
 x = matrix(rep(c(1:10), 10), 10, 10)
 param = data.frame(sampleID = seq(1, 10))
 da = new("dataElement", x,
-         varName = seq(1, 10),
+         varName = as.character(seq(1, 10)),
          type = "NMR",
          obsDescr = param)
 sampleID <- getID(da)

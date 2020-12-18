@@ -3,7 +3,7 @@ test_that("matching two, same dimension", {
   param = data.frame(sampleID = seq(1, 10),
                      testAnn = LETTERS[1:10])
   da = new("dataElement", x,
-           varName = seq(1, 10),
+           varName = as.character(seq(1, 10)),
            type = "NMR",
            obsDescr = param)
 
@@ -25,7 +25,7 @@ test_that("matching two, same dimension", {
   param = data.frame(sampleID = seq(1, 10),
                      testAnn = LETTERS[1:10])
   da = new("dataElement", x,
-           varName = seq(1, 10),
+           varName = as.character(seq(1, 10)),
            type = "NMR",
            obsDescr = param)
 
