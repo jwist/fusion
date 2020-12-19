@@ -13,10 +13,26 @@
 #'
 #' @export
 setClass("dataElement",
-         slots = list(.Data = "matrix",
+         representation = representation(.Data = "matrix",
                       varName = "character",
                       obsDescr = "data.frame",
                       type = "character"),
-         prototype = NULL,
+         prototype(varName = NA_character_,
+                   obsDescr = data.frame(),
+                   type = NA_character_),
+         validity = function(object) {
+           if (sum(duplicated(object@obsDescr$sampleID)) > 0) {
+             stop("the sampleID are not unique, run
+                   'duplicated(sampleID)' to find dups or
+                   make.unique(x, '_') to solve the issue")
+           }
+           if (is.na(object@type)) {
+             stop("a type must be given")
+           }
+           if (!object@type %in% c("NMR", "MS", "ANN")) {
+             stop("unsupported type")
+           }
+           TRUE
+         },
          contains = list("matrix")
 )

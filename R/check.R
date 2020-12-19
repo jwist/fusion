@@ -23,14 +23,6 @@ setGeneric("check", function(da, using = "sampleID") {
 setMethod("check",
           c(da = "dataElement"),
           function(da, using = "sampleID") {
-            if (sum(duplicated(da@obsDescr$sampleID)) > 0) {
-              stop("the sampleID are not unique, run
-                   'duplicated(sampleID)' to find dups or
-                   make.unique(x, '_') to solve the issue")
-            }
-            if (!da@type %in% c("NMR", "MS", "ANN")) {
-              stop("unsupported type")
-            }
             if (da@type == "ANN") {
               if (is.null(da@.Data)) {
                 stop("dataElement of type ANN cannot contain data")
