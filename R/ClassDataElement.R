@@ -29,7 +29,7 @@ setClass("dataElement",
            if (is.na(object@type)) {
              stop("a type must be given")
            }
-           if (!object@type %in% c("NMR", "MS", "ANN")) {
+           if (!object@type %in% c("NMR", "MS", "MS-T", "ANN", "IVDR", "LIPO")) {
              stop("unsupported type")
            }
            TRUE
