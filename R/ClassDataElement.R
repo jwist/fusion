@@ -10,7 +10,7 @@
 #' @examples
 #'
 #' x = matrix(sample(100), 10, 10)
-#' a = new("dataElement", x, varName = as.character(rep(1, 10)), type = "MS")
+#' a = new("dataElement", x, varName = as.character(rep(1, 10)), type = "MS", method = "tryptophan")
 #'
 #' @export
 setClass("dataElement",

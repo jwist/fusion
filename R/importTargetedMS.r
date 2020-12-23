@@ -1,3 +1,11 @@
+#' importation function for targeted MS assays
+#'
+#' @param file - the file path to be imported
+#' @param method - the method used to acquire the assay
+#' @return a dataElement
+#'
+#' @export
+
 importTargetedMS <- function(file, method) {
   if (method == "tryptophan") {
     rawData <- read.table(file,
