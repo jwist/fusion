@@ -7,7 +7,7 @@
 #' @export
 parseTargetedMS <- function(file, method) {
   if (method == "tryptophan") {
-    mv <- readxl::read_xlsx("../inst/tryptophan pathway molecular weights.xlsx",
+    mv <- readxl::read_xlsx("inst/tryptophan pathway molecular weights.xlsx",
                             sheet = "Sheet1")
     rawData <- read.table(file,
                           fill = TRUE,
