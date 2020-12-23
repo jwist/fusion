@@ -21,7 +21,7 @@ setGeneric("getID", function(da, using = "sampleID") {
 setMethod("getID",
           c(da = "dataElement"),
           function(da, using = "sampleID") {
-            sampleID <- unlist(unname(da@obsDescr[using]))
+            sampleID <- unlist(unname(da@obsDescr[[1]][using]))
             return(sampleID)
           }
 )

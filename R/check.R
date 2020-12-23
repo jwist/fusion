@@ -27,18 +27,18 @@ setMethod("check",
               if (is.null(da@.Data)) {
                 stop("dataElement of type ANN cannot contain data")
               }
-              if (!using %in% names(da@obsDescr)) {
+              if (!using %in% names(da@obsDescr[[1]])) {
                 stop("obsDescr MUST contain a field with unique ID")
               }
             } else {
-              if (!"sampleID" %in% names(da@obsDescr)) {
+              if (!"sampleID" %in% names(da@obsDescr[[1]])) {
                 stop("obsDescr MUST contain a field 'sampleID'")
               }
               if (length(da@varName) != ncol(da@.Data)) {
                 stop("the length of varName vector does't
               match the number of columns of the data matrix")
               }
-              if (length(da@obsDescr$sampleID) != nrow(da@.Data)) {
+              if (length(da@obsDescr[[1]]$sampleID) != nrow(da@.Data)) {
                 stop("the length of sampleID vector does't
               match the number of rows of the data matrix")
               }

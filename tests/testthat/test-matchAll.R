@@ -5,7 +5,8 @@ test_that("matching two, same dimension", {
   da = new("dataElement", x,
            varName = as.character(seq(1, 10)),
            type = "NMR",
-           obsDescr = param)
+           method = "1D",
+           obsDescr = list(param))
 
   fi <- seq(1, 10) > 3
   fDa <- filterWith(da, fi)
@@ -27,7 +28,8 @@ test_that("matching two, same dimension", {
   da = new("dataElement", x,
            varName = as.character(seq(1, 10)),
            type = "NMR",
-           obsDescr = param)
+           method = "1D",
+           obsDescr = list(param))
 
   fi <- seq(1, 10) > 3
   fDa <- filterWith(da, fi)

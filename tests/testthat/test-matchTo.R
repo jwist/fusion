@@ -5,7 +5,8 @@ test_that("matching two, same dimension", {
   da = new("dataElement", x,
            varName = as.character(seq(1, 10)),
            type = "NMR",
-           obsDescr = param)
+           method = "1D",
+           obsDescr = list(param))
   sampleID <- getID(da)
 
   idx <- sort(sampleID, decreasing = TRUE,
@@ -23,7 +24,8 @@ test_that("matching two, different dimension, smaller first", {
   da = new("dataElement", x,
            varName = as.character(seq(1, 10)),
            type = "NMR",
-           obsDescr = param)
+           method = "1D",
+           obsDescr = list(param))
 
   fi <- seq(1, 10) > 1
   fDa <- filterWith(da, fi)
@@ -39,7 +41,8 @@ test_that("matching two, different dimension, bigger first", {
   da = new("dataElement", x,
            varName = as.character(seq(1, 10)),
            type = "NMR",
-           obsDescr = param)
+           method = "1D",
+           obsDescr = list(param))
 
   fi <- seq(1, 10) > 3
   fDa <- filterWith(da, fi)
@@ -55,7 +58,8 @@ test_that("matching two, different dimension", {
   da = new("dataElement", x,
            varName = as.character(seq(1, 10)),
            type = "NMR",
-           obsDescr = param)
+           method = "1D",
+           obsDescr = list(param))
 
   fi <- seq(1, 10) > 3
   fDa <- filterWith(da, fi)
@@ -74,13 +78,14 @@ test_that("matching with annotations", {
   da = new("dataElement", x,
            varName = as.character(seq(1, 10)),
            type = "NMR",
-           obsDescr = param)
+           method = "1D",
+           obsDescr = list(param))
 
   param = data.frame(sampleID = seq(10, 1),
                      testAnn = LETTERS[10:1])
   ann = new("dataElement",
             type = "ANN",
-            obsDescr = param)
+            obsDescr = list(param))
 
   mDa <- matchTo(ann, da)
 
@@ -92,13 +97,13 @@ test_that("matching with annotations", {
                      testAnn = LETTERS[1:10])
   da = new("dataElement",
            type = "ANN",
-           obsDescr = param)
+           obsDescr = list(param))
 
   param = data.frame(UID = seq(10, 1),
                      testAnn = LETTERS[10:1])
   ann = new("dataElement",
             type = "ANN",
-            obsDescr = param)
+            obsDescr = list(param))
 
   mDa <- matchTo(ann, da, using = "UID")
 

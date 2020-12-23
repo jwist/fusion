@@ -23,11 +23,11 @@ setGeneric("orderWith", function(da, idx) {
 setMethod("orderWith",
           c(da = "dataElement", idx = "numeric"),
           function(da, idx) {
-            if (length(idx) == nrow(da@obsDescr)) {
+            if (length(idx) == nrow(da@obsDescr[[1]])) {
               if (da@type != "ANN") {
                 da <- setDataPart(da, getDataPart(da)[idx,, drop = FALSE])
               }
-              da@obsDescr <- da@obsDescr[idx,, drop = FALSE]
+              da@obsDescr[[1]] <- da@obsDescr[[1]][idx,, drop = FALSE]
               return(da)
             } else {
               stop("dimension mismatch")

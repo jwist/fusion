@@ -6,7 +6,8 @@ test_that("matching two, same dimension", {
   da = new("dataElement", x,
            varName = as.character(seq(1, 10)),
            type = "NMR",
-           obsDescr = param)
+           method = "1D",
+           obsDescr = list(param))
   sampleID <- getID(da)
 
   idx <- sort(sampleID, decreasing = TRUE,
@@ -24,12 +25,13 @@ test_that("matching two, different dimension, bigger first", {
   da = new("dataElement", x,
            varName = as.character(seq(1, 10)),
            type = "NMR",
-           obsDescr = param)
+           method = "1D",
+           obsDescr = list(param))
 
   fi <- seq(1, 10) > 1
   fDa <- filterWith(da, fi)
   mDa <- matchPairwise(fDa, da)
-  expect_equal(mDa[[1]], mDa[[2]])
+  expect_identical(mDa[[1]], mDa[[2]])
 })
 
 test_that("matching two, different dimension", {
@@ -39,7 +41,8 @@ test_that("matching two, different dimension", {
   da = new("dataElement", x,
            varName = as.character(seq(1, 10)),
            type = "NMR",
-           obsDescr = param)
+           method = "1D",
+           obsDescr = list(param))
 
   fi <- seq(1, 10) > 3
   fDa <- filterWith(da, fi)
@@ -55,7 +58,8 @@ test_that("matching two, different dimension, bigger first", {
   da = new("dataElement", x,
            varName = as.character(seq(1, 10)),
            type = "NMR",
-           obsDescr = param)
+           method = "1D",
+           obsDescr = list(param))
 
   fi <- seq(1, 10) > 3
   fDa <- filterWith(da, fi)
@@ -73,15 +77,16 @@ test_that("matching annotations", {
   da = new("dataElement", x,
            varName = as.character(seq(1, 10)),
            type = "NMR",
-           obsDescr = param)
+           method = "1D",
+           obsDescr = list(param))
 
   param = data.frame(sampleID = seq(10, 1),
                      testAnn = LETTERS[10:1])
   ann = new("dataElement",
            type = "ANN",
-           obsDescr = param)
+           obsDescr = list(param))
 
   mDa <- matchPairwise(ann, da)
-  expect_equal(mDa[[1]]@obsDescr$sampleID,
-               mDa[[2]]@obsDescr$sampleID)
+  expect_equal(mDa[[1]]@obsDescr[[1]]$sampleID,
+               mDa[[2]]@obsDescr[[1]]$sampleID)
 })

@@ -3,18 +3,19 @@ param = data.frame(sampleID = seq(1, 10), testAnn = LETTERS[1:10])
 da = new("dataElement", x,
          varName = as.character(seq(1, 10)),
          type = "NMR",
-         obsDescr = param)
+         method = "1D",
+         obsDescr = list(param))
 
 test_that("creation of dataElement", {
-  expect_equal(length(da@obsDescr$sampleID), 10)
+  expect_equal(length(da@obsDescr[[1]]$sampleID), 10)
 })
 
 param = data.frame(sampleID = seq(1, 10), testAnn = LETTERS[1:10])
 da = new("dataElement",
          varName = as.character(seq(1, 10)),
          type = "ANN",
-         obsDescr = param)
+         obsDescr = list(param))
 
 test_that("creation of annotations", {
-  expect_equal(length(da@obsDescr$sampleID), 10)
+  expect_equal(length(da@obsDescr[[1]]$sampleID), 10)
 })

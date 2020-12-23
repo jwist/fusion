@@ -4,6 +4,7 @@
 #' @slot varName a vector containing the name of each variable
 #' @slot obsDescr a data.frame containing experimental
 #' conditions and a field called sampleID that MUST be unique.
+#' @slot method a name for the method used to acquire the data
 #' @slot type type can be NMR, MS-U, MS-T, ANN
 #' @return a dataElement
 #' @examples
@@ -15,10 +16,12 @@
 setClass("dataElement",
          representation = representation(.Data = "matrix",
                       varName = "character",
-                      obsDescr = "data.frame",
-                      type = "character"),
+                      obsDescr = "list",
+                      type = "character",
+                      method = "character"),
          prototype(varName = NA_character_,
                    obsDescr = data.frame(),
+                   method = NA_character_,
                    type = NA_character_),
          validity = function(object) {
            if (sum(duplicated(object@obsDescr$sampleID)) > 0) {
@@ -31,6 +34,14 @@ setClass("dataElement",
            }
            if (!object@type %in% c("NMR", "MS", "MS-T", "ANN", "IVDR", "LIPO")) {
              stop("unsupported type")
+           }
+           if (object@type == "NMR" & is.na(object@method)) {
+             stop("fusion: NMR dataElement must contain a method Use meltdown()
+                  to check for valid types")
+           }
+           if (object@type == "MS" & is.na(object@method)) {
+             stop("fusion: MS dataElement must contain a method Use meltdown()
+                  to check for valid types")
            }
            TRUE
          },
