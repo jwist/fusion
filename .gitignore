@@ -1,6 +1,6 @@
 .Rproj.user
 .Rhistory
-.Rdata
+
 .DS_Store
 .lintr
 .Rbuildignore
@@ -8,5 +8,4 @@
 codecov.yml
 *.Rproj
 
-.RData
 
