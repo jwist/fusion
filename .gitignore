@@ -7,7 +7,7 @@
 .travis.yml
 codecov.yml
 *.Rproj
-data/*
+
 *.rda
 *.Rda
 
