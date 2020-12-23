@@ -8,8 +8,5 @@
 codecov.yml
 *.Rproj
 
-*.rda
-*.Rda
-
 .RData
 
