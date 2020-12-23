@@ -19,4 +19,5 @@ Suggests:
 URL: https://github.com/jwist/fusion
 BugReports: https://github.com/jwist/fusion/issues
 Imports: 
-    methods
+    methods,
+    readxl
