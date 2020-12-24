@@ -2,10 +2,11 @@
 #'
 #' @param file - the file path to be imported
 #' @param method - the method used to acquire the assay
+#' @param codePosition - the position of the code in the file name
 #' @return a dataElement
 #'
 #' @export
-parseTargetedMS <- function(file, method) {
+parseTargetedMS <- function(file, method, codePosition) {
   if (method == "tryptophan") {
     data(mv)
     rawData <- read.table(file,
@@ -93,7 +94,7 @@ parseTargetedMS <- function(file, method) {
     extractCode <- function(path) {
       l <- strsplit(path, "_")
       len <- length(l[[1]])
-      code <- l[[1]][7]
+      code <- l[[1]][codePosition]
       return(code)
     }
     code <- do.call("rbind",
@@ -205,7 +206,7 @@ parseTargetedMS <- function(file, method) {
     extractCode <- function(path) {
       l <- strsplit(path, "_")
       len <- length(l[[1]])
-      code <- l[[1]][7]
+      code <- l[[1]][codePosition]
       return(code)
     }
     code <- do.call("rbind",
