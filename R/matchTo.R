@@ -21,7 +21,7 @@ matchTo <- function(daA, daB, using = "sampleID") {
 
     ldiff <-  sum(fn)
     if (ldiff != 0) {
-      warning(paste("fusion::matchWith -",
+      warning(paste("fusion::matchAll -",
                     ldiff ,
                    "sample(s) dropped"))
     }

@@ -237,7 +237,7 @@ parseTargetedMS <- function(file, method) {
       cat(paste("fusion: matrix flipped\n"))
     }
 
-    varName <- unlist(lapply(newData, function(x) x[[1]]))
+    varName <- unname(unlist(lapply(newData, function(x) x[[1]])))
     da <- new("dataElement",
               .Data = .Data,
               obsDescr = obsDescr,
