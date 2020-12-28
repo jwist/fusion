@@ -137,7 +137,7 @@ parseTargetedMS <- function(file, method, codePosition) {
               .Data = .Data,
               obsDescr = obsDescr,
               varName = varName,
-              type = "MS",
+              type = "T-MS",
               method = "tryptophane")
   }
   ## Amino acids
@@ -243,7 +243,7 @@ parseTargetedMS <- function(file, method, codePosition) {
               .Data = .Data,
               obsDescr = obsDescr,
               varName = varName,
-              type = "MS",
+              type = "T-MS",
               method = "aminoAcids")
   }
   return(da)

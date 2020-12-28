@@ -4,7 +4,7 @@
 \alias{parseTargetedMS}
 \title{importation function for targeted MS assays}
 \usage{
-parseTargetedMS(file, method)
+parseTargetedMS(file, method, codePosition)
 }
 \arguments{
 \item{file}{\itemize{
@@ -13,6 +13,10 @@ parseTargetedMS(file, method)
 
 \item{method}{\itemize{
 \item the method used to acquire the assay
+}}
+
+\item{codePosition}{\itemize{
+\item the position of the code in the file name
 }}
 }
 \value{
