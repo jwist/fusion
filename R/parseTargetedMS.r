@@ -216,6 +216,7 @@ parseTargetedMS <- function(file, method, codePosition) {
     )
     uid <- make.unique(code, "_")
 
+    #4-hydroyproline, 5-oxoproline, Aminoadipic acid, Ethanolamine and Tryptophan
     for (chk in newData) {
       cpndName <- chk[[1]]
       # multiplication according to sample preparation
