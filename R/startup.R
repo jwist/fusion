@@ -79,8 +79,6 @@ parseFileFor = function(path, pattern) {
 
 #' startup script to define shared folders for ANPC users
 #'
-#' @return void
-#'
 #' @export
 startup <- function() {
   homePath <- Sys.getenv("HOME")

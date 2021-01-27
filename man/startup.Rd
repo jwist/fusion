@@ -6,9 +6,6 @@
 \usage{
 startup()
 }
-\value{
-void
-}
 \description{
 startup script to define shared folders for ANPC users
 }
