@@ -77,6 +77,11 @@ parseFileFor = function(path, pattern) {
 }
 #parseFileFor(rProfilePath, pattern = "Welcome to the ANPC environment")
 
+#' startup script to define shared folders for ANPC users
+#'
+#' @return void
+#'
+#' @export
 startup <- function() {
   homePath <- Sys.getenv("HOME")
   rProfilePath <- file.path(homePath, ".Rprofile")
