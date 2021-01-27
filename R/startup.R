@@ -1,7 +1,6 @@
 rProfileTxt <- "
   .First <- function(){
   library(crayon)
-  library(fusion)
   cat(crayon::white$bold(\"\\nWelcome to the ANPC environment \"), date(), \"\\n\")
   if (!dir.exists(Sys.getenv()['ONEDRIVE'])) {
     cat(crayon::red(\"ERROR: OneDrive folder not found in .Renviron file.\\n\"))
@@ -79,6 +78,7 @@ parseFileFor = function(path, pattern) {
 
 #' startup script to define shared folders for ANPC users
 #'
+#' @return void
 #' @export
 startup <- function() {
   homePath <- Sys.getenv("HOME")
