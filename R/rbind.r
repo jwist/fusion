@@ -1,5 +1,6 @@
 #' print information for dataElement objects
 #'
+#' @param ... a list of dataElements
 #' @return the information about dataElement
 #'
 #' @export rbind.dataElement

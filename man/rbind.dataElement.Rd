@@ -6,6 +6,9 @@
 \usage{
 \method{rbind}{dataElement}(...)
 }
+\arguments{
+\item{...}{a list of dataElements}
+}
 \value{
 the information about dataElement
 }
