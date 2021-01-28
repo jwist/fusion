@@ -167,26 +167,28 @@ parseTargetedMS <- function(file, method, codePosition) {
     # }
 
     idx <- which(duplicated(rawData[,1:2]))
-    d <- c()
-    toRemove <- c()
-    toCheck <- c()
-    for (i in idx) {
-      c <- which(rawData[,2] == rawData[i,2] & rawData[,1] == rawData[i,1])
-      if (!identical(c, d)) {
-        print(c)
-        idxx <- which(rawData$`Quantity [units]`[c] != "n.c.")
-        print(idxx)
-        if (length(idxx) == 1) {
-          if (length(c) > 1) {
-            toRemove <- c(toRemove, c[-idxx])
+    if (length(idx) > 0) {
+      d <- c()
+      toRemove <- c()
+      toCheck <- c()
+      for (i in idx) {
+        c <- which(rawData[,2] == rawData[i,2] & rawData[,1] == rawData[i,1])
+        if (!identical(c, d)) {
+          print(c)
+          idxx <- which(rawData$`Quantity [units]`[c] != "n.c.")
+          print(idxx)
+          if (length(idxx) == 1) {
+            if (length(c) > 1) {
+              toRemove <- c(toRemove, c[-idxx])
+            }
+          } else if (length(idxx) == 0) {
+            toRemove <- c(toRemove, c[-1])
+          } else {
+            toCheck <- c(toCheck, c[-1])
           }
-        } else if (length(idxx) == 0) {
-          toRemove <- c(toRemove, c[-1])
-        } else {
-          toCheck <- c(toCheck, c[-1])
         }
+        d <- c
       }
-      d <- c
     }
 
     cat(paste("fusion: duplicated line", toRemove, "was removed\n"))
