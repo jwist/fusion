@@ -189,15 +189,15 @@ parseTargetedMS <- function(file, method, codePosition) {
         }
         d <- c
       }
+
+
+      cat(paste("fusion: duplicated line", toRemove, "was removed\n"))
+      rawData <- rawData[-toRemove, ]
+
+      cat("fusion: cannot remove duplicated line. Please do it manually!\n")
+      cat(paste("please check line", toCheck, "\n"))
+      rawData <- rawData[-toCheck, ]
     }
-
-    cat(paste("fusion: duplicated line", toRemove, "was removed\n"))
-    rawData <- rawData[-toRemove, ]
-
-    cat("fusion: cannot remove duplicated line. Please do it manually!\n")
-    cat(paste("please check line", toCheck, "\n"))
-    rawData <- rawData[-toCheck, ]
-
     compoundList <- unique(rawData$`Analyte Name`)
     numberOfCompounds <- length(compoundList)
     cat(paste("fusion:",
