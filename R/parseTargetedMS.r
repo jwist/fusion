@@ -174,9 +174,7 @@ parseTargetedMS <- function(file, method, codePosition) {
       for (i in idx) {
         c <- which(rawData[,2] == rawData[i,2] & rawData[,1] == rawData[i,1])
         if (!identical(c, d)) {
-          print(c)
           idxx <- which(rawData$`Quantity [units]`[c] != "n.c.")
-          print(idxx)
           if (length(idxx) == 1) {
             if (length(c) > 1) {
               toRemove <- c(toRemove, c[-idxx])
@@ -192,12 +190,14 @@ parseTargetedMS <- function(file, method, codePosition) {
 
 
       cat(paste("fusion: duplicated line", toRemove, "was removed\n"))
-      rawData <- rawData[-toRemove, ]
+      #rawData <- rawData[-toRemove, ]
 
       cat("fusion: cannot remove duplicated line. Please do it manually!\n")
       cat(paste("please check line", toCheck, "\n"))
-      rawData <- rawData[-toCheck, ]
+      #rawData <- rawData[-toCheck, ]
+      rawData <- rawData[-c(toCheck, toRemove), ]
     }
+
     compoundList <- unique(rawData$`Analyte Name`)
     numberOfCompounds <- length(compoundList)
     cat(paste("fusion:",
