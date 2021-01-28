@@ -160,11 +160,41 @@ parseTargetedMS <- function(file, method, codePosition) {
               sum(!fi),
               "empty line(s) removed\n"))
 
-    if (sum(duplicated(rawData[,1:2])) > 0) {
-      cat(paste("fusion: line",
-                which(duplicated(rawData[,1:2])),
-                "is duplicated, clean your data!\n"))
+    # if (sum(duplicated(rawData[,1:2])) > 0) {
+    #   cat(paste("fusion: line",
+    #             which(duplicated(rawData[,1:2])),
+    #             "is duplicated, clean your data!\n"))
+    # }
+
+    idx <- which(duplicated(rawData[,1:2]))
+    d <- c()
+    toRemove <- c()
+    toCheck <- c()
+    for (i in idx) {
+      c <- which(rawData[,2] == rawData[i,2] & rawData[,1] == rawData[i,1])
+      if (!identical(c, d)) {
+        print(c)
+        idxx <- which(rawData$`Quantity [units]`[c] != "n.c.")
+        print(idxx)
+        if (length(idxx) == 1) {
+          if (length(c) > 1) {
+            toRemove <- c(toRemove, c[-idxx])
+          }
+        } else if (length(idxx) == 0) {
+          toRemove <- c(toRemove, c[-1])
+        } else {
+          toCheck <- c(toCheck, c[-1])
+        }
+      }
+      d <- c
     }
+
+    cat(paste("fusion: duplicated line", toRemove, "was removed\n"))
+    rawData <- rawData[-toRemove, ]
+
+    cat("fusion: cannot remove duplicated line. Please do it manually!\n")
+    cat(paste("please check line", toCheck, "\n"))
+    rawData <- rawData[-toCheck, ]
 
     compoundList <- unique(rawData$`Analyte Name`)
     numberOfCompounds <- length(compoundList)
