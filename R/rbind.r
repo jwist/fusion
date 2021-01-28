@@ -2,6 +2,7 @@
 #'
 #' @return the information about dataElement
 #'
+#' @export rbind.dataElement
 #' @export
 #' @importFrom methods hasArg
 
