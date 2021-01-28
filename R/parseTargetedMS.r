@@ -144,7 +144,11 @@ parseTargetedMS <- function(file, method, codePosition) {
   if (method == "aminoAcids") {
     # rawData <- readxl::read_xlsx(file,
     #                              sheet = "Sheet0")
-    rawData <- read.csv2(file, sep = ",", header = TRUE, dec = ".")
+    rawData <- read.csv2(file,
+                         sep = ",",
+                         header = TRUE,
+                         dec = ".",
+                         check.names = FALSE)
     cat(paste("fusion: using import method for",
               method, "\n"))
     cat(paste("fusion:", nrow(rawData),
