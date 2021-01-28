@@ -10,6 +10,7 @@ rbind.dataElement <- function(...){
   newData <- list()
   newObs <- list()
   type <- method <- "init"
+  counter <- 1
   for (el in list(...)) {
     if (is(el)[1] != "dataElement"){
       warning(paste("fusion: ", el, " is not a dataElement and is ignored"))
@@ -22,34 +23,33 @@ rbind.dataElement <- function(...){
           if (el@method != method & method != "init") {
             stop("fusion: all elements must be of same method")
           } else {
-            newData <- c(newData, el@.Data)
+            newData[[counter]] <- el@.Data
+            newObs[[counter]] <- el@obsDescr
           }
-          method = el@method
         }
-        if (identical())
-          if (el@type != "T-MS") {
-            for (obs in el@obsDescr) {
-              newObs <- c(newObs, el@obsDescr[[1]])
-            }
-          } else {
-            newObs <- c(newObs, el@obsDescr[[1]])
-          }
+        method = el@method
       }
       type = el@type
     }
+    counter <- counter + 1
   }
-  obsDescr <- do.call("rbind", newObs)
+
+  obsDescr <- list()
+  for (obs in 1:length(el@obsDescr)) {
+    obsDescr[[obs]] <- do.call("rbind", do.call("rbind", newObs)[,obs])
+  }
+
   if (el@type != "ANN") {
     .Data <- do.call("rbind", newData)
     newElement <- new("dataElement",
                       .Data = .Data,
-                      obsDescr = list(obsDescr),
-                      varName = varName,
+                      obsDescr = obsDescr,
+                      varName = el@varName,
                       type = type,
                       method = method)
   } else {
     newElement <- new("dataElement",
-                      obsDescr = obsDescr,
+                      obsDescr = list(obsDescr),
                       type = type,)
   }
 
