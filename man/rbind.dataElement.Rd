@@ -6,9 +6,6 @@
 \usage{
 \method{rbind}{dataElement}(...)
 }
-\arguments{
-\item{...}{a sequence of dataElements}
-}
 \value{
 the information about dataElement
 }

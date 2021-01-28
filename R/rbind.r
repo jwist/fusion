@@ -1,6 +1,5 @@
 #' print information for dataElement objects
 #'
-#' @param ... a sequence of dataElements
 #' @return the information about dataElement
 #'
 #' @export
