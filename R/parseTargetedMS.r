@@ -152,9 +152,14 @@ parseTargetedMS <- function(file, method, codePosition) {
     fi <- !is.na(rawData$`Analyte Name`)
     rawData <- rawData[fi,]
     cat(paste("fusion:",
-              sum(fi),
+              sum(!fi),
               "empty line(s) removed\n"))
 
+    if (sum(duplicated(rawData[,1:2])) > 0) {
+      cat(paste("fusion: line",
+                which(duplicated(rawData[,1:2])),
+                "is duplicated, clean your data!\n"))
+    }
 
     compoundList <- unique(rawData$`Analyte Name`)
     numberOfCompounds <- length(compoundList)
