@@ -24,11 +24,25 @@ setClass("dataElement",
                    method = NA_character_,
                    type = NA_character_),
          validity = function(object) {
-           if (sum(duplicated(object@obsDescr$sampleID)) > 0) {
-             stop("the sampleID are not unique, run
+           ann <- object@obsDescr[[1]]
+           if ("sampleID" %in% names(ann)) {
+             if (sum(duplicated(ann$sampleID)) > 0) {
+               stop("the sampleID are not unique, run
                    'duplicated(sampleID)' to find dups or
                    make.unique(x, '_') to solve the issue")
+             }
+           } else {
+             stop("the metadata must contain a column: sampleID")
            }
+
+           if ("sampleType" %in% names(ann)) {
+             cat(crayon::green(names(table(ann$sampleType))) %+%
+                   crayon::green(": ") %+%
+                   crayon::green(table(ann$sampleType)), fill = 2)
+           } else {
+             stop("the metadata must contain a column: sampleID")
+           }
+
            if (is.na(object@type)) {
              stop("a type must be given")
            }
