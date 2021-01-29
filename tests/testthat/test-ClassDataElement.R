@@ -42,8 +42,8 @@ test_that("creation of annotations", {
                      sampleType = rep("sample", 10),
                      testAnn = LETTERS[1:10])
   da = new("dataElement",
-           varName = as.character(seq(1, 10)),
            type = "ANN",
            obsDescr = list(param))
   expect_equal(length(da@obsDescr[[1]]$sampleID), 10)
 })
+

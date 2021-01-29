@@ -1,6 +1,7 @@
 test_that("matching two, same dimension", {
   x = matrix(rep(c(1:10), 10), 10, 10)
   param = data.frame(sampleID = seq(1, 10),
+                     sampleType = rep("sample", 10),
                      testAnn = LETTERS[1:10])
   da = new("dataElement", x,
            varName = as.character(seq(1, 10)),
@@ -20,6 +21,7 @@ test_that("matching two, same dimension", {
 test_that("matching two, different dimension, smaller first", {
   x = matrix(rep(c(1:10), 10), 10, 10)
   param = data.frame(sampleID = seq(1, 10),
+                     sampleType = rep("sample", 10),
                      testAnn = LETTERS[1:10])
   da = new("dataElement", x,
            varName = as.character(seq(1, 10)),
@@ -37,6 +39,7 @@ test_that("matching two, different dimension, smaller first", {
 test_that("matching two, different dimension, bigger first", {
   x = matrix(rep(c(1:10), 10), 10, 10)
   param = data.frame(sampleID = seq(1, 10),
+                     sampleType = rep("sample", 10),
                      testAnn = LETTERS[1:10])
   da = new("dataElement", x,
            varName = as.character(seq(1, 10)),
@@ -54,6 +57,7 @@ test_that("matching two, different dimension, bigger first", {
 test_that("matching two, different dimension", {
   x = matrix(rep(c(1:10), 10), 10, 10)
   param = data.frame(sampleID = seq(1, 10),
+                     sampleType = rep("sample", 10),
                      testAnn = LETTERS[1:10])
   da = new("dataElement", x,
            varName = as.character(seq(1, 10)),
@@ -74,6 +78,7 @@ test_that("matching two, different dimension", {
 test_that("matching with annotations", {
   x = matrix(rep(c(1:10), 10), 10, 10)
   param = data.frame(sampleID = seq(1, 10),
+                     sampleType = rep("sample", 10),
                      testAnn = LETTERS[1:10])
   da = new("dataElement", x,
            varName = as.character(seq(1, 10)),
@@ -82,6 +87,7 @@ test_that("matching with annotations", {
            obsDescr = list(param))
 
   param = data.frame(sampleID = seq(10, 1),
+                     sampleType = rep("sample", 10),
                      testAnn = LETTERS[10:1])
   ann = new("dataElement",
             type = "ANN",
@@ -90,23 +96,5 @@ test_that("matching with annotations", {
   mDa <- matchTo(ann, da)
 
   expect_equal(getID(mDa), c(1:10))
-})
-
-test_that("matching with annotations", {
-  param = data.frame(UID = seq(1, 10),
-                     testAnn = LETTERS[1:10])
-  da = new("dataElement",
-           type = "ANN",
-           obsDescr = list(param))
-
-  param = data.frame(UID = seq(10, 1),
-                     testAnn = LETTERS[10:1])
-  ann = new("dataElement",
-            type = "ANN",
-            obsDescr = list(param))
-
-  mDa <- matchTo(ann, da, using = "UID")
-
-  expect_equal(getID(mDa, using = "UID"), c(1:10))
 })
 

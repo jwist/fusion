@@ -24,25 +24,6 @@ setClass("dataElement",
                    method = NA_character_,
                    type = NA_character_),
          validity = function(object) {
-           ann <- object@obsDescr[[1]]
-           if ("sampleID" %in% names(ann)) {
-             if (sum(duplicated(ann$sampleID)) > 0) {
-               stop("the sampleID are not unique, run
-                   'duplicated(sampleID)' to find dups or
-                   make.unique(x, '_') to solve the issue")
-             }
-           } else {
-             stop("the metadata must contain a column: sampleID")
-           }
-
-           if ("sampleType" %in% names(ann)) {
-             cat(crayon::green(names(table(ann$sampleType))) %+%
-                   crayon::green(": ") %+%
-                   crayon::green(table(ann$sampleType)), fill = 2)
-           } else {
-             stop("the metadata must contain a column: sampleID")
-           }
-
            if (is.na(object@type)) {
              stop("a type must be given")
            }
@@ -56,6 +37,26 @@ setClass("dataElement",
            if (object@type == "MS" & is.na(object@method)) {
              stop("fusion: MS dataElement must contain a method Use meltdown()
                   to check for valid types")
+           }
+           ann <- object@obsDescr[[1]]
+           print(names(ann))
+           if ("sampleID" %in% names(ann)) {
+             if (sum(duplicated(ann$sampleID)) > 0) {
+               stop("the sampleID are not unique, run
+                   'duplicated(sampleID)' to find dups or
+                   make.unique(x, '_') to solve the issue")
+             }
+           } else {
+             stop("the metadata must contain a column: sampleID")
+           }
+           if (object@type != "ANN") {
+             if ("sampleType" %in% names(ann)) {
+               cat(crayon::green(names(table(ann$sampleType))) %+%
+                     crayon::green(": ") %+%
+                     crayon::green(table(ann$sampleType)), fill = 2)
+             } else {
+               stop("the metadata must contain a column: sampleType")
+             }
            }
            TRUE
          },

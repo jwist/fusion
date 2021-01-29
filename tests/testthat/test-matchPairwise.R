@@ -2,6 +2,7 @@
 test_that("matching two, same dimension", {
   x = matrix(rep(c(1:10), 10), 10, 10)
   param = data.frame(sampleID = seq(1, 10),
+                     sampleType = rep("sample", 10),
                      testAnn = LETTERS[1:10])
   da = new("dataElement", x,
            varName = as.character(seq(1, 10)),
@@ -21,6 +22,7 @@ test_that("matching two, same dimension", {
 test_that("matching two, different dimension, bigger first", {
   x = matrix(rep(c(1:10), 10), 10, 10)
   param = data.frame(sampleID = seq(1, 10),
+                     sampleType = rep("sample", 10),
                      testAnn = LETTERS[1:10])
   da = new("dataElement", x,
            varName = as.character(seq(1, 10)),
@@ -37,6 +39,7 @@ test_that("matching two, different dimension, bigger first", {
 test_that("matching two, different dimension", {
   x = matrix(rep(c(1:10), 10), 10, 10)
   param = data.frame(sampleID = seq(1, 10),
+                     sampleType = rep("sample", 10),
                      testAnn = LETTERS[1:10])
   da = new("dataElement", x,
            varName = as.character(seq(1, 10)),
@@ -54,6 +57,7 @@ test_that("matching two, different dimension", {
 test_that("matching two, different dimension, bigger first", {
   x = matrix(rep(c(1:10), 10), 10, 10)
   param = data.frame(sampleID = seq(1, 10),
+                     sampleType = rep("sample", 10),
                      testAnn = LETTERS[1:10])
   da = new("dataElement", x,
            varName = as.character(seq(1, 10)),
@@ -73,6 +77,7 @@ test_that("matching two, different dimension, bigger first", {
 test_that("matching annotations", {
   x = matrix(rep(c(1:10), 10), 10, 10)
   param = data.frame(sampleID = seq(1, 10),
+                     sampleType = rep("sample", 10),
                      testAnn = LETTERS[1:10])
   da = new("dataElement", x,
            varName = as.character(seq(1, 10)),
@@ -81,6 +86,7 @@ test_that("matching annotations", {
            obsDescr = list(param))
 
   param = data.frame(sampleID = seq(10, 1),
+                     sampleType = rep("sample", 10),
                      testAnn = LETTERS[10:1])
   ann = new("dataElement",
            type = "ANN",
