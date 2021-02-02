@@ -26,7 +26,7 @@ parseTargetedMS <- function(file, method, options) {
       cat(crayon::red$bold(ncol(da)) %+%
             crayon::red$bold("/60 metabolite imported for that method.\n"))
     }
-    p <- getType(da, using = "SampleType")
+    #p <- getType(da, using = "sampleType")
   }
 
   return(da)
@@ -206,6 +206,8 @@ parseMS_AA <- function(file, options) {
       fi <- which(names(chk[[2]]) == "Quantity [units]")
       descr <- data.frame(chk[[2]][, -fi], check.names = FALSE)
       descr <- cbind(sampleID = uid, descr)
+      fi <- which(colnames(descr) == "SampleType")
+      colnames(descr)[fi] <- "sampleType"
       obsDescr <- c(obsDescr, list(descr))
     }
   }
@@ -338,8 +340,10 @@ parseMS_Tr <- function(file, options) {
       stop ("fusion: row order alterated, matrix cannot be flipped")
     }
     fi <- which(names(chk[[2]]) == "Conc.")
-    descr <- data.frame(chk[[2]][, -fi])
+    descr <- data.frame(chk[[2]][, -fi], check.names = FALSE)
     descr <- cbind(sampleID = uid, descr)
+    fi <- which(colnames(descr) == "Type")
+    colnames(descr)[fi] <- "sampleType"
     obsDescr <- c(obsDescr, list(descr))
   }
 

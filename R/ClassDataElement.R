@@ -39,7 +39,6 @@ setClass("dataElement",
                   to check for valid types")
            }
            ann <- object@obsDescr[[1]]
-           print(names(ann))
            if ("sampleID" %in% names(ann)) {
              if (sum(duplicated(ann$sampleID)) > 0) {
                stop("the sampleID are not unique, run

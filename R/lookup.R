@@ -10,16 +10,16 @@
 #'
 lookup <- function(da, ann, using = c("sourceID", "sampleID")) {
   check(da, using = "sampleID")
-  uid <- da@obsDescr[using[1]][[1]]
+  uid <- unlist(da@obsDescr[[1]][using[1]])
   fi <- match(uid,
-              ann[using[2]][[1]])
+              unlist(ann[using[2]]))
   if(sum(is.na(fi)) > 0) {
     txt = paste(uid[which(is.na(fi))])
     warning(paste("fusion: NA found, check:", txt, "\n"))
   }
-  newAnn <- cbind(sampleID = da@obsDescr$sampleID, ann[fi,])
+  newAnn <- cbind(sampleID = da@obsDescr[[1]]$sampleID, ann[fi,])
   sampleAnnotations <-new("dataElement",
-                          obsDescr = newAnn,
+                          obsDescr = list(newAnn),
                           type = "ANN")
   return(sampleAnnotations)
 }
