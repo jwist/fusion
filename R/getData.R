@@ -36,6 +36,8 @@ setMethod("getData",
               ori <- unique(gsub("#.", "", getID(da)[idx]))
               fi <- getID(da) %in% ori
               da <- filterWith(da, !fi)
+              newID <- gsub("#.", "", getID(da))
+              da <- setID(da, newID)
             } else if (replicates == "rm"){
               fi <- grepl("#", getID(da))
               da <- filterWith(da, !fi)
