@@ -43,8 +43,12 @@ setClass("dataElement",
            }
            ann <- object@obsDescr[[1]]
            if ("sampleID" %in% names(ann)) {
-             fi <- getType(object) == "sample"
-             ids <- getID(object)[fi]
+             if (object@type != "ANN") {
+               fi <- getType(object) == "sample"
+               ids <- getID(object)[fi]
+             } else {
+               ids <- getID(object)
+             }
              if (sum(duplicated(ids)) > 0) {
                stop("the sampleID (fpr samples) are not unique, run
                    'duplicated(sampleID)' to find dups or

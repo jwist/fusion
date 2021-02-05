@@ -1,4 +1,3 @@
-
 #' S3 method nrow for dataElement objects (S4)
 #'
 #' A nrow method for \emph{dataElement} objects
@@ -8,7 +7,6 @@
 #' @return the number of rows
 #'
 #' @export
-
 nrow.dataElement <- function(da, ...){
   if (da@type == 'ANN') {
     n <- nrow(da@obsDescr)
