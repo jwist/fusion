@@ -38,10 +38,15 @@ setClass("dataElement",
              stop("fusion: MS dataElement must contain a method Use meltdown()
                   to check for valid types")
            }
+           if (!is.list(object@obsDescr)){
+             stop("fusion: obsDescr must be of type list")
+           }
            ann <- object@obsDescr[[1]]
            if ("sampleID" %in% names(ann)) {
-             if (sum(duplicated(ann$sampleID)) > 0) {
-               stop("the sampleID are not unique, run
+             fi <- getType(object) == "sample"
+             ids <- getID(object)[fi]
+             if (sum(duplicated(ids)) > 0) {
+               stop("the sampleID (fpr samples) are not unique, run
                    'duplicated(sampleID)' to find dups or
                    make.unique(x, '_') to solve the issue")
              }

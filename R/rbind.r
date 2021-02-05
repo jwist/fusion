@@ -37,7 +37,9 @@ rbind.dataElement <- function(...){
 
   obsDescr <- list()
   for (obs in 1:length(el@obsDescr)) {
-    obsDescr[[obs]] <- do.call("rbind", do.call("rbind", newObs)[,obs])
+    newDescr <- do.call("rbind", do.call("rbind", newObs)[,obs])
+    newDescr$sampleID <- make.unique(newDescr$sampleID, sep = "#")
+    obsDescr[[obs]] <- newDescr
   }
 
   if (el@type != "ANN") {

@@ -16,8 +16,8 @@ setGeneric("getID", function(da, using = "sampleID") {
 #' @param using the name of the column used as UID
 #' @return the sampleID
 #'
+#' @export getID
 #' @export
-#'
 setMethod("getID",
           c(da = "dataElement"),
           function(da, using = "sampleID") {
@@ -25,3 +25,4 @@ setMethod("getID",
             return(sampleID)
           }
 )
+

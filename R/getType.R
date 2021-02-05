@@ -16,8 +16,8 @@ setGeneric("getType", function(da, using = "sampleType") {
 #' @param using the name of the column used as sampleType
 #' @return the sampleType
 #'
+#' @export getType
 #' @export
-#'
 setMethod("getType",
           c(da = "dataElement"),
           function(da, using = "sampleType") {

@@ -177,7 +177,7 @@ parseMS_AA <- function(file, options) {
                          function(x) extractCode(x)
                   )
   )
-  uid <- make.unique(code, "_")
+  uid <- makeUnique(code, "#")
 
   #4-hydroyproline, 5-oxoproline, Aminoadipic acid, Ethanolamine and Tryptophan
   cleaningList <- c("4--hydroxyproline",
@@ -206,8 +206,12 @@ parseMS_AA <- function(file, options) {
       fi <- which(names(chk[[2]]) == "Quantity [units]")
       descr <- data.frame(chk[[2]][, -fi], check.names = FALSE)
       descr <- cbind(sampleID = uid, descr)
+
+      # proper sampleType column
       fi <- which(colnames(descr) == "SampleType")
       colnames(descr)[fi] <- "sampleType"
+      descr$sampleType <- factor(descr$sampleType)
+      levels(descr$sampleType) <- c("sample", "blanck", "qc", "standard")
       obsDescr <- c(obsDescr, list(descr))
     }
   }
@@ -321,7 +325,7 @@ parseMS_Tr <- function(file, options) {
                          function(x) extractCode(x)
                   )
   )
-  uid <- make.unique(code, "_")
+  uid <- makeUnique(code, "#")
 
   for (chk in newData) {
     cpndName <- chk[[1]]
@@ -342,8 +346,12 @@ parseMS_Tr <- function(file, options) {
     fi <- which(names(chk[[2]]) == "Conc.")
     descr <- data.frame(chk[[2]][, -fi], check.names = FALSE)
     descr <- cbind(sampleID = uid, descr)
+
+    # creating proper sampleType column
     fi <- which(colnames(descr) == "Type")
     colnames(descr)[fi] <- "sampleType"
+    descr$sampleType <- factor(descr$sampleType)
+    levels(descr$sampleType) <- c("sample", "blanck", "qc", "standard")
     obsDescr <- c(obsDescr, list(descr))
   }
 
