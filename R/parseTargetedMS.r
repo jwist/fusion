@@ -205,13 +205,21 @@ parseMS_AA <- function(file, options) {
       }
       fi <- which(names(chk[[2]]) == "Quantity [units]")
       descr <- data.frame(chk[[2]][, -fi], check.names = FALSE)
+
+      # adding sampleID
       descr <- cbind(sampleID = uid, descr)
 
-      # proper sampleType column
+      # renaming sampleType
       fi <- which(colnames(descr) == "SampleType")
       colnames(descr)[fi] <- "sampleType"
+
+      # set LTR to type ltr
+      fi <- grepl("PLA", descr$sampleID)
+      descr$sampleType[fi] <- "ltr"
+
       descr$sampleType <- factor(descr$sampleType)
-      levels(descr$sampleType) <- c("sample", "blanck", "qc", "standard")
+      print(levels(descr$sampleType))
+      levels(descr$sampleType) <- c("blank", "standard", "ltr", "qc", "sample")
       obsDescr <- c(obsDescr, list(descr))
     }
   }
@@ -345,13 +353,20 @@ parseMS_Tr <- function(file, options) {
     }
     fi <- which(names(chk[[2]]) == "Conc.")
     descr <- data.frame(chk[[2]][, -fi], check.names = FALSE)
+
+    # adding sampleID
     descr <- cbind(sampleID = uid, descr)
 
-    # creating proper sampleType column
+    # renaming sampleType
     fi <- which(colnames(descr) == "Type")
     colnames(descr)[fi] <- "sampleType"
+
+    # set LTR to type ltr
+    fi <- grepl("PLA", descr$sampleID)
+    descr$sampleType[fi] <- "ltr"
+
     descr$sampleType <- factor(descr$sampleType)
-    levels(descr$sampleType) <- c("sample", "blanck", "qc", "standard")
+    levels(descr$sampleType) <- c("sample", "blanck", "ltr", "qc", "standard")
     obsDescr <- c(obsDescr, list(descr))
   }
 
