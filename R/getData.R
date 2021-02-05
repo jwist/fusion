@@ -2,7 +2,7 @@
 #'
 #' @param da dataElement
 #' @param using either sample, qc, standard, or blank or a combination of
-#' @param replicates either takeLast, notAtAll or keepAll
+#' @param replicates either last, rm or all
 #' @return a dataElement with selected types
 #'
 #' @export
@@ -25,19 +25,22 @@ setMethod("getData",
             replicates = "character"),
           function(da,
                    type = c("sample"),
-                   replicates = "takeLast") {
-            fi <- getType(da) == type
-            newDa <- filterWith(da, fi)
-            if (replicates == "takeLast") {
-              idx <- which(grepl("#", getID(newDa)))
-              ori <- unique(gsub("#.", "", getID(newDa)[idx]))
-              fi <- getID(newDa) %in% ori
-              newDa <- filterWith(newDa, !fi)
-            } else if (replicates == "notAtAll"){
-              fi <- grepl("#", getID(newDa))
-              newDa <- filterWith(da, !fi)
+                   replicates = "last") {
+            if (!replicates %in% c("last", "rm", "all")) {
+              stop("fusion: incorrect value for replicates")
             }
-            return(newDa)
+            fi <- getType(da) == type
+            da <- filterWith(da, fi)
+            if (replicates == "last") {
+              idx <- which(grepl("#", getID(da)))
+              ori <- unique(gsub("#.", "", getID(da)[idx]))
+              fi <- getID(da) %in% ori
+              da <- filterWith(da, !fi)
+            } else if (replicates == "rm"){
+              fi <- grepl("#", getID(da))
+              da <- filterWith(da, !fi)
+            }
+            return(da)
           }
 )
 

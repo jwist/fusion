@@ -17,3 +17,8 @@ unique ID
 \description{
 function to make ID unique
 }
+\examples{
+a <- c("a", "a", "b", "a", "b", "c")
+makeUnique(a)
+
+}

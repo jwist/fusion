@@ -23,7 +23,6 @@ setGeneric("setID", function(da, ID, using = "sampleID") {
 setMethod("setID",
           c(da = "dataElement"),
           function(da, ID, using = "sampleID") {
-            obsDescr <- list()
             for (i in 1:length(da@obsDescr)) {
               da@obsDescr[[i]][using] <- ID
             }

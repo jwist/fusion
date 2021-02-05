@@ -4,8 +4,9 @@
 #' @param sep the separator
 #' @return unique ID
 #'
-#' @example
+#' @examples
 #' a <- c("a", "a", "b", "a", "b", "c")
+#' makeUnique(a)
 #'
 #' @export
 makeUnique <- function(sampleID, sep = "#"){

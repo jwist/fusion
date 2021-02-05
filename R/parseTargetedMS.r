@@ -218,7 +218,6 @@ parseMS_AA <- function(file, options) {
       descr$sampleType[fi] <- "ltr"
 
       descr$sampleType <- factor(descr$sampleType)
-      print(levels(descr$sampleType))
       levels(descr$sampleType) <- c("blank", "standard", "ltr", "qc", "sample")
       obsDescr <- c(obsDescr, list(descr))
     }

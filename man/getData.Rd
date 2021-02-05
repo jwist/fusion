@@ -4,10 +4,12 @@
 \alias{getData}
 \title{S4 method get data from dataElement}
 \usage{
-getData(da, type)
+getData(da, type = c("sample"), replicates = "takeLast")
 }
 \arguments{
 \item{da}{dataElement}
+
+\item{replicates}{either last, rm or all}
 
 \item{using}{either sample, qc, standard, or blank or a combination of}
 }
