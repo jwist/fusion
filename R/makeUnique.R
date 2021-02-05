@@ -4,18 +4,16 @@
 #' @param sep the separator
 #' @return unique ID
 #'
+#' @example
+#' a <- c("a", "a", "b", "a", "b", "c")
+#'
 #' @export
 makeUnique <- function(sampleID, sep = "#"){
-  dup <- duplicated(sampleID)
+  dup <- duplicated(sampleID) | duplicated(sampleID, fromLast = TRUE)
   i = 1
   while (sum(dup) > 0) {
-    newName <- unlist(lapply(sampleID[dup], function(x) strsplit(x, "_")[[1]][1]))[1]
-    print(newName)
-    adam <- which(sampleID == newName)[1]
-    if (length(adam) > 0) {
-      sampleID[adam] <- paste0(newName, "_", 0)
-    }
-    sampleID[dup] <- paste0(newName, "_", i)
+    newName <- unlist(lapply(sampleID[dup], function(x) strsplit(x, sep)[[1]][1]))
+    sampleID[dup] <- paste0(newName, sep , i)
     dup <- duplicated(sampleID)
     i <- i + 1
   }
