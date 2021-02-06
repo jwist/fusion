@@ -28,3 +28,13 @@ test_that("filtering is working with single column data.frame", {
   expect_equal(getID(filteredDa), seq(2, 10))
  })
 
+test_that("filtering throw error", {
+  param = data.frame(sampleID = seq(1, 10))
+  da = new("dataElement",
+           type = "ANN",
+           obsDescr = list(param))
+  fi <- seq(1, 10) > 1
+
+  expect_error(filterWith(da, fi[-1]), "*length*")
+})
+
