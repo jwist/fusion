@@ -11,7 +11,7 @@
 #' @export
 makeUnique <- function(sampleID, sep = "#"){
   dup <- duplicated(sampleID) | duplicated(sampleID, fromLast = TRUE)
-  i = 1
+  i = 0
   while (sum(dup) > 0) {
     newName <- unlist(lapply(sampleID[dup], function(x) strsplit(x, sep)[[1]][1]))
     sampleID[dup] <- paste0(newName, sep , i)

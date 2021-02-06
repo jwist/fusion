@@ -11,7 +11,7 @@ getData(da, type = c("sample"), replicates = "takeLast")
 
 \item{replicates}{either last, rm or all}
 
-\item{using}{either sample, qc, standard, or blank or a combination of}
+\item{using}{either sample, ltr, pqc, qc, standard, or blank or a combination of}
 }
 \value{
 a dataElement with selected types

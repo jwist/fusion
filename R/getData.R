@@ -1,7 +1,7 @@
 #' S4 method get data from dataElement
 #'
 #' @param da dataElement
-#' @param using either sample, qc, standard, or blank or a combination of
+#' @param using either sample, ltr, pqc, qc, standard, or blank or a combination of
 #' @param replicates either last, rm or all
 #' @return a dataElement with selected types
 #'
@@ -18,7 +18,6 @@ setGeneric("getData", function(da, type = c("sample"), replicates = "takeLast") 
 #' @return a dataElement with selected types
 #'
 #' @export getData
-#' @export
 setMethod("getData",
           c(da = "dataElement",
             type = c(),
@@ -26,8 +25,19 @@ setMethod("getData",
           function(da,
                    type = c("sample"),
                    replicates = "last") {
-            if (!replicates %in% c("last", "rm", "all")) {
-              stop("fusion: incorrect value for replicates")
+            if (missing(type)) {
+              type <- "sample"
+            } else {
+              if (!type %in% c("sample", "pqc", "ltr", "qc", "standar", "blank")) {
+                stop("fusion: incorrect value for sample type")
+              }
+            }
+            if (missing(replicates)) {
+              replicates <- "all"
+            } else {
+              if (!replicates %in% c("last", "rm", "all")) {
+                stop("fusion: incorrect value for replicates")
+              }
             }
             fi <- getType(da) == type
             da <- filterWith(da, fi)
