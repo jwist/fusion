@@ -8,30 +8,43 @@
 #' @importFrom methods hasArg
 
 cbind.dataElement <- function(...){
+  if (!all(sapply(list(...), function(x) is(x)[1] == "dataElement"))) {
+    stop(crayon::red("fusion::rbind >>
+Some are not dataElements"))
+  }
+
+  if (length(unique(sapply(list(...), function(x) x@type))) > 1) {
+    stop(crayon::red("fusion::rbind >>
+All elements must be of same type"))
+  }
+  type <- list(...)[[1]]@type
+
+  if (type != "ANN") {
+    if (length(unique(sapply(list(...), function(x) x@method))) > 1) {
+      stop(crayon::red("fusion::rbind >>
+All elements must be of same method"))
+    }
+  }
+  method <- list(...)[[1]]@method
+
+  IDs <- getID(list(...)[[1]])
+  if (!all(sapply(list(...),
+                  function(x) identical(getID(x), IDs)))) {
+    stop(crayon::red("fusion::rbind >>
+All must have identical IDs"))
+  }
+
   newData <- list()
   newObs <- list()
-  type <- method <- "init"
   counter <- 1
-  for (el in list(...)) {
-    if (is(el)[1] != "dataElement"){
-      warning(paste("fusion: ", el, " is not a dataElement and is ignored"))
-    } else {
-      if (el@type != type & type != "init") {
-        stop("fusion: all elements must be of same type")
-      } else  {
 
-        if (el@type != "ANN") {
-          if (el@method != method & method != "init") {
-            stop("fusion: all elements must be of same method")
-          } else {
-            newData[[counter]] <- el@.Data
-            newObs[[counter]] <- el@obsDescr
-          }
-        }
-        method = el@method
-      }
-      type = el@type
+  for (el in list(...)) {
+    if (el@type != "ANN") {
+
+      newData[[counter]] <- el@.Data
+
     }
+    newObs[[counter]] <- el@obsDescr
     counter <- counter + 1
   }
 
