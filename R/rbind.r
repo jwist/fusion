@@ -6,6 +6,7 @@
 #' @export rbind.dataElement
 #' @export
 #' @importFrom methods hasArg
+#' @importFrom crayon %+%
 
 rbind.dataElement <- function(...){
   newData <- list()
@@ -14,15 +15,15 @@ rbind.dataElement <- function(...){
   counter <- 1
   for (el in list(...)) {
     if (is(el)[1] != "dataElement"){
-      warning(paste("fusion: ", el, " is not a dataElement and is ignored"))
+      stop(crayon::red("fusion::rbind >> Some are not dataElements"))
     } else {
       if (el@type != type & type != "init") {
-        stop("fusion: all elements must be of same type")
+        stop(crayon::red("fusion::rbind >> All elements must be of same type"))
       } else  {
 
         if (el@type != "ANN") {
           if (el@method != method & method != "init") {
-            stop("fusion: all elements must be of same method")
+            stop(crayon::red("fusion::rbind >> All elements must be of same method"))
           } else {
             newData[[counter]] <- el@.Data
             newObs[[counter]] <- el@obsDescr
