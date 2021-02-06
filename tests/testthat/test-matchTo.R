@@ -98,3 +98,25 @@ test_that("matching with annotations", {
   expect_equal(getID(mDa), c(1:10))
 })
 
+
+test_that("matching errors", {
+  x = matrix(rep(c(1:10), 10), 10, 10)
+  param = data.frame(sampleID = seq(1, 10),
+                     sampleType = rep("sample", 10),
+                     testAnn = LETTERS[1:10])
+  da = new("dataElement", x,
+           varName = as.character(seq(1, 10)),
+           type = "NMR",
+           method = "1D",
+           obsDescr = list(param))
+
+  param = data.frame(sampleID = seq(10, 1),
+                     sampleType = rep("sample", 10),
+                     testAnn = LETTERS[10:1])
+  ann = new("dataElement",
+            type = "ANN",
+            obsDescr = list(param))
+
+  expect_error(matchTo(ann, da@.Data), "*class*")
+})
+
