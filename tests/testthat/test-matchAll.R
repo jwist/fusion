@@ -39,6 +39,11 @@ test_that("matching two, same dimension", {
   fi <- seq(1, 10) < 7
   fDb <- filterWith(da, fi)
   fDb@type = "MS"
+
+  da = new("dataElement",
+           type = "ANN",
+           obsDescr = list(param))
+
   fi <- seq(1, 10) < 7 & seq(1, 10) > 3
   fDc <- filterWith(da, fi)
   fDc@type = "ANN"
@@ -47,7 +52,6 @@ test_that("matching two, same dimension", {
   expect_equal(mDa[[1]]@type, "ANN")
   expect_equal(mDa[[2]]@type, "NMR")
   expect_equal(mDa[[3]]@type, "MS")
-
 })
 
 

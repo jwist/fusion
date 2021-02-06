@@ -21,24 +21,34 @@ setClass("dataElement",
                    type = NA_character_),
          validity = function(object) {
            if (is.na(object@type)) {
-             stop("a type must be given")
+             stop(crayon::red("fusion:ClassDataElement >>
+a type must be given"))
            }
            if (!object@type %in% c("NMR", "MS", "T-MS", "ANN", "IVDR", "LIPO")) {
-             stop("unsupported type")
+             stop(crayon::red("fusion:ClassDataElement >>
+unsupported type"))
            }
            if (object@type == "NMR" & is.na(object@method)) {
-             stop("fusion: NMR dataElement must contain a method Use meltdown()
-                  to check for valid types")
+             stop(crayon::red("fusion:ClassDataElement >>
+fusion: NMR dataElement must contain a method Use meltdown()
+to check for valid types"))
            }
            if (object@type == "MS" & is.na(object@method)) {
-             stop("fusion: MS dataElement must contain a method Use meltdown()
-                  to check for valid types")
+             stop(crayon::red("fusion:ClassDataElement >>
+fusion: MS dataElement must contain a method Use meltdown()
+to check for valid types"))
+           }
+           if (object@type == "ANN" & any(!is.na(object@method),
+               !is.na(object@varName), !is.na(object@.Data))) {
+             stop(crayon::red("fusion:ClassDataElement >>
+fusion: ANN dataElement must not contain a method, a varName or .Data"))
            }
            if (!is.list(object@obsDescr)){
-             stop("fusion: obsDescr must be of type list")
+             stop(crayon::red("fusion:ClassDataElement >>
+fusion: obsDescr must be of type list"))
            }
-           ann <- object@obsDescr[[1]]
-           if ("sampleID" %in% names(ann)) {
+           meta <- object@obsDescr[[1]]
+           if ("sampleID" %in% names(meta)) {
              if (object@type != "ANN") {
                fi <- getType(object) == "sample"
                ids <- getID(object)[fi]
@@ -46,20 +56,21 @@ setClass("dataElement",
                ids <- getID(object)
              }
              if (sum(duplicated(ids)) > 0) {
-               stop("the sampleID (fpr samples) are not unique, run
-                   'duplicated(sampleID)' to find dups or
-                   make.unique(x, '_') to solve the issue")
+               stop(crayon::red("fusion:ClassDataElement >>
+the sampleID (fpr samples) are not unique"))
              }
            } else {
-             stop("the metadata must contain a column: sampleID")
+             stop(crayon::red("fusion:ClassDataElement >>
+the metadata must contain a column: sampleID"))
            }
            if (object@type != "ANN") {
-             if ("sampleType" %in% names(ann)) {
-               cat(crayon::green(names(table(ann$sampleType))) %+%
+             if ("sampleType" %in% names(meta)) {
+               cat(crayon::green(names(table(meta$sampleType))) %+%
                      crayon::green(": ") %+%
-                     crayon::green(table(ann$sampleType)), fill = 2)
+                     crayon::green(table(meta$sampleType)), fill = 2)
              } else {
-               stop("the metadata must contain a column: sampleType")
+               stop(crayon::red("fusion:ClassDataElement >>
+the metadata must contain a column: sampleType"))
              }
            }
            TRUE

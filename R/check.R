@@ -24,23 +24,24 @@ setMethod("check",
           c(da = "dataElement"),
           function(da, using = "sampleID") {
             if (da@type == "ANN") {
-              if (is.null(da@.Data)) {
-                stop("dataElement of type ANN cannot contain data")
-              }
               if (!using %in% names(da@obsDescr[[1]])) {
-                stop("obsDescr MUST contain a field with unique ID")
+                stop(crayon::red("fusion::check >>
+obsDescr MUST contain a field with unique ID"))
               }
             } else {
               if (!"sampleID" %in% names(da@obsDescr[[1]])) {
-                stop("obsDescr MUST contain a field 'sampleID'")
+                stop(crayon::red("fusion::check >>
+obsDescr MUST contain a field 'sampleID'"))
               }
               if (length(da@varName) != ncol(da@.Data)) {
-                stop("the length of varName vector does't
-              match the number of columns of the data matrix")
+                stop(crayon::red("fusion::check >>
+the length of varName vector does't
+match the number of columns of the data matrix"))
               }
               if (length(da@obsDescr[[1]]$sampleID) != nrow(da@.Data)) {
-                stop("the length of sampleID vector does't
-              match the number of rows of the data matrix")
+                stop(crayon::red("fusion::check >>
+the length of sampleID vector does't
+match the number of rows of the data matrix"))
               }
             }
             return(TRUE)

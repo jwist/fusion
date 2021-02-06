@@ -26,9 +26,9 @@ rbind.dataElement <- function(...){
             stop(crayon::red("fusion::rbind >> All elements must be of same method"))
           } else {
             newData[[counter]] <- el@.Data
-            newObs[[counter]] <- el@obsDescr
           }
         }
+        newObs[[counter]] <- el@obsDescr
         method = el@method
       }
       type = el@type
