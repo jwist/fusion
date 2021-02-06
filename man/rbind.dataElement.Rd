@@ -2,7 +2,7 @@
 % Please edit documentation in R/rbind.r
 \name{rbind.dataElement}
 \alias{rbind.dataElement}
-\title{print information for dataElement objects}
+\title{rbind dataElements}
 \usage{
 \method{rbind}{dataElement}(...)
 }
@@ -13,5 +13,5 @@
 the information about dataElement
 }
 \description{
-print information for dataElement objects
+rbind dataElements
 }

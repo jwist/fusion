@@ -1,4 +1,4 @@
-#' rbind dataElements
+#' cbind dataElements
 #'
 #' @param ... a list of dataElements
 #' @return the information about dataElement
@@ -7,7 +7,7 @@
 #' @export
 #' @importFrom methods hasArg
 
-rbind.dataElement <- function(...){
+cbind.dataElement <- function(...){
   newData <- list()
   newObs <- list()
   type <- method <- "init"
@@ -36,23 +36,19 @@ rbind.dataElement <- function(...){
   }
 
   obsDescr <- list()
-  for (obs in 1:length(el@obsDescr)) {
-    newDescr <- do.call("rbind", do.call("rbind", newObs)[,obs])
-    newDescr$sampleID <- make.unique(newDescr$sampleID, sep = "#")
-    obsDescr[[obs]] <- newDescr
-  }
+  newDescr <- do.call("c", newObs)
 
   if (el@type != "ANN") {
-    .Data <- do.call("rbind", newData)
+    .Data <- do.call("cbind", newData)
     newElement <- new("dataElement",
                       .Data = .Data,
-                      obsDescr = obsDescr,
+                      obsDescr = newDescr,
                       varName = el@varName,
                       type = type,
                       method = method)
   } else {
     newElement <- new("dataElement",
-                      obsDescr = obsDescr,
+                      obsDescr = newDescr,
                       type = type,)
   }
 
