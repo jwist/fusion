@@ -36,7 +36,7 @@ test_that("matching two, same dimension", {
   expect_equal(mDa, mDd)
   expect_equal(mDa, mDe)
   expect_equal(mDa, mDf)
-
+  IDs <- getID(fDc)
   test <- all(sapply(list(mDa[[1]], mDa[[2]], mDa[[3]]),
                      function(x) identical(getID(x), IDs)))
   expect_true(test)
