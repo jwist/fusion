@@ -20,15 +20,16 @@ rProfileTxt <- "
   }
 }"
 
-configurePath <- function() {
-  sink(file = rEnvironPath, append = TRUE)
-  cat(paste0("ONEDRIVE=", ONEDRIVE, "\n"))
-  cat(paste0("DATASETS=", DATASETS, "\n"))
-  sink()
-}
+# configurePath <- function() {
+#   rEnvironPath <- ONEDRIVE <- DATASETS <- NULL
+#   sink(file = rEnvironPath, append = TRUE)
+#   cat(paste0("ONEDRIVE=", ONEDRIVE, "\n"))
+#   cat(paste0("DATASETS=", DATASETS, "\n"))
+#   sink()
+# }
 
-setPath <- function(folder, environ = rEnvironPath) {
-  if(file.exists(rEnvironPath)) {
+setPath <- function(folder, environ = file.path(Sys.getenv("HOME"), ".Renviron")) {
+  if(file.exists(environ)) {
     cat(paste0("The path to your home folder is: ", Sys.getenv("HOME"), "\n"))
     cat(paste0("The path to your .Renviron file is: ", environ, "\n"))
     question <- paste0("What is the path to your ", folder, " folder/file?\n")
@@ -53,7 +54,7 @@ modifyPath <- function(folder, oldPath) {
          cat("Nothing done.\n"))
 }
 
-updateProfile <- function() {
+updateProfile <- function(rProfilePath) {
   sink(file = rProfilePath, append = TRUE)
   cat("\n", rProfileTxt, "\n")
   sink()
@@ -80,6 +81,7 @@ parseFileFor = function(path, pattern) {
 #'
 #' @return void
 #' @export
+#' @importFrom utils menu
 startup <- function() {
   homePath <- Sys.getenv("HOME")
   rProfilePath <- file.path(homePath, ".Rprofile")
@@ -102,7 +104,7 @@ startup <- function() {
       cat("Please check that the paths are corrects using:\n")
       cat(crayon::white$italic("Sys.getenv()['ONEDRIVE']\n"))
       cat(crayon::white$italic("Sys.getenv()['DATASETS']\n"))
-      cat("If necessary, correct the paths in:\n", blue(rEnvironPath), "\n")
+      cat("If necessary, correct the paths in:\n", crayon::blue(rEnvironPath), "\n")
       modifyPath("OneDrive", Sys.getenv()['ONEDRIVE'])
       modifyPath("datasets", Sys.getenv()['DATASETS'])
     }
@@ -128,11 +130,11 @@ startup <- function() {
                        crayon::red("no")),
                      title = "Would you allwow me to update your .Rprofile file?\n")
       switch(choice,
-             updateProfile(),
+             updateProfile(rProfilePath),
              cat("Nothing done.\n"))
     }
   } else {
-    updateProfile()
+    updateProfile(rProfilePath)
   }
 }
 

@@ -26,14 +26,13 @@ parseTargetedMS <- function(file, method, options) {
       cat(crayon::red$bold(ncol(da)) %+%
             crayon::red$bold("/60 metabolite imported for that method.\n"))
     }
-    #p <- getType(da, using = "sampleType")
   }
 
   return(da)
 }
 
 parseMS_AA <- function(file, options) {
-  rawData <- read.csv2(file,
+  rawData <- read.table(file,
                        sep = ",",
                        header = TRUE,
                        dec = ".",
@@ -255,8 +254,7 @@ parseMS_Tr <- function(file, options) {
                         sep = "\t",
                         dec = ".")
 
-  cat(paste("fusion: using import method for",
-            method, "\n"))
+  cat(paste("fusion: using import method for tryptophan\n"))
   cat(paste("fusion:", nrow(rawData),
             "line(s) read\n"))
 

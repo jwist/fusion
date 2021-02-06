@@ -9,10 +9,8 @@
 
 print.dataElement <- function(x, ...){
   txt <- "blabla"
-  if (hasArg(translate)) {
-    if (list(...)$translate == TRUE){
+  if (hasArg("translate")) {
       cat("bla")
-    }
   }
   return(txt)
 }

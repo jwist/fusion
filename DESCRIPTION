@@ -18,9 +18,11 @@ Suggests:
     covr
 URL: https://github.com/jwist/fusion
 BugReports: https://github.com/jwist/fusion/issues
+Config/testthat/edition: 3
 Imports: 
     methods,
     readxl,
     crayon
 Depends: 
     R (>= 2.10)
+
