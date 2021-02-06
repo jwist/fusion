@@ -36,27 +36,29 @@ All must have identical IDs"))
 
   newData <- list()
   newObs <- list()
+  newVars <- list()
   counter <- 1
 
   for (el in list(...)) {
     if (el@type != "ANN") {
 
       newData[[counter]] <- el@.Data
-
+      newVars[[counter]] <- el@varName
     }
     newObs[[counter]] <- el@obsDescr
     counter <- counter + 1
   }
 
-  obsDescr <- list()
+  # obsDescr <- list()
   newDescr <- do.call("c", newObs)
+  varName <- do.call("c", newVars)
 
   if (el@type != "ANN") {
     .Data <- do.call("cbind", newData)
     newElement <- new("dataElement",
                       .Data = .Data,
                       obsDescr = newDescr,
-                      varName = el@varName,
+                      varName = varName,
                       type = type,
                       method = method)
   } else {

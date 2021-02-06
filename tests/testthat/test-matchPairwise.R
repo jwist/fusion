@@ -17,9 +17,20 @@ test_that("matching two, same dimension", {
   mDa <- matchPairwise(oDa, da)
 
   expect_equal(mDa[[1]], mDa[[2]])
+  expect_equal(nrow(mDa[[1]]), 10)
+  expect_equal(ncol(mDa[[1]]), 10)
+  expect_equal(mDa[[1]][1,1], 1)
+  expect_equal(mDa[[1]]@obsDescr[[1]]$testAnn[1], "A")
+
+  mDa <- matchPairwise(da, oDa)
+  expect_equal(mDa[[1]], mDa[[2]])
+  expect_equal(nrow(mDa[[1]]), 10)
+  expect_equal(ncol(mDa[[1]]), 10)
+  expect_equal(mDa[[1]][1,1], 10)
+  expect_equal(mDa[[1]]@obsDescr[[1]]$testAnn[1], "J")
 })
 
-test_that("matching two, different dimension, bigger first", {
+test_that("matching two, different dimension", {
   x = matrix(rep(c(1:10), 10), 10, 10)
   param = data.frame(sampleID = seq(1, 10),
                      sampleType = rep("sample", 10),
@@ -34,6 +45,19 @@ test_that("matching two, different dimension, bigger first", {
   fDa <- filterWith(da, fi)
   mDa <- matchPairwise(fDa, da)
   expect_identical(mDa[[1]], mDa[[2]])
+  expect_equal(nrow(mDa[[1]]), 9)
+  expect_equal(ncol(mDa[[1]]), 10)
+  expect_equal(mDa[[1]][1,1], 2)
+  expect_equal(mDa[[1]]@obsDescr[[1]]$testAnn[1], "B")
+
+  mDb <- matchPairwise(da, fDa)
+  expect_equal(mDb[[1]], mDb[[2]])
+  expect_equal(nrow(mDb[[1]]), 9)
+  expect_equal(ncol(mDb[[1]]), 10)
+  expect_equal(mDb[[1]][1,1], 2)
+  expect_equal(mDb[[1]]@obsDescr[[1]]$testAnn[1], "B")
+
+  expect_equal(mDa, mDb)
 })
 
 test_that("matching two, different dimension", {
@@ -50,8 +74,20 @@ test_that("matching two, different dimension", {
   fi <- seq(1, 10) > 3
   fDa <- filterWith(da, fi)
   mDa <- matchPairwise(da, fDa)
+  expect_identical(mDa[[1]], mDa[[2]])
+  expect_equal(nrow(mDa[[1]]), 7)
+  expect_equal(ncol(mDa[[1]]), 10)
+  expect_equal(mDa[[1]][1,1], 4)
+  expect_equal(mDa[[1]]@obsDescr[[1]]$testAnn[1], "D")
 
-  expect_equal(mDa[[1]], mDa[[2]])
+  mDb <- matchPairwise(da, fDa)
+  expect_equal(mDb[[1]], mDb[[2]])
+  expect_equal(nrow(mDb[[1]]), 7)
+  expect_equal(ncol(mDb[[1]]), 10)
+  expect_equal(mDb[[1]][1,1], 4)
+  expect_equal(mDb[[1]]@obsDescr[[1]]$testAnn[1], "D")
+
+  expect_equal(mDa, mDb)
 })
 
 test_that("matching two, different dimension, bigger first", {
@@ -72,6 +108,19 @@ test_that("matching two, different dimension, bigger first", {
 
   mDa <- matchPairwise(fDb, fDa)
   expect_equal(mDa[[1]], mDa[[2]])
+  expect_equal(nrow(mDa[[1]]), 3)
+  expect_equal(ncol(mDa[[1]]), 10)
+  expect_equal(mDa[[1]][1,1], 4)
+  expect_equal(mDa[[1]]@obsDescr[[1]]$testAnn[1], "D")
+
+  mDb <- matchPairwise(fDa, fDb)
+  expect_equal(mDb[[1]], mDb[[2]])
+  expect_equal(nrow(mDb[[1]]), 3)
+  expect_equal(ncol(mDb[[1]]), 10)
+  expect_equal(mDb[[1]][1,1], 4)
+  expect_equal(mDb[[1]]@obsDescr[[1]]$testAnn[1], "D")
+
+  expect_equal(mDa, mDb)
 })
 
 test_that("matching annotations", {

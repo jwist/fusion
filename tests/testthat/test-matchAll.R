@@ -19,7 +19,27 @@ test_that("matching two, same dimension", {
   mDa <- matchAll(list(fDa, fDb, fDc))
   expect_equal(mDa[[1]], mDa[[2]])
   expect_equal(mDa[[2]], mDa[[3]])
-  expect_equal(mDa[[1]], mDa[[3]])
+
+  expect_equal(nrow(mDa[[1]]), 3)
+  expect_equal(ncol(mDa[[1]]), 10)
+  expect_equal(mDa[[1]][1,1], 4)
+  expect_equal(mDa[[1]]@obsDescr[[1]]$testAnn[1], "D")
+
+  mDb <- matchAll(list(fDb, fDa, fDc))
+  mDc <- matchAll(list(fDb, fDc, fDa))
+  mDd <- matchAll(list(fDc, fDb, fDa))
+  mDe <- matchAll(list(fDc, fDa, fDb))
+  mDf <- matchAll(list(fDa, fDc, fDb))
+
+  expect_equal(mDa, mDb)
+  expect_equal(mDa, mDc)
+  expect_equal(mDa, mDd)
+  expect_equal(mDa, mDe)
+  expect_equal(mDa, mDf)
+
+  test <- all(sapply(list(mDa[[1]], mDa[[2]], mDa[[3]]),
+                     function(x) identical(getID(x), IDs)))
+  expect_true(test)
 })
 
 test_that("matching two, same dimension", {
@@ -49,9 +69,25 @@ test_that("matching two, same dimension", {
   fDc@type = "ANN"
 
   mDa <- matchAll(list(fDc, fDa, fDb))
+  IDs <- getID(fDc)
+  test <- all(sapply(list(mDa[[1]], mDa[[2]], mDa[[3]]),
+                     function(x) identical(getID(x), IDs)))
+  expect_true(test)
   expect_equal(mDa[[1]]@type, "ANN")
   expect_equal(mDa[[2]]@type, "NMR")
   expect_equal(mDa[[3]]@type, "MS")
+
+  mDa <- matchAll(list(fDb, fDc, fDa))
+  IDs <- getID(fDc)
+  test <- all(sapply(list(mDa[[1]], mDa[[2]], mDa[[3]]),
+                     function(x) identical(getID(x), IDs)))
+  expect_true(test)
+
+  mDa <- matchAll(list(fDa, fDc, fDb))
+  IDs <- getID(fDc)
+  test <- all(sapply(list(mDa[[1]], mDa[[2]], mDa[[3]]),
+                     function(x) identical(getID(x), IDs)))
+  expect_true(test)
 })
 
 

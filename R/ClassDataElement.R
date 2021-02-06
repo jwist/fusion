@@ -73,7 +73,7 @@ the metadata must contain a column: sampleID"))
 the metadata must contain a column: sampleType"))
              }
            }
-           TRUE
+           return(check(object))
          },
          contains = list("matrix")
 )
