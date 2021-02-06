@@ -7,12 +7,8 @@
 #' @slot method a name for the method used to acquire the data
 #' @slot type type can be NMR, MS-U, MS-T, ANN
 #' @return a dataElement
-#' @examples
-#'
-#' x = matrix(sample(100), 10, 10)
-#' a = new("dataElement", x, varName = as.character(rep(1, 10)), type = "MS", method = "tryptophan")
-#'
 #' @export
+#' @importFrom crayon %+%
 setClass("dataElement",
          representation = representation(.Data = "matrix",
                       varName = "character",
