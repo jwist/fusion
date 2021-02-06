@@ -5,7 +5,7 @@
 .lintr
 .Rbuildignore
 .travis.yml
-codecov.yml
+.codecov.yml
 *.Rproj
 
 
