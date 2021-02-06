@@ -32,7 +32,7 @@ setMethod("orderWith",
               }
               return(da)
             } else {
-              stop("dimension mismatch")
+              stop(crayon::red("fusion::filterWith >> length(fi) != nrow(da)"))
             }
           }
 )
