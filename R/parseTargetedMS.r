@@ -49,26 +49,33 @@ parseMS_AA <- function(file, options) {
             "empty line(s) removed\n"))
 
   # checking columns
-  columnsList <- c("Analyte Name",
-                   "Data Set",
-                   "SampleType",
-                   "m/z expected",
-                   "_m/z [ppm]",
-                   "RT [min]",
-                   "mSigma",
-                   "Area of PI",
-                   "A/H",
-                   "Review State",
-                   "Quantity [units]",
-                   "Quantity exp [units]",
-                   "Accuracy [%]",
-                   "Area [IS]",
-                   "Recovery [%]")
+  if ("columnsList" %in% names(options)) {
+    columnsList <- options$`columnsList`
+  } else {
+    columnsList <- c("Analyte Name",
+                     "Data Set",
+                     "SampleType",
+                     "m/z expected",
+                     "_m/z [ppm]",
+                     "RT [min]",
+                     "mSigma",
+                     "Area of PI",
+                     "A/H",
+                     "Review State",
+                     "Quantity [units]",
+                     "Quantity exp [units]",
+                     "Accuracy [%]",
+                     "Area [IS]",
+                     "Recovery [%]")
+  }
+  print(columnsList)
   missingCol <- setdiff(columnsList, names(rawData))
   if (length(missingCol) > 0) {
     cat(crayon::red("fusion: column ") %+%
           crayon::red$bold(missingCol) %+%
           crayon::red("is missing from file."), fill = TRUE)
+  } else {
+    cat("fusion: no missing columns")
   }
 
   remainingCol <- setdiff(names(rawData), columnsList)
@@ -76,6 +83,8 @@ parseMS_AA <- function(file, options) {
     cat(crayon::blue("fusion: column ") %+%
           crayon::blue$bold(remainingCol) %+%
           crayon::blue(" is ignored for that method."), fill = TRUE)
+  } else {
+    cat("fusion: no remaining columns")
   }
 
   if ("columnsList" %in% names(options)) {
@@ -116,6 +125,8 @@ parseMS_AA <- function(file, options) {
           crayon::red$bold(toCheck), fill = TRUE)
     #rawData <- rawData[-toCheck, ]
     rawData <- rawData[-c(toCheck, toRemove), ]
+  } else {
+    cat("fusion: no duplicated lines were found")
   }
 
   compoundList <- unique(rawData$`Analyte Name`)
