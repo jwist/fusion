@@ -5,6 +5,7 @@ test_that("parse targeted MS works ... Tr", {
   tryptophan <- tMsTestsets[[1]]
   da <- parseTargetedMS(file, method = "tryptophan", options = list(codePosition = 8))
 
+  expect_equal(unname(da[1,1]), 1.026494, tolerance = 1e-6)
   expect_equal(getID(da), getID(tryptophan))
   expect_equal(getType(da), getType(tryptophan))
   expect_equal(da@.Data, tryptophan@.Data)
@@ -30,6 +31,7 @@ test_that("parse targeted MS works ... AA", {
                         method = "aminoAcids",
                         options = list(codePosition = 8))
   aminoAcids <- tMsTestsets[[2]]
+  expect_equal(unname(da[1,1]), 3.68)
   expect_equal(getID(da), getID(aminoAcids))
   expect_equal(getType(da), getType(aminoAcids))
   expect_equal(da@.Data, aminoAcids@.Data)
