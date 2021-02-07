@@ -57,7 +57,7 @@ fusion: obsDescr must be of type list"))
              }
              if (sum(duplicated(ids)) > 0) {
                stop(crayon::red("fusion:ClassDataElement >>
-the sampleID (fpr samples) are not unique"))
+the sampleID (for type samples) are not unique"))
              }
            } else {
              stop(crayon::red("fusion:ClassDataElement >>

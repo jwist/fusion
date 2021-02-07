@@ -228,9 +228,11 @@ parseMS_AA <- function(file, options) {
       fi <- grepl("PLA", descr$sampleID)
       descr$sampleType[fi] <- "ltr"
 
-      descr$sampleType <- factor(descr$sampleType)
-      levels(descr$sampleType) <- c("blank", "standard", "ltr", "qc", "sample")
-      descr$sampleType <- as.character(descr$sampleType)
+      descr$sampleType[descr$sampleType == "Blank"] <- "blank"
+      descr$sampleType[descr$sampleType == "Calibration Sample"] <- "standard"
+      descr$sampleType[descr$sampleType == "Qualitycontrol Sample"] <- "qc"
+      descr$sampleType[descr$sampleType == "Sample"] <- "sample"
+
       obsDescr <- c(obsDescr, list(descr))
     }
   }
@@ -378,9 +380,9 @@ parseMS_Tr <- function(file, options) {
     fi <- grepl("PLA", descr$sampleID)
     descr$sampleType[fi] <- "ltr"
 
-    descr$sampleType <- as.factor(descr$sampleType)
-    levels(descr$sampleType) <- c("sample", "blanck", "ltr", "qc", "standard")
-    descr$sampleType <- as.character(descr$sampleType)
+    descr$sampleType <- tolower(descr$sampleType)
+    descr$sampleType[descr$sampleType == "Analyte"] <- "sample"
+
     obsDescr <- c(obsDescr, list(descr))
   }
 
