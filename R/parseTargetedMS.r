@@ -230,6 +230,7 @@ parseMS_AA <- function(file, options) {
 
       descr$sampleType <- factor(descr$sampleType)
       levels(descr$sampleType) <- c("blank", "standard", "ltr", "qc", "sample")
+      descr$sampleType <- as.character(descr$sampleType)
       obsDescr <- c(obsDescr, list(descr))
     }
   }
@@ -249,6 +250,7 @@ parseMS_AA <- function(file, options) {
 }
 
 parseMS_Tr <- function(file, options) {
+  mv <- NULL
   data(mv, envir = environment())
   rawData <- read.table(file,
                         fill = TRUE,
