@@ -1,14 +1,19 @@
 test_that("parse targeted MS works ... Tr", {
   file = file.path("plate_1_export.txt")
-  print(paste("PATHPATH", getwd()))
-  print(paste("PATHPATH", file))
+  # print(paste("PATHPATH", getwd()))
+  # print(paste("PATHPATH", file))
   da <- parseTargetedMS(file, method = "tryptophan", options = list(codePosition = 8))
-  expect_snapshot(getID(da))
-  expect_snapshot(da@.Data)
-  expect_snapshot(da@varName)
-  expect_snapshot(da@obsDescr)
+  # print(da@obsDescr[[1]]$sampleType)
+  data(tryptophan)
+  # print(tryptophan@obsDescr[[1]]$sampleType)
+  expect_equal(getID(da), getID(tryptophan))
+  # expect_equal(getType(da), getType(tryptophan))
+  expect_equal(da@.Data, tryptophan@.Data)
+  expect_equal(da@obsDescr[[1]][,-5], tryptophan@obsDescr[[1]][,-5])
+  expect_equal(da@varName, tryptophan@varName)
+  expect_equal(da@type, tryptophan@type)
+  expect_equal(da@method, tryptophan@method)
 })
-
 
 test_that("parse targeted MS works ... AA", {
   file <- file.path("cambridge_aa_PAI-03_plate_4.csv")
@@ -23,11 +28,14 @@ test_that("parse targeted MS works ... AA", {
 
   da <- parseTargetedMS(file,
                         method = "aminoAcids",
-                        options = list(codePosition = 8,
-                                       columnsList = columnsList))
-  expect_snapshot(getID(da))
-  expect_snapshot(da@.Data)
-  expect_snapshot(da@varName)
-  expect_snapshot(da@obsDescr)
+                        options = list(codePosition = 8))
+  daRef <- data(aminoAcids)
+  expect_equal(getID(da), getID(aminoAcids))
+  #expect_equal(getType(da), getType(aminoAcids))
+  expect_equal(da@.Data, aminoAcids@.Data)
+  expect_equal(da@obsDescr[[1]][-5], aminoAcids@obsDescr[[1]][,-5])
+  expect_equal(da@varName, aminoAcids@varName)
+  expect_equal(da@type, aminoAcids@type)
+  expect_equal(da@method, aminoAcids@method)
 })
 

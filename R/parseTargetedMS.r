@@ -10,6 +10,7 @@
 #' @return a dataElement
 #'
 #' @export
+#' @importFrom utils data read.table
 parseTargetedMS <- function(file, method, options) {
   cat(paste("fusion: using import method for",
             method, "\n"))
@@ -248,7 +249,7 @@ parseMS_AA <- function(file, options) {
 }
 
 parseMS_Tr <- function(file, options) {
-  data(mv)
+  data(mv, envir = environment())
   rawData <- read.table(file,
                         fill = TRUE,
                         sep = "\t",
@@ -373,8 +374,9 @@ parseMS_Tr <- function(file, options) {
     fi <- grepl("PLA", descr$sampleID)
     descr$sampleType[fi] <- "ltr"
 
-    descr$sampleType <- factor(descr$sampleType)
+    descr$sampleType <- as.factor(descr$sampleType)
     levels(descr$sampleType) <- c("sample", "blanck", "ltr", "qc", "standard")
+    descr$sampleType <- as.character(descr$sampleType)
     obsDescr <- c(obsDescr, list(descr))
   }
 
