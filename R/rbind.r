@@ -39,7 +39,7 @@ rbind.dataElement <- function(...){
   obsDescr <- list()
   for (obs in 1:length(el@obsDescr)) {
     newDescr <- do.call("rbind", do.call("rbind", newObs)[,obs])
-    newDescr$sampleID <- make.unique(newDescr$sampleID, sep = "#")
+    newDescr$sampleID <- makeUnique(newDescr$sampleID, sep = "#")
     obsDescr[[obs]] <- newDescr
   }
 

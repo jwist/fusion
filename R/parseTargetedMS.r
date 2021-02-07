@@ -253,8 +253,6 @@ parseMS_AA <- function(file, options) {
 
 parseMS_Tr <- function(file, options) {
   mw <- tMsTestsets$mw
-  print(mw$mw)
-  print(mw$analyte)
   rawData <- read.table(file,
                         fill = TRUE,
                         sep = "\t",
