@@ -250,8 +250,9 @@ parseMS_AA <- function(file, options) {
 }
 
 parseMS_Tr <- function(file, options) {
-  mv <- NULL
-  data(mv, envir = environment())
+  mw <- tMsTestsets$mw
+  print(mw$mw)
+  print(mw$analyte)
   rawData <- read.table(file,
                         fill = TRUE,
                         sep = "\t",
@@ -351,9 +352,10 @@ parseMS_Tr <- function(file, options) {
     dataCol <- data.frame(chk[[2]]$`Conc.`)
     names(dataCol) <- cpndName
     if (identical(chk[[2]]$Name, sampleNames)){
-      if (cpndName %in% mv$analyte) {
-        idx <- which(mv$analyte == cpndName)
-        dataMatrix <- c(dataMatrix, dataCol / mv$mw[idx])
+      print(cpndName)
+      if (cpndName %in% mw$analyte) {
+        idx <- which(mw$analyte == cpndName)
+        dataMatrix <- c(dataMatrix, dataCol / mw$mw[idx])
       } else {
         dataMatrix <- c(dataMatrix, dataCol)
         warning(paste("fusion:", cpndName, "molecular weight not found,

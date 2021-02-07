@@ -1,6 +1,6 @@
 #' function to make ID unique
 #'
-#' @param da sampleID
+#' @param sampleID sampleID
 #' @param sep the separator
 #' @return unique ID
 #'

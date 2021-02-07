@@ -1,13 +1,10 @@
-citHeader("To cite fusion in publications use:")
 
-bibEntry(
-  entry    = "Article",
-  title    = "Fusion: an integrated dataset library for metabolic profiling",
-  author   = "Wist, Julien",
-  journal  = ,
-  year     = "2020",
-  volume   = ,
-  number   = ,
-  pages    = ,
-  url      = ,
-)
+year <- sub("-.*", "", meta$Date)
+note <- sprintf("R package version %s", meta$Version)
+
+bibentry(bibtype = "Manual",
+         title = "{Fusion}: an integrated dataset library for metabolic profiling",
+         author = c(person("Julien", "Wist")),
+         year = year,
+         note = note,
+         url = "https://github.com/jwist/fusion")

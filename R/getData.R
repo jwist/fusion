@@ -1,7 +1,7 @@
 #' S4 method get data from dataElement
 #'
 #' @param da dataElement
-#' @param using either sample, ltr, pqc, qc, standard, or blank or a combination of
+#' @param type either sample, ltr, pqc, qc, standard, or blank or a combination of
 #' @param replicates either last, rm or all
 #' @return a dataElement with selected types
 #'
@@ -14,7 +14,8 @@ setGeneric("getData", function(da, type = c("sample"), replicates = "takeLast") 
 #' S4 method get data from dataElement
 #'
 #' @param da dataElement
-#' @param using either sample, qc, standard, or blank or a combination thereof
+#' @param type either sample, qc, standard, or blank or a combination thereof
+#' @param replicates either last, rm or all
 #' @return a dataElement with selected types
 #'
 #' @export getData

@@ -9,7 +9,9 @@
 \arguments{
 \item{da}{dataElement}
 
-\item{using}{either sample, qc, standard, or blank or a combination thereof}
+\item{type}{either sample, qc, standard, or blank or a combination thereof}
+
+\item{replicates}{either last, rm or all}
 }
 \value{
 a dataElement with selected types

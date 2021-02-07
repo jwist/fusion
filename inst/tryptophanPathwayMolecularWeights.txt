@@ -1,0 +1,34 @@
+analyte	mw
+3-hydroxyanthranilic acid	153.1
+3-hydroxykynurenine	224.2
+5-hydroxyindole acetic acid	191.2
+SIL 3-hydroxyanthranilic acid D3	153.14
+SIL 3-hydroxykynurenine 13C215N	227.19
+SIL 5-hydroxyindole acetic acid D5	196.21
+SIL citrulline D7	175.19
+SIL dopamine D4	153.18
+SIL indole-3-acetic acid D4	179.2
+SIL kynurenic acid D5	194.2
+SIL kynurenine D4	212.24
+SIL neopterin 13C5	258.2
+SIL nicotinamide adenine ribonucleotide D3	663.43
+SIL nicotinic acid D4	127.13
+SIL picolinic acid D3	123.11
+SIL quinolinic acid D3	170.14
+SIL tryptophan D5	209.26
+SIL xanthurenic acid D4	209.19
+beta-nicotinamide mononucleotide	334.22
+citrulline	175.2
+dopamine	153.18
+indole-3-acetic acid	175.18
+kynurenic acid	189.2
+kynurenine	208.2
+neopterin	253.2
+nicotinamide adenine dinucleotide	663.4
+nicotinamide adenine ribonucleotide	255.2
+nicotinic acid	123.1
+picolinic acid	123.1
+quinolinic acid	167.1
+serotonin	176.2
+tryptophan	204.2
+xanthurenic acid	205.2

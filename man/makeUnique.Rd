@@ -7,9 +7,9 @@
 makeUnique(sampleID, sep = "#")
 }
 \arguments{
-\item{sep}{the separator}
+\item{sampleID}{sampleID}
 
-\item{da}{sampleID}
+\item{sep}{the separator}
 }
 \value{
 unique ID
