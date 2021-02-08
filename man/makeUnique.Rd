@@ -4,12 +4,18 @@
 \alias{makeUnique}
 \title{function to make ID unique}
 \usage{
-makeUnique(sampleID, sep = "#")
+makeUnique(sampleID, sep = "#", fromFirst = FALSE, reverse = FALSE, first = 1)
 }
 \arguments{
 \item{sampleID}{sampleID}
 
 \item{sep}{the separator}
+
+\item{fromFirst}{if true all replicate including the first will be marked}
+
+\item{reverse}{if true start marking from last}
+
+\item{first}{a number to start numbering from}
 }
 \value{
 unique ID

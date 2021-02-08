@@ -352,7 +352,6 @@ parseMS_Tr <- function(file, options) {
     dataCol <- data.frame(chk[[2]]$`Conc.`)
     names(dataCol) <- cpndName
     if (identical(chk[[2]]$Name, sampleNames)){
-      print(cpndName)
       if (cpndName %in% mw$analyte) {
         idx <- which(mw$analyte == cpndName)
         dataMatrix <- c(dataMatrix, dataCol / mw$mw[idx])
