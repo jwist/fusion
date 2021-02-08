@@ -4,12 +4,14 @@
 \alias{getID}
 \title{S4 method get sampleID from dataElement}
 \usage{
-getID(da, using = "sampleID")
+getID(da, using = "sampleID", re.rm = FALSE)
 }
 \arguments{
 \item{da}{dataElement}
 
 \item{using}{the name of the column used as UID}
+
+\item{re.rm}{if TRUE replicate markers are removed}
 }
 \value{
 the sampleID
