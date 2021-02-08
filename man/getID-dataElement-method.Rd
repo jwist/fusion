@@ -4,12 +4,16 @@
 \alias{getID,dataElement-method}
 \title{S4 method get sampleID from dataElement}
 \usage{
-\S4method{getID}{dataElement}(da, using = "sampleID", re.rm = FALSE)
+\S4method{getID}{dataElement}(da, using = "sampleID", re.rm = FALSE, type = "all")
 }
 \arguments{
 \item{da}{dataElement}
 
 \item{using}{the name of the column used as UID}
+
+\item{re.rm}{if TRUE replicate markers are removed}
+
+\item{type}{type of sample to get the ids (either all or a valid type}
 }
 \value{
 the sampleID

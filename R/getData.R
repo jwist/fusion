@@ -20,9 +20,7 @@ setGeneric("getData", function(da, type = c("sample"), replicates = "takeLast") 
 #'
 #' @export getData
 setMethod("getData",
-          c(da = "dataElement",
-            type = c(),
-            replicates = "character"),
+          c(da = "dataElement"),
           function(da,
                    type = c("sample"),
                    replicates = "last") {
