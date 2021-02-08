@@ -378,7 +378,7 @@ parseMS_Tr <- function(file, options) {
     descr$sampleType[fi] <- "ltr"
 
     descr$sampleType <- tolower(descr$sampleType)
-    descr$sampleType[descr$sampleType == "Analyte"] <- "sample"
+    descr$sampleType[descr$sampleType == "analyte"] <- "sample"
 
     obsDescr <- c(obsDescr, list(descr))
   }
