@@ -196,7 +196,8 @@ parseMS_AA <- function(file, options) {
                     "Aminoadipic acid",
                     "Ethanolamine",
                     "Tryptophan",
-                    "Carnosine")
+                    "Carnosine",
+                    "Cystathionine")
   for (chk in newData) {
     cpndName <- chk[[1]]
     # removing unwanted variables
@@ -332,6 +333,7 @@ parseMS_Tr <- function(file, options) {
   # flipping the matrix
   dataMatrix <- list()
   obsDescr <- list()
+  varName <- list()
   sampleNames <- newData[[1]][[2]]$Name
 
   extractCode <- function(path) {
@@ -347,8 +349,15 @@ parseMS_Tr <- function(file, options) {
   )
   uid <- makeUnique(code, "#")
 
+  cleaningList <- c("dopamine",
+                    "citrulline")
   for (chk in newData) {
     cpndName <- chk[[1]]
+    if (tolower(cpndName) %in% tolower(cleaningList)) {
+      cat(crayon::blue("fusion: ") %+%
+            crayon::blue$bold(cpndName) %+%
+            crayon::blue(" ignored for that method."), fill = TRUE)
+    } else {
     dataCol <- data.frame(chk[[2]]$`Conc.`)
     names(dataCol) <- cpndName
     if (identical(chk[[2]]$Name, sampleNames)){
@@ -360,6 +369,7 @@ parseMS_Tr <- function(file, options) {
         warning(paste("fusion:", cpndName, "molecular weight not found,
                     concentration is not exported correctly\n"))
       }
+      varName <- c(varName, cpndName)
     } else {
       stop ("fusion: row order alterated, matrix cannot be flipped")
     }
@@ -381,6 +391,7 @@ parseMS_Tr <- function(file, options) {
     descr$sampleType[descr$sampleType == "analyte"] <- "sample"
 
     obsDescr <- c(obsDescr, list(descr))
+    }
   }
 
   .Data <- do.call("cbind", dataMatrix)
@@ -389,11 +400,10 @@ parseMS_Tr <- function(file, options) {
     cat(paste("fusion: matrix flipped\n"))
   }
 
-  varName <- unlist(lapply(newData, function(x) x[[1]]))
   da <- new("dataElement",
             .Data = .Data,
             obsDescr = obsDescr,
-            varName = varName,
+            varName = unlist(varName),
             type = "T-MS",
             method = "tryptophane")
   return(da)
