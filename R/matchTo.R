@@ -20,10 +20,9 @@ matchTo <- function(daA, daB, using = "sampleID") {
       daA <- filterWith(daA, !fn)
     }
 
-    ldiff <-  sum(fn)
-    if (ldiff != 0) {
+    if (sum(fn) != 0) {
       warning(paste("fusion::matchTo >>",
-                    ldiff ,
+                    sum(fn) ,
                    "sample(s) dropped"))
     }
 

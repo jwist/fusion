@@ -24,7 +24,7 @@ setClass("dataElement",
              stop(crayon::red("fusion:ClassDataElement >>
 a type must be given"))
            }
-           supportedTypes <- c("NMR", "MS", "T-MS", "ANN", "IVDR", "LIPO", "NMR-INT")
+           supportedTypes <- c("NMR", "MS", "T-MS", "ANN", "IVDR", "LIPO", "NMR-INT", "MRMS")
            if (!object@type %in% supportedTypes) {
              cat("supportedTypes:", supportedTypes, "\n")
              stop(crayon::red("fusion:ClassDataElement >>

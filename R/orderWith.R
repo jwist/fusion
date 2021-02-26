@@ -28,7 +28,7 @@ setMethod("orderWith",
                 da <- setDataPart(da, getDataPart(da)[idx,, drop = FALSE])
               }
               for (i in 1:length(da@obsDescr)) {
-                da@obsDescr[[i]] <- da@obsDescr[[1]][idx,, drop = FALSE]
+                da@obsDescr[[i]] <- da@obsDescr[[i]][idx,, drop = FALSE]
               }
               return(da)
             } else {

@@ -24,7 +24,7 @@ setMethod("filterWith",
                 da <- setDataPart(da, getDataPart(da)[fi,, drop = FALSE])
               }
               for (i in 1:length(da@obsDescr)) {
-                da@obsDescr[[i]] <- da@obsDescr[[1]][fi,, drop = FALSE]
+                da@obsDescr[[i]] <- da@obsDescr[[i]][fi,, drop = FALSE]
               }
               return(da)
             } else {
