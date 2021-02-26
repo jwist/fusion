@@ -1,5 +1,8 @@
 
-
+#' help remembering
+#'
+#' @return a cheat list
+#' @export
 meltdown <- function() {
   melt <- list(
     "NMR" = list(method = c("noesy",
