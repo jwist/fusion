@@ -52,3 +52,9 @@ test_that("parse targeted MS works ... AA", {
   expect_equal(da@method, aminoAcids@method)
 })
 
+test_that("test AA with whole export", {
+  file=file.path(Sys.getenv()['DATASETS'], "covid19", "bioGune", "datasets", "PAI-05_Biogune_COVID_AA-Day2_Plate4and5.txt")
+  da <- parseTargetedMS(file,
+                        method = "aminoAcids",
+                        options = list(codePosition = 8))
+})

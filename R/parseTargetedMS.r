@@ -33,16 +33,28 @@ parseTargetedMS <- function(file, method, options) {
 }
 
 parseMS_AA <- function(file, options) {
-  rawData <- read.table(file,
-                       sep = ",",
-                       header = TRUE,
-                       dec = ".",
-                       check.names = FALSE)
+  rawData <- read.delim2(file = file,
+                         fileEncoding = "latin1",
+                         header = TRUE,
+                         check.names = FALSE)
+  # con <- file(description = file, "r")
+  # data <- list()
+  # while ( TRUE ) {
+  #   line <-  readLines(con, n = 1)
+  #   if ( length(line) == 0 ) {
+  #     break
+  #   }
+  #   data <- c(data, strsplit(iconv(line, to = "UTF-8", sub = ""), "\t"))
+  # }
+  # close(con = con)
+  # headers <- data[[1]]
+  # rawData <- data.frame(do.call("rbind", data[2:length(data)]))
+  # colnames(rawData) <- headers
 
   cat(paste("fusion:", nrow(rawData),
             "line(s) read\n"))
 
-  fi <- !is.na(rawData$`Analyte Name`)
+  fi <- !is.na(rawData$AnalyteName)
   rawData <- rawData[fi,]
   cat(paste("fusion:",
             sum(!fi),
@@ -52,28 +64,30 @@ parseMS_AA <- function(file, options) {
   if ("columnsList" %in% names(options)) {
     columnsList <- options$`columnsList`
   } else {
-    columnsList <- c("Analyte Name",
-                     "Data Set",
+    columnsList <- c("AnalyteName",
+                     "AnalysisName",
                      "SampleType",
-                     "m/z expected",
-                     "_m/z [ppm]",
-                     "RT [min]",
+                     "expected m/z",
+                     "m/z",
+                     "Retention Time[min]",
+                     "Expected Retention Time[min]",
                      "mSigma",
-                     "Area of PI",
-                     "A/H",
-                     "Review State",
-                     "Quantity [units]",
-                     "Quantity exp [units]",
-                     "Accuracy [%]",
-                     "Area [IS]",
-                     "Recovery [%]")
+                     "Area",
+                     "Height",
+                     "Visited",
+                     "Quantity",
+                     "Unit of Quantity",
+                     "Expected Quantity",
+                     "Residuals[%]",
+                     "R2",
+                     "Accuracy/Recovery[%]",
+                     "Internal Standard(ISTD)")
   }
-  print(columnsList)
   missingCol <- setdiff(columnsList, names(rawData))
   if (length(missingCol) > 0) {
     cat(crayon::red("fusion: column ") %+%
           crayon::red$bold(missingCol) %+%
-          crayon::red("is missing from file."), fill = TRUE)
+          crayon::red(" is missing from file."), fill = TRUE)
   } else {
     cat("fusion: no missing columns")
   }
@@ -92,50 +106,51 @@ parseMS_AA <- function(file, options) {
     rawData <- rawData[,idx]
   }
 
-  # cleaning duplicated lines
-  idx <- which(duplicated(rawData[,1:2]))
-  if (length(idx) > 0) {
-    d <- c()
-    toRemove <- c()
-    toCheck <- c()
-    for (i in idx) {
-      c <- which(rawData[,2] == rawData[i,2] & rawData[,1] == rawData[i,1])
-      if (!identical(c, d)) {
-        idxx <- which(rawData$`Quantity [units]`[c] != "n.c.")
-        if (length(idxx) == 1) {
-          if (length(c) > 1) {
-            toRemove <- c(toRemove, c[-idxx])
-          }
-        } else if (length(idxx) == 0) {
-          toRemove <- c(toRemove, c[-1])
-        } else {
-          toCheck <- c(toCheck, c[-1])
-        }
-      }
-      d <- c
-    }
+  # # cleaning duplicated lines
+  # idx <- which(duplicated(rawData[,1:2]))
+  # if (length(idx) > 0) {
+  #   d <- c()
+  #   toRemove <- c()
+  #   toCheck <- c()
+  #   for (i in idx) {
+  #     c <- which(rawData[,2] == rawData[i,2] & rawData[,1] == rawData[i,1])
+  #     if (!identical(c, d)) {
+  #       idxx <- which(rawData$`Quantity w/ unit`[c] != "n.c.")
+  #       if (length(idxx) == 1) {
+  #         if (length(c) > 1) {
+  #           toRemove <- c(toRemove, c[-idxx])
+  #         }
+  #       } else if (length(idxx) == 0) {
+  #         toRemove <- c(toRemove, c[-1])
+  #       } else {
+  #         toCheck <- c(toCheck, c[-1])
+  #       }
+  #     }
+  #     d <- c
+  #   }
+  #
+  #   cat(crayon::red("fusion: duplicated line ") %+%
+  #         crayon::red$bold(toRemove) %+%
+  #         crayon::red(" was ignored."), fill = TRUE)
+  #   #rawData <- rawData[-toRemove, ]
+  #
+  #   cat(crayon::red$bold("fusion: cannot remove duplicated line. Please do it manually!\n"))
+  #   cat(crayon::red("please check line ") %+%
+  #         crayon::red$bold(toCheck), fill = TRUE)
+  #   #rawData <- rawData[-toCheck, ]
+  #   rawData <- rawData[-c(toCheck, toRemove), ]
+  # } else {
+  #   cat("fusion: no duplicated lines were found")
+  # }
 
-    cat(crayon::red("fusion: duplicated line ") %+%
-          crayon::red$bold(toRemove) %+%
-          crayon::red(" was ignored."), fill = TRUE)
-    #rawData <- rawData[-toRemove, ]
-
-    cat(crayon::red$bold("fusion: cannot remove duplicated line. Please do it manually!\n"))
-    cat(crayon::red("please check line ") %+%
-          crayon::red$bold(toCheck), fill = TRUE)
-    #rawData <- rawData[-toCheck, ]
-    rawData <- rawData[-c(toCheck, toRemove), ]
-  } else {
-    cat("fusion: no duplicated lines were found")
-  }
-
-  compoundList <- unique(rawData$`Analyte Name`)
+  compoundList <- unique(rawData$AnalyteName)
   numberOfCompounds <- length(compoundList)
   cat(paste("fusion:",
             numberOfCompounds,
             "compound(s) found\n"))
 
-  dataChkLength <- table(factor(rawData$`Analyte Name`))
+  dataChkLength <- table(factor(rawData$AnalyteName))
+  #print(dataChkLength)
   if (!length(unique(dataChkLength)) == 1) {
     stop("fusion: data chunks have different size, check your data")
   } else {
