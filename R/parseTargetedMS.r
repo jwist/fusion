@@ -33,11 +33,26 @@ parseTargetedMS <- function(file, method, options) {
 }
 
 parseMS_AA <- function(file, options) {
-  rawData <- read.table(file,
-                       sep = ",",
-                       header = TRUE,
-                       dec = ".",
-                       check.names = FALSE)
+  # rawData <- read.table(file,
+  #                      sep = ",",
+  #                      header = TRUE,
+  #                      dec = ".",
+  #                      check.names = FALSE)
+  con <- file(description = file, "r")
+  data <- list()
+  while ( TRUE ) {
+    line <-  readLines(con, n = 1)
+    if ( length(line) == 0 ) {
+      break
+    }
+    data <- c(data, strsplit(iconv(line, to = "UTF-8", sub = ""), "\t"))
+  }
+
+  headers <- data[[1]]
+  rawData <- data.frame(do.call("rbind", data[2:length(data)]))
+
+
+  colnames(rawData) <- headers
 
   cat(paste("fusion:", nrow(rawData),
             "line(s) read\n"))
@@ -52,28 +67,31 @@ parseMS_AA <- function(file, options) {
   if ("columnsList" %in% names(options)) {
     columnsList <- options$`columnsList`
   } else {
-    columnsList <- c("Analyte Name",
-                     "Data Set",
+    columnsList <- c("AnalyteName",
+                     "AnalysisName",
                      "SampleType",
-                     "m/z expected",
-                     "_m/z [ppm]",
-                     "RT [min]",
+                     "expected m/z",
+                     "m/z",
+                     "Retention Time[min]",
+                     "Expected Retention Time[min]",
                      "mSigma",
-                     "Area of PI",
-                     "A/H",
-                     "Review State",
-                     "Quantity [units]",
-                     "Quantity exp [units]",
-                     "Accuracy [%]",
-                     "Area [IS]",
-                     "Recovery [%]")
+                     "Area",
+                     "Height",
+                     "Visited",
+                     "Quantity",
+                     "Unit of Quantity",
+                     "Expected Quantity",
+                     "Residuals[%]",
+                     "R2",
+                     "Accuracy/Recovery[%]",
+                     "Internal Standard(ISTD)")
   }
   print(columnsList)
   missingCol <- setdiff(columnsList, names(rawData))
   if (length(missingCol) > 0) {
     cat(crayon::red("fusion: column ") %+%
           crayon::red$bold(missingCol) %+%
-          crayon::red("is missing from file."), fill = TRUE)
+          crayon::red(" is missing from file."), fill = TRUE)
   } else {
     cat("fusion: no missing columns")
   }
@@ -136,6 +154,7 @@ parseMS_AA <- function(file, options) {
             "compound(s) found\n"))
 
   dataChkLength <- table(factor(rawData$`Analyte Name`))
+  print(dataChkLength)
   if (!length(unique(dataChkLength)) == 1) {
     stop("fusion: data chunks have different size, check your data")
   } else {
