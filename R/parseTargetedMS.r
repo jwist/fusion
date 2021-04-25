@@ -33,28 +33,6 @@ parseTargetedMS <- function(file, method, options) {
 }
 
 parseMS_AA <- function(file, options) {
-<<<<<<< HEAD
-  # rawData <- read.table(file,
-  #                      sep = ",",
-  #                      header = TRUE,
-  #                      dec = ".",
-  #                      check.names = FALSE)
-  con <- file(description = file, "r")
-  data <- list()
-  while ( TRUE ) {
-    line <-  readLines(con, n = 1)
-    if ( length(line) == 0 ) {
-      break
-    }
-    data <- c(data, strsplit(iconv(line, to = "UTF-8", sub = ""), "\t"))
-  }
-
-  headers <- data[[1]]
-  rawData <- data.frame(do.call("rbind", data[2:length(data)]))
-
-
-  colnames(rawData) <- headers
-=======
   rawData <- read.delim2(file = file,
                          fileEncoding = "latin1",
                          header = TRUE,
@@ -72,7 +50,6 @@ parseMS_AA <- function(file, options) {
   # headers <- data[[1]]
   # rawData <- data.frame(do.call("rbind", data[2:length(data)]))
   # colnames(rawData) <- headers
->>>>>>> e261fe1fd3bf1d503c52f9c46a52ad24cdef0a14
 
   cat(paste("fusion:", nrow(rawData),
             "line(s) read\n"))
@@ -172,13 +149,10 @@ parseMS_AA <- function(file, options) {
             numberOfCompounds,
             "compound(s) found\n"))
 
-<<<<<<< HEAD
-  dataChkLength <- table(factor(rawData$`Analyte Name`))
-  print(dataChkLength)
-=======
+
   dataChkLength <- table(factor(rawData$AnalyteName))
   #print(dataChkLength)
->>>>>>> e261fe1fd3bf1d503c52f9c46a52ad24cdef0a14
+
   if (!length(unique(dataChkLength)) == 1) {
     stop("fusion: data chunks have different size, check your data")
   } else {
