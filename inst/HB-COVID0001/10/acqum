@@ -1,0 +1,41 @@
+##TITLE= Parameter file, TopSpin 3.5 pl 4
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmrsu
+$$ 2020-07-01 16:40:46.908 +0200  nmrsu@rmn601
+$$ C:/IVDrData/data/COVID19_Serum-20200701/nmr/HB-COVID0001/10/acqum
+$$ process C:\Bruker\TopSpin3.5pl4\prog\mod\xwish3.exe
+##$COMMENT= <>
+##$ECF= 1
+##$ECHOLST= (0..15)
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+##$ECOLLST= (0..15)
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+##$FLIPA= 0
+##$FOV1= 0
+##$FOV2= 0
+##$FOV3= 0
+##$FRARE= 1
+##$HEADER= <>
+##$INSTIT= <>
+##$METHOD= <>
+##$NECHOES= 1
+##$NPROJEC= 32
+##$NSLICES= 32
+##$PATPOS= 0
+##$RUNEXAM= -1
+##$SDIST= 1
+##$SOANGLE= 0
+##$SORIENT= 0
+##$SOT= <>
+##$SPOS= 0
+##$SPOSDIR= <>
+##$STHICK= 3
+##$T2DIST= 30
+##$TINV= 50
+##$TREC= 2700
+##$TREP= 3000
+##$TSCAN= 50000
+##END=

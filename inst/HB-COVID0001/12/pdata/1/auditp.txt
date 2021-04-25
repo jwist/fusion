@@ -1,0 +1,40 @@
+##TITLE= Audit trail, TopSpin 3.5 pl 4
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmrsu
+$$ C:/IVDrData/data/COVID19_Serum-20200701/nmr/HB-COVID0001/12/pdata/1/auditp.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2020-07-01 17:05:34.471 +0200>,<nmrsu>,<rmn601>,<go4>,<TopSpin 3.5.4>,
+      <created by zg
+	started at 2020-07-01 17:01:14.917 +0200,
+	POWCHK enabled, PULCHK disabled,
+       configuration hash MD5:
+       CD DF F1 A9 4C 34 BF A4 A7 AC 2F 58 F1 48 82 AF
+       data hash MD5: 8K * 40
+       36 FA EA 5F D5 B8 90 D3 73 C0 14 B2 31 2E A5 6B>)
+(   2,<2020-07-01 17:05:34.580 +0200>,<nmrsu>,<rmn601>,<audit>,<TopSpin 3.5.4>,
+      <user comment:
+       ICON-NMR User ID: SamTrack
+       data hash MD5: 8K * 40
+       36 FA EA 5F D5 B8 90 D3 73 C0 14 B2 31 2E A5 6B>)
+(   3,<2020-07-01 17:05:35.329 +0200>,<nmrsu>,<rmn601>,<proc2d>,<TopSpin 3.5.4>,
+      <Start of raw data processing
+       xfb same F2: SI = 16K BC_mod = 4 WDW = 3 SSB = 0 FT_mod = 6 PKNL = 1 F1: SI = 256 WDW = 3 SSB = 0 FT_mod = 6 FCOR = 0.5 PH_mod = 2
+       data hash MD5: 16K * 256
+       E2 D8 67 00 E1 D6 43 B5 FB 92 E4 1E 0C E4 B6 78>)
+(   4,<2020-07-01 17:05:35.594 +0200>,<nmrsu>,<rmn601>,<proc2d>,<TopSpin 3.5.4>,
+      <tilt
+       data hash MD5: 16K * 256
+       00 2C C0 F2 73 B7 FA 46 BD 52 26 6E DE CB 29 03>)
+(   5,<2020-07-01 17:05:35.984 +0200>,<nmrsu>,<rmn601>,<proc2d>,<TopSpin 3.5.4>,
+      <symj
+       data hash MD5: 16K * 256
+       39 00 4C 8D 18 72 7D 09 C3 31 3F DE 24 FC 92 B0>)
+(   6,<2020-07-01 17:05:36.265 +0200>,<nmrsu>,<rmn601>,<proc2d>,<TopSpin 3.5.4>,
+      <abs2 F2: ABSG = 5 ABSF1 = 13.05111 ABSF2 = -3.6526
+       data hash MD5: 16K * 256
+       61 29 49 86 F2 D8 F7 B8 30 DE CD 61 CC 7B 02 FE>)
+##END=
+
+$$ hash MD5
+$$ E9 8E 93 95 4A 27 F9 D9 DC 55 83 42 5B 59 53 0D

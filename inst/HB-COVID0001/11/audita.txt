@@ -1,0 +1,23 @@
+##TITLE= Audit trail, TopSpin 3.5 pl 4
+##JCAMPDX= 5.01
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmrsu
+$$ C:/IVDrData/data/COVID19_Serum-20200701/nmr/HB-COVID0001/11/audita.txt
+##AUDIT TRAIL=  $$ (NUMBER, WHEN, WHO, WHERE, PROCESS, VERSION, WHAT)
+(   1,<2020-07-01 17:00:46.197 +0200>,<nmrsu>,<rmn601>,<go4>,<TopSpin 3.5.4>,
+      <created by zg
+	started at 2020-07-01 16:56:20.979 +0200,
+	POWCHK enabled, PULCHK disabled,
+       configuration hash MD5:
+       CD DF F1 A9 4C 34 BF A4 A7 AC 2F 58 F1 48 82 AF
+       data hash MD5: 72K
+       71 05 18 E5 51 14 21 F0 64 CE 37 48 7C D6 CA C3>)
+(   2,<2020-07-01 17:00:46.306 +0200>,<nmrsu>,<rmn601>,<audit>,<TopSpin 3.5.4>,
+      <user comment:
+       ICON-NMR User ID: SamTrack
+       data hash MD5: 72K
+       71 05 18 E5 51 14 21 F0 64 CE 37 48 7C D6 CA C3>)
+##END=
+
+$$ hash MD5
+$$ E6 DB 47 30 29 76 D1 21 B6 AE 7C E6 6D 8D 76 14

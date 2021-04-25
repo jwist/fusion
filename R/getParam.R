@@ -1,20 +1,17 @@
-#' extract a parameter from a bruker folder
+#' get a parameter from procs or acqus dataframe
 #'
-#' @param filePath - the path to the expName folder
-#' @param paramName - the name of the parameter to read
+#' @param df - the name of the dataframe
+#' @param paramName - the name of the parameter to get
 #' @return the parameter
 #'
 #' @export
-
-getParam <- function(filePath, paramName){
-  buf <- file(filePath, open = "r")
-  txt <- readLines(buf, n = -1, warn = FALSE)
-  close(buf)
-  parameter <- strsplit(txt[grep(paramName, txt)], "=")[[1]][2]
-  if (grepl("<", parameter) == TRUE) {
-    return(gsub(" ", "", (gsub("<", "", (gsub(">", "", parameter))))))
+getParam <- function(df, paramName){
+  idx <- df$name == paramName
+  if (grepl("^[-+]?[0-9]*[\\.]?[0-9]*", df$value[idx]) == TRUE) {
+    return(as.numeric(df$value[idx]))
   } else {
-    return(as.numeric(parameter))
+    return(df$value[idx])
   }
 }
+
 

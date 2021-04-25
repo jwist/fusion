@@ -2,22 +2,22 @@
 % Please edit documentation in R/getParam.R
 \name{getParam}
 \alias{getParam}
-\title{extract a parameter from a bruker folder}
+\title{get a parameter from procs or acqus dataframe}
 \usage{
-getParam(filePath, paramName)
+getParam(df, paramName)
 }
 \arguments{
-\item{filePath}{\itemize{
-\item the path to the expName folder
+\item{df}{\itemize{
+\item the name of the dataframe
 }}
 
 \item{paramName}{\itemize{
-\item the name of the parameter to read
+\item the name of the parameter to get
 }}
 }
 \value{
 the parameter
 }
 \description{
-extract a parameter from a bruker folder
+get a parameter from procs or acqus dataframe
 }

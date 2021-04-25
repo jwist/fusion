@@ -1,0 +1,11 @@
+##TITLE= Parameter file, TopSpin 3.5 pl 4
+##JCAMPDX= 5.0
+##DATATYPE= Parameter Values
+##NPOINTS= 1	$$ modification sequence number
+##ORIGIN= Bruker BioSpin GmbH
+##OWNER= nmrsu
+$$ 2020-07-02 19:43:12.004 +0200  nmrsu@rmn601
+$$ C:/IVDrData/data/COVID19_Serum-20200701/nmr/HB-COVID0001/10/pdata/1/assocs
+$$ process C:\Bruker\TopSpin3.5pl4\prog\mod\dataserver.exe
+##$MULTDISP= <C:\IVDrData\data\COVID19_Serum-20200701\nmr\HB-COVID0002\10\pdata\1|C:\IVDrData\data\COVID19_Serum-20200701\nmr\HB-COVID0004\10\pdata\1|C:\IVDrData\data\COVID19_Serum-20200701\nmr\HB-COVID0006\10\pdata\1|C:\IVDrData\data\COVID19_Serum-20200701\nmr\HB-COVID0008\10\pdata\1>
+##END=
