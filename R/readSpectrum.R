@@ -23,6 +23,7 @@ readSpectrum <- function(path, procs = TRUE, options = list()){
       sw <- readParam(pathProcs, "SW_p") / sf
       inc <- sw/(length(y) - 1)
       offset <- readParam(pathProcs, "OFFSET")
+      x <- seq(from = offset, to = (offset - sw), by = -inc)
     } else {
       if(getParam(procs, "BYTORDP") == 0) {
         endian <- "little"
@@ -38,18 +39,17 @@ readSpectrum <- function(path, procs = TRUE, options = list()){
       offset <- getParam(procs, "OFFSET")
       x <- seq(from = offset, to = (offset - sw), by = -inc)
     }
-    
     if ("ereticFactor" %in% names(options)) {
       spec <- data.frame(x, y / options$ereticFactor)
-      cat(crayon::blue("fusion::readSpectrum >> spectra corrected for eretic (", 
-                       options$ereticFactor, 
-                       ")\n")) 
+      cat(crayon::blue("fusion::readSpectrum >> spectra corrected for eretic (",
+                       options$ereticFactor,
+                       ")\n"))
     } else {
       spec <- data.frame(x, y)
     }
     return(spec)
   } else {
-    cat(crayon::yellow("fusion::readSpectrum >> data not found for", path, "\n")) 
+    cat(crayon::yellow("fusion::readSpectrum >> data not found for", path, "\n"))
   }
 }
 

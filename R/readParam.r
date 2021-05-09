@@ -9,7 +9,7 @@ readParam <- function(path, paramName){
   buf <- file(path, open = "r")
   txt <- readLines(buf, n = -1, warn = FALSE)
   close(buf)
-  parameter <- strsplit(txt[grep(paramName, txt)], "=")[[1]][2]
+  parameter <- strsplit(txt[grep(paste0(paramName, "="), txt)], "=")[[1]][2]
   if (grepl("<", parameter) == TRUE) {
     return(gsub(" ", "", (gsub("<", "", (gsub(">", "", parameter))))))
   } else {

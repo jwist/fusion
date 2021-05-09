@@ -4,16 +4,16 @@
 #' @return a list with all read elements
 #'
 #' @export
-readExperiment <- function(path, acqus = FALSE, procs = FALSE) {
-  if (is.logical(acqus) && isTRUE(acqus)) {
+readExperiment <- function(path, acqus = TRUE, procs = TRUE) {
+  if (is.logical(acqus) && isFALSE(acqus)) {
     acqus <- readParams(file.path(path, "acqus"))
   }
-  if (is.logical(procs) && isTRUE(procs)) {
+  if (is.logical(procs) && isFALSE(procs)) {
     procs <- readParams(file.path(path, "pdata", "1", "procs"))
   }
   title <- getTitle(file.path(path, "pdata", "1", "title"))
 
-  spec <- readSpectrum(path, procs = TRUE)
+  spec <- readSpectrum(path, procs)
   if (!is.null(spec)) {
     res <- list(path = path,
                 spec = spec,
@@ -43,8 +43,6 @@ readExperiment <- function(path, acqus = FALSE, procs = FALSE) {
     }
     return(res)
   }
-
-
 }
 
 # path <- "/home/rstudio/data/imports/data2/BIOGUNE/HB-COVID0001/11"
