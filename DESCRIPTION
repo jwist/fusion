@@ -22,7 +22,7 @@ Config/testthat/edition: 3
 Imports: 
     methods,
     readxl,
-    crayon
+    crayon,
+    xml2
 Depends: 
     R (>= 2.10)
-
