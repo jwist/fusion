@@ -4,7 +4,6 @@ readParams <- function(filePath) {
   buf <- file(filePath, open = "r")
   txt <- readLines(buf, n = -1, warn = FALSE)
   close(buf)
-  
   content <- list()
   counter <- 1
   while (counter < length(txt)) {
