@@ -24,9 +24,9 @@ readFolder <- function(path) {
   return(list(noesy = noesy, cpmg = cpmg))
 }
 
-getValue <- function(list, name) {
-  which(d$noesy[[1]]$procs$name == "WDW")
-}
+# getValue <- function(list, name) {
+#   which(d$noesy[[1]]$procs$name == "WDW")
+# }
 
 # X <- t(sapply(d$noesy, function(x) x$spec$y))
 # eretic <- sapply(d$noesy, function(x) getEreticFactor(x$eretic))
