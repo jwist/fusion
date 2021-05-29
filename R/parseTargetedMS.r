@@ -172,6 +172,14 @@ parseMS_AA <- function(file, options) {
     }
   }
 
+  fi <- is.na(tmp)
+  newData <- newData[!fi,]
+
+  for (i in 1:length(obsDescr)) {
+    obsDescr[[i]] <- obsDescr[[i]][!fi,]
+    obsDescr[[i]]$sampleType <- tmp[!fi]
+  }
+
   da <- new("dataElement",
             .Data = newData,
             obsDescr = obsDescr,
