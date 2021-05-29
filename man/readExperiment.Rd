@@ -4,7 +4,7 @@
 \alias{readExperiment}
 \title{read experiment from a bruker folder (expno)}
 \usage{
-readExperiment(path)
+readExperiment(path, acqus = TRUE, procs = TRUE)
 }
 \arguments{
 \item{path}{\itemize{
