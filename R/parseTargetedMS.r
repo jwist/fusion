@@ -37,19 +37,6 @@ parseMS_AA <- function(file, options) {
                          fileEncoding = "latin1",
                          header = TRUE,
                          check.names = FALSE)
-  # con <- file(description = file, "r")
-  # data <- list()
-  # while ( TRUE ) {
-  #   line <-  readLines(con, n = 1)
-  #   if ( length(line) == 0 ) {
-  #     break
-  #   }
-  #   data <- c(data, strsplit(iconv(line, to = "UTF-8", sub = ""), "\t"))
-  # }
-  # close(con = con)
-  # headers <- data[[1]]
-  # rawData <- data.frame(do.call("rbind", data[2:length(data)]))
-  # colnames(rawData) <- headers
 
   cat(paste("fusion:", nrow(rawData),
             "line(s) read\n"))
@@ -92,56 +79,10 @@ parseMS_AA <- function(file, options) {
     cat("fusion: no missing columns")
   }
 
-  remainingCol <- setdiff(names(rawData), columnsList)
-  if (length(remainingCol) > 0) {
-    cat(crayon::blue("fusion: column ") %+%
-          crayon::blue$bold(remainingCol) %+%
-          crayon::blue(" is ignored for that method."), fill = TRUE)
-  } else {
-    cat("fusion: no remaining columns")
-  }
-
   if ("columnsList" %in% names(options)) {
     idx <- match(options$columnsList, names(rawData))
     rawData <- rawData[,idx]
   }
-
-  # # cleaning duplicated lines
-  # idx <- which(duplicated(rawData[,1:2]))
-  # if (length(idx) > 0) {
-  #   d <- c()
-  #   toRemove <- c()
-  #   toCheck <- c()
-  #   for (i in idx) {
-  #     c <- which(rawData[,2] == rawData[i,2] & rawData[,1] == rawData[i,1])
-  #     if (!identical(c, d)) {
-  #       idxx <- which(rawData$`Quantity w/ unit`[c] != "n.c.")
-  #       if (length(idxx) == 1) {
-  #         if (length(c) > 1) {
-  #           toRemove <- c(toRemove, c[-idxx])
-  #         }
-  #       } else if (length(idxx) == 0) {
-  #         toRemove <- c(toRemove, c[-1])
-  #       } else {
-  #         toCheck <- c(toCheck, c[-1])
-  #       }
-  #     }
-  #     d <- c
-  #   }
-  #
-  #   cat(crayon::red("fusion: duplicated line ") %+%
-  #         crayon::red$bold(toRemove) %+%
-  #         crayon::red(" was ignored."), fill = TRUE)
-  #   #rawData <- rawData[-toRemove, ]
-  #
-  #   cat(crayon::red$bold("fusion: cannot remove duplicated line. Please do it manually!\n"))
-  #   cat(crayon::red("please check line ") %+%
-  #         crayon::red$bold(toCheck), fill = TRUE)
-  #   #rawData <- rawData[-toCheck, ]
-  #   rawData <- rawData[-c(toCheck, toRemove), ]
-  # } else {
-  #   cat("fusion: no duplicated lines were found")
-  # }
 
   compoundList <- unique(rawData$AnalyteName)
   numberOfCompounds <- length(compoundList)
@@ -149,65 +90,16 @@ parseMS_AA <- function(file, options) {
             numberOfCompounds,
             "compound(s) found\n"))
 
-
-  dataChkLength <- table(factor(rawData$AnalyteName))
-  #print(dataChkLength)
-
-  if (!length(unique(dataChkLength)) == 1) {
-    stop("fusion: data chunks have different size, check your data")
-  } else {
-    cat(paste("fusion:",
-              dataChkLength[1],
-              "is data chunk size\n"))
-  }
-
-  dataLength <- nrow(rawData)
+  sampleList <- unique(rawData$AnalysisName)
   cat(paste("fusion:",
-            dataLength,
-            "line(s) of data found\n"))
-  spliter <- c(1, cumsum(dataChkLength) + 1)[1:numberOfCompounds]
+            length(sampleList),
+            "compound(s) found\n"))
 
-  newData <- list()
-  for (i in 1:numberOfCompounds){
+  # removing unnecessary columns
+  fi <- names(rawData) %in% columnsList
+  rawData <- rawData[, fi]
 
-    rge <- spliter[i]:(spliter[i] + dataChkLength[i] - 1)
-    cpndName <- rawData[spliter[i], 1]
-    dataChk <- rawData[rge,]
-
-    newData[[i]] <- list(cpndName = cpndName, #reading data chunk
-                         dataChk = dataChk)
-  }
-
-  newDataLength <- sum(unlist(lapply(newData, function(x) dim(x$dataChk)[1])))
-  if (dataLength != newDataLength) {
-    stop(paste("fusion: the expected length of the data is:",
-               dataLength,
-               "/ received:",
-               newDataLength))
-  } else {
-    cat(paste("fusion:", numberOfCompounds, "compounds imported\n"))
-  }
-
-  # flipping the matrix
-  dataMatrix <- list()
-  obsDescr <- list()
-  varName <- list()
-  sampleNames <- newData[[1]][[2]]$`Data Set`
-
-  extractCode <- function(path) {
-    l <- strsplit(path, "_")
-    len <- length(l[[1]])
-    code <- l[[1]][options$codePosition]
-    return(code)
-  }
-  code <- do.call("rbind",
-                  lapply(sampleNames,
-                         function(x) extractCode(x)
-                  )
-  )
-  uid <- makeUnique(code, "#")
-
-  #4-hydroyproline, 5-oxoproline, Aminoadipic acid, Ethanolamine and Tryptophan
+  # removing unnecessary compounds
   cleaningList <- c("4--hydroxyproline",
                     "5-Oxoproline",
                     "Aminoadipic acid",
@@ -215,55 +107,68 @@ parseMS_AA <- function(file, options) {
                     "Tryptophan",
                     "Carnosine",
                     "Cystathionine")
-  for (chk in newData) {
-    cpndName <- chk[[1]]
-    # removing unwanted variables
-    if (tolower(cpndName) %in% tolower(cleaningList)) {
-      cat(crayon::blue("fusion: ") %+%
-            crayon::blue$bold(cpndName) %+%
-            crayon::blue(" ignored for that method."), fill = TRUE)
-    } else {
-      # multiplication according to sample preparation
-      dataCol <- suppressWarnings(as.numeric(chk[[2]]$`Quantity [units]`) * 2)
-      names(dataCol) <- cpndName
-      if (identical(chk[[2]]$`Data Set`, sampleNames)){
-        dataMatrix <- c(dataMatrix, data.frame(cpndName = dataCol))
-        varName <- c(varName, cpndName)
-      } else {
-        stop ("fusion: row order alterated, matrix cannot be flipped")
-      }
-      fi <- which(names(chk[[2]]) == "Quantity [units]")
-      descr <- data.frame(chk[[2]][, -fi], check.names = FALSE)
 
-      # adding sampleID
-      descr <- cbind(sampleID = uid, descr)
+  fi <- is.na(match(rawData$AnalyteName, cleaningList))
+  rawData <- rawData[fi,]
 
-      # renaming sampleType
-      fi <- which(colnames(descr) == "SampleType")
-      colnames(descr)[fi] <- "sampleType"
+  compoundList <- unique(rawData$AnalyteName)
+  numberOfCompounds <- length(compoundList)
+  cat(paste("fusion:",
+            numberOfCompounds,
+            "compound(s) retained\n"))
 
-      # set LTR to type ltr
-      fi <- grepl("PLA", descr$sampleID)
-      descr$sampleType[fi] <- "ltr"
+  cat(crayon::blue("fusion: ") %+%
+        crayon::blue$bold(cleaningList) %+%
+        crayon::blue(" ignored for that method."), fill = TRUE)
 
-      descr$sampleType[descr$sampleType == "Blank"] <- "blank"
-      descr$sampleType[descr$sampleType == "Calibration Sample"] <- "standard"
-      descr$sampleType[descr$sampleType == "Qualitycontrol Sample"] <- "qc"
-      descr$sampleType[descr$sampleType == "Sample"] <- "sample"
+  # names(rawData) <- cleanNames(names(rawData))
+  # recasting to get data
+  idx <- which(names(rawData) == "Quantity")
+  newData <- t(dcast(rawData[,c(1,2,idx)], ... ~ AnalysisName, value.var = "Quantity"))
+  colnames(newData) <- newData[1,]
+  newData <- newData[-1,]
 
-      obsDescr <- c(obsDescr, list(descr))
-    }
+  # adding sampleID
+  code <- sapply(strsplit(rawData$AnalysisName, "_"), "[", options$codePosition)
+  rawData <- cbind("sampleID" = code, rawData)
+
+  # cleaning sampleType
+  sampleType <- as.factor(rawData$SampleType)
+  levels(sampleType) <- c("blank", "standard", "qc", "sample")
+  rawData$SampleType <- as.character(sampleType)
+
+  fi <- which(colnames(rawData) == "SampleType")
+  colnames(rawData)[fi] <- "sampleType"
+
+  # cleaning LTR
+  fi <- grepl("PLA", rawData$sampleID)
+  rawData$sampleType[fi] <- "ltr"
+
+  # concatenating metadata
+  rowList <- sapply(strsplit(sampleList, "_"), "[", options$codePosition)
+  rowList <- data.frame("sampleID" = makeUnique(rowList))
+  obsDescr <- list()
+  for (i in seq_along(compoundList)) {
+    descr <- rawData[rawData$AnalyteName == compoundList[i],]
+
+    # make sampleID unique and merge
+    descr$sampleID <- makeUnique(descr$sampleID, "#")
+    obsDescr[[i]]  <- merge(rowList,
+                           descr,
+                           all = TRUE)
   }
-  .Data <- do.call("cbind", dataMatrix)
-  if (nrow(.Data) == dataChkLength[1]
-      & ncol(.Data) == numberOfCompounds) {
-    cat(paste("fusion: matrix flipped\n"))
+  sapply(obsDescr, function(x) dim(x))
+
+  # check for empty sampleType in obsDescr
+  idx <- which(sapply(obsDescr, function(x) sum(is.na(x$sampleType))) == 0)[1]
+  for (i in 1:length(obsDescr)) {
+    obsDescr[[i]]$sampleType <-  obsDescr[[idx]]$sampleType
   }
 
   da <- new("dataElement",
-            .Data = .Data,
+            .Data = newData,
             obsDescr = obsDescr,
-            varName = unlist(varName),
+            varName = unlist(colnames(newData)),
             type = "T-MS",
             method = "aminoAcids")
   return(da)
