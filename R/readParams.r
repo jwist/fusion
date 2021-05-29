@@ -41,6 +41,13 @@ readParams <- function(filePath) {
     }
     counter <- counter + 1
   }
+  fi <- sapply(content$value, function(x) {
+    if (identical(x, character(0))) {
+      res <- NA
+    } else {
+      x
+    }
+  })
   return(data.frame(do.call(rbind, content)))
   } else {
     cat(crayon::yellow("fusion::getParams >>", filePath, " file not found\n"))
