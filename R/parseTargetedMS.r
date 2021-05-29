@@ -93,7 +93,7 @@ parseMS_AA <- function(file, options) {
   sampleList <- unique(rawData$AnalysisName)
   cat(paste("fusion:",
             length(sampleList),
-            "compound(s) found\n"))
+            "sample(s) found\n"))
 
   # removing unnecessary columns
   fi <- names(rawData) %in% columnsList
@@ -157,12 +157,19 @@ parseMS_AA <- function(file, options) {
                            descr,
                            all = TRUE)
   }
-  sapply(obsDescr, function(x) dim(x))
+  dimDescr <- dim(obsDescr[[1]])
+
+  if (sum(sapply(obsDescr, function(x) dim(x) != dimDescr)) != 0){
+    cat(crayon::red("fusion: metadata dimension mismatch"))
+  }
 
   # check for empty sampleType in obsDescr
-  idx <- which(sapply(obsDescr, function(x) sum(is.na(x$sampleType))) == 0)[1]
-  for (i in 1:length(obsDescr)) {
-    obsDescr[[i]]$sampleType <-  obsDescr[[idx]]$sampleType
+  tmp <- obsDescr[[1]]$sampleType
+  for (i in 2:length(obsDescr)) {
+    fi <- which(is.na(tmp))
+    if (length(fi > 0)) {
+      tmp[fi] <- obsDescr[[i]]$sampleType[fi]
+    }
   }
 
   da <- new("dataElement",
