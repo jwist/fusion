@@ -128,8 +128,9 @@ parseMS_AA <- function(file, options) {
         fill = TRUE)
   }
   idx <- which(duplicated(rawData[,c(1,2)]))
-  rawData <- rawData[-idx,]
+
   if (length(idx) > 0) {
+    rawData <- rawData[-idx,]
     cat(crayon::white("fusion: " %+%
                       crayon::white(idx) %+%
                       crayon::white(" duplicated line(s) removed")),
@@ -138,8 +139,6 @@ parseMS_AA <- function(file, options) {
 
   # recasting to get data
   idx <- which(tolower(names(rawData)) == "quantity")
-  rawData$fake <- as.character(seq_along(rownames(rawData)))
-
   newData <- tryCatch(dcast(rawData[,c(1,2,idx)],
                    AnalysisName ~ AnalyteName,
                    value.var = "Quantity"),
