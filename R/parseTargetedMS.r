@@ -11,6 +11,8 @@
 #'
 #' @export
 #' @importFrom utils data read.table
+#' @importFrom reshape2 dcast
+#' @importFrom crayon red blue yellow white green
 parseTargetedMS <- function(file, method, options) {
   cat(paste("fusion: using import method for",
             method, "\n"))
@@ -20,13 +22,6 @@ parseTargetedMS <- function(file, method, options) {
   }
   if (method == "aminoAcids") {
     da <- parseMS_AA(file, options)
-
-    if (ncol(da) == 60) {
-      cat(crayon::green$bold("60/60 metabolite imported for that method.\n"))
-    } else {
-      cat(crayon::red$bold(ncol(da)) %+%
-            crayon::red$bold("/60 metabolite imported for that method.\n"))
-    }
   }
 
   return(da)
@@ -122,11 +117,35 @@ parseMS_AA <- function(file, options) {
         crayon::blue(" ignored for that method."), fill = TRUE)
 
   # names(rawData) <- cleanNames(names(rawData))
+
+  # looking for duplicated lines
+  idx <- which(duplicated(rawData[,c(1,2)]) |
+                 duplicated(rawData[,c(1,2)], fromLast = TRUE))
+  if (length(idx) > 0) {
+    cat(crayon::red("fusion: " %+%
+                      crayon::red(idx) %+%
+                      crayon::red(" duplicated line(s) found")),
+        fill = TRUE)
+  }
+  idx <- which(duplicated(rawData[,c(1,2)]))
+  rawData <- rawData[-idx,]
+  if (length(idx) > 0) {
+    cat(crayon::white("fusion: " %+%
+                      crayon::white(idx) %+%
+                      crayon::white(" duplicated line(s) removed")),
+        fill = TRUE)
+  }
+
   # recasting to get data
-  idx <- which(names(rawData) == "Quantity")
-  newData <- t(dcast(rawData[,c(1,2,idx)], ... ~ AnalysisName, value.var = "Quantity"))
-  colnames(newData) <- newData[1,]
-  newData <- newData[-1,]
+  idx <- which(tolower(names(rawData)) == "quantity")
+  rawData$fake <- as.character(seq_along(rownames(rawData)))
+
+  newData <- tryCatch(dcast(rawData[,c(1,2,idx)],
+                   AnalysisName ~ AnalyteName,
+                   value.var = "Quantity"),
+                   message=function(m) stop("fusion: duplicated line(s) found in rawData"))
+  rownames(newData) <- newData[,1]
+  newData <- newData[,-1]
 
   # adding sampleID
   code <- sapply(strsplit(rawData$AnalysisName, "_"), "[", options$codePosition)
@@ -179,6 +198,12 @@ parseMS_AA <- function(file, options) {
     obsDescr[[i]] <- obsDescr[[i]][!fi,]
     obsDescr[[i]]$sampleType <- tmp[!fi]
   }
+
+  cat(crayon::blue$bold("fusion: ") %+%
+        crayon::blue$bold(ncol(da)) %+%
+        crayon::blue$bold(" / ") %+%
+        crayon::blue$bold(numberOfCompounds) %+%
+        crayon::blue$bold(" metabolite imported for that method.\n"))
 
   da <- new("dataElement",
             .Data = newData,
@@ -321,7 +346,9 @@ parseMS_Tr <- function(file, options) {
     colnames(descr)[fi] <- "sampleType"
 
     # set LTR to type ltr
-    fi <- grepl("PLA", descr$sampleID)
+    fi <- grepl("PLA", descr$sampleID) |
+      grepl("LTR", descr$sampleID) |
+      grepl("URI", descr$sampleID)
     descr$sampleType[fi] <- "ltr"
 
     descr$sampleType <- tolower(descr$sampleType)
