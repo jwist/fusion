@@ -85,9 +85,8 @@ parseMS_AA <- function(file, options) {
             numberOfCompounds,
             "compound(s) found\n"))
 
-  sampleList <- unique(rawData$AnalysisName)
   cat(paste("fusion:",
-            length(sampleList),
+            length(unique(rawData$AnalysisName)),
             "sample(s) found\n"))
 
   # removing unnecessary columns
@@ -143,7 +142,8 @@ parseMS_AA <- function(file, options) {
                    AnalysisName ~ AnalyteName,
                    value.var = "Quantity"),
                    message=function(m) stop("fusion: duplicated line(s) found in rawData"))
-  rownames(newData) <- newData[,1]
+
+  sID <- newData[,1] #sapply(strsplit(newData[,1], "_"), "[", options$codePosition)
   newData <- newData[,-1]
 
   # adding sampleID
@@ -159,18 +159,20 @@ parseMS_AA <- function(file, options) {
   colnames(rawData)[fi] <- "sampleType"
 
   # cleaning LTR
-  fi <- grepl("PLA", rawData$sampleID)
+  fi <- grepl("PLA|URI|SER|LTR", rawData$sampleID)
   rawData$sampleType[fi] <- "ltr"
 
-  # concatenating metadata
-  rowList <- sapply(strsplit(sampleList, "_"), "[", options$codePosition)
-  rowList <- data.frame("sampleID" = makeUnique(rowList))
+  # concatenating metadata with the same order as the data
+  # we use analysisName that is unique and contain plate information
+  # for multiplate imports.
+  rowList <- data.frame("AnalysisName" = sID)
   obsDescr <- list()
   for (i in seq_along(compoundList)) {
     descr <- rawData[rawData$AnalyteName == compoundList[i],]
 
     # make sampleID unique and merge
-    descr$sampleID <- makeUnique(descr$sampleID, "#")
+    descr$AnalysisName <- descr$AnalysisName
+    # descr$sampleID <- sapply(strsplit(descr$AnalysisName, "_"), "[", options$codePosition)
     obsDescr[[i]]  <- merge(rowList,
                            descr,
                            all = TRUE)
@@ -198,18 +200,19 @@ parseMS_AA <- function(file, options) {
     obsDescr[[i]]$sampleType <- tmp[!fi]
   }
 
-  cat(crayon::blue$bold("fusion: ") %+%
-        crayon::blue$bold(ncol(da)) %+%
-        crayon::blue$bold(" / ") %+%
-        crayon::blue$bold(numberOfCompounds) %+%
-        crayon::blue$bold(" metabolite imported for that method.\n"))
-
   da <- new("dataElement",
             .Data = newData,
             obsDescr = obsDescr,
             varName = unlist(colnames(newData)),
             type = "T-MS",
             method = "aminoAcids")
+
+  cat(crayon::blue$bold("fusion: ") %+%
+        crayon::blue$bold(ncol(da)) %+%
+        crayon::blue$bold(" / ") %+%
+        crayon::blue$bold(numberOfCompounds) %+%
+        crayon::blue$bold(" metabolite imported for that method.\n"))
+
   return(da)
 }
 
