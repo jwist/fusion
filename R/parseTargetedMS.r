@@ -11,6 +11,8 @@
 #'
 #' @export
 #' @importFrom utils data read.table
+#' @importFrom reshape2 dcast
+#' @importFrom crayon red blue yellow white green
 parseTargetedMS <- function(file, method, options) {
   cat(paste("fusion: using import method for",
             method, "\n"))
@@ -20,13 +22,6 @@ parseTargetedMS <- function(file, method, options) {
   }
   if (method == "aminoAcids") {
     da <- parseMS_AA(file, options)
-
-    if (ncol(da) == 60) {
-      cat(crayon::green$bold("60/60 metabolite imported for that method.\n"))
-    } else {
-      cat(crayon::red$bold(ncol(da)) %+%
-            crayon::red$bold("/60 metabolite imported for that method.\n"))
-    }
   }
 
   return(da)
@@ -90,9 +85,8 @@ parseMS_AA <- function(file, options) {
             numberOfCompounds,
             "compound(s) found\n"))
 
-  sampleList <- unique(rawData$AnalysisName)
   cat(paste("fusion:",
-            length(sampleList),
+            length(unique(rawData$AnalysisName)),
             "sample(s) found\n"))
 
   # removing unnecessary columns
@@ -122,11 +116,35 @@ parseMS_AA <- function(file, options) {
         crayon::blue(" ignored for that method."), fill = TRUE)
 
   # names(rawData) <- cleanNames(names(rawData))
+
+  # looking for duplicated lines
+  idx <- which(duplicated(rawData[,c(1,2)]) |
+                 duplicated(rawData[,c(1,2)], fromLast = TRUE))
+  if (length(idx) > 0) {
+    cat(crayon::red("fusion: " %+%
+                      crayon::red(idx) %+%
+                      crayon::red(" duplicated line(s) found")),
+        fill = TRUE)
+  }
+  idx <- which(duplicated(rawData[,c(1,2)]))
+
+  if (length(idx) > 0) {
+    rawData <- rawData[-idx,]
+    cat(crayon::white("fusion: " %+%
+                      crayon::white(idx) %+%
+                      crayon::white(" duplicated line(s) removed")),
+        fill = TRUE)
+  }
+
   # recasting to get data
-  idx <- which(names(rawData) == "Quantity")
-  newData <- t(dcast(rawData[,c(1,2,idx)], ... ~ AnalysisName, value.var = "Quantity"))
-  colnames(newData) <- newData[1,]
-  newData <- newData[-1,]
+  idx <- which(tolower(names(rawData)) == "quantity")
+  newData <- tryCatch(dcast(rawData[,c(1,2,idx)],
+                   AnalysisName ~ AnalyteName,
+                   value.var = "Quantity"),
+                   message=function(m) stop("fusion: duplicated line(s) found in rawData"))
+
+  sID <- newData[,1] #sapply(strsplit(newData[,1], "_"), "[", options$codePosition)
+  newData <- newData[,-1]
 
   # adding sampleID
   code <- sapply(strsplit(rawData$AnalysisName, "_"), "[", options$codePosition)
@@ -141,18 +159,20 @@ parseMS_AA <- function(file, options) {
   colnames(rawData)[fi] <- "sampleType"
 
   # cleaning LTR
-  fi <- grepl("PLA", rawData$sampleID)
+  fi <- grepl("PLA|URI|SER|LTR", rawData$sampleID)
   rawData$sampleType[fi] <- "ltr"
 
-  # concatenating metadata
-  rowList <- sapply(strsplit(sampleList, "_"), "[", options$codePosition)
-  rowList <- data.frame("sampleID" = makeUnique(rowList))
+  # concatenating metadata with the same order as the data
+  # we use analysisName that is unique and contain plate information
+  # for multiplate imports.
+  rowList <- data.frame("AnalysisName" = sID)
   obsDescr <- list()
   for (i in seq_along(compoundList)) {
     descr <- rawData[rawData$AnalyteName == compoundList[i],]
 
     # make sampleID unique and merge
-    descr$sampleID <- makeUnique(descr$sampleID, "#")
+    descr$AnalysisName <- descr$AnalysisName
+    # descr$sampleID <- sapply(strsplit(descr$AnalysisName, "_"), "[", options$codePosition)
     obsDescr[[i]]  <- merge(rowList,
                            descr,
                            all = TRUE)
@@ -186,6 +206,13 @@ parseMS_AA <- function(file, options) {
             varName = unlist(colnames(newData)),
             type = "T-MS",
             method = "aminoAcids")
+
+  cat(crayon::blue$bold("fusion: ") %+%
+        crayon::blue$bold(ncol(da)) %+%
+        crayon::blue$bold(" / ") %+%
+        crayon::blue$bold(numberOfCompounds) %+%
+        crayon::blue$bold(" metabolite imported for that method.\n"))
+
   return(da)
 }
 
@@ -321,7 +348,9 @@ parseMS_Tr <- function(file, options) {
     colnames(descr)[fi] <- "sampleType"
 
     # set LTR to type ltr
-    fi <- grepl("PLA", descr$sampleID)
+    fi <- grepl("PLA", descr$sampleID) |
+      grepl("LTR", descr$sampleID) |
+      grepl("URI", descr$sampleID)
     descr$sampleType[fi] <- "ltr"
 
     descr$sampleType <- tolower(descr$sampleType)
