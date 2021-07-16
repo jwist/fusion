@@ -166,6 +166,7 @@ parseMS_AA <- function(file, options) {
   # we use analysisName that is unique and contain plate information
   # for multiplate imports.
   rowList <- data.frame("AnalysisName" = sID)
+  
   obsDescr <- list()
   for (i in seq_along(compoundList)) {
     descr <- rawData[rawData$AnalyteName == compoundList[i],]
@@ -176,6 +177,9 @@ parseMS_AA <- function(file, options) {
     obsDescr[[i]]  <- merge(rowList,
                            descr,
                            all = TRUE)
+    code <- sapply(strsplit(obsDescr[[i]]$AnalysisName, "_"), "[", options$codePosition)
+    obsDescr[[i]]$sampleID <- code
+    
   }
   dimDescr <- dim(obsDescr[[1]])
 
