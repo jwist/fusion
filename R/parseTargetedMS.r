@@ -33,7 +33,7 @@ parseTargetedMS <- function(file, method, options) {
 }
 
 parseMS_AA <- function(file, options) {
-  rawData <- read.delim2(file = file,
+  rawData <- read.delim2(file.path(pathToRaw, fileList),
                          fileEncoding = "latin1",
                          header = TRUE,
                          check.names = FALSE)
@@ -133,7 +133,7 @@ parseMS_AA <- function(file, options) {
   rawData <- cbind("sampleID" = code, rawData)
 
   # cleaning sampleType
-  sampleType <- as.factor(rawData$SampleType)
+  sampleType <- factor(rawData$SampleType, levels = c("BLANK", "CALIBRANT", "QUALITYCONTROL", "SAMPLE"))
   levels(sampleType) <- c("blank", "standard", "qc", "sample")
   rawData$SampleType <- as.character(sampleType)
 
