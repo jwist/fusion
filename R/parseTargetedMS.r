@@ -152,7 +152,13 @@ parseMS_AA <- function(file, options) {
 
   # cleaning sampleType
   sampleType <- as.factor(rawData$SampleType)
-  levels(sampleType) <- c("blank", "standard", "qc", "sample")
+  cat(bold(blue(levels(sampleType)) %+% blue(" sample type was found")), fill = TRUE)
+  if ("sampleTypes" %in% names(options)) {
+    cat(red(options$sampleType))
+    levels(sampleType) <- options$sampleTypes
+  } else {
+    levels(sampleType) <- c("blank", "standard", "qc", "sample")
+  }
   rawData$SampleType <- as.character(sampleType)
 
   fi <- which(colnames(rawData) == "SampleType")
@@ -166,16 +172,15 @@ parseMS_AA <- function(file, options) {
   # we use analysisName that is unique and contain plate information
   # for multiplate imports.
   rowList <- data.frame("AnalysisName" = sID)
+  IDs <- sapply(strsplit(sID, "_"), "[", options$codePosition)
   obsDescr <- list()
   for (i in seq_along(compoundList)) {
     descr <- rawData[rawData$AnalyteName == compoundList[i],]
-
-    # make sampleID unique and merge
-    descr$AnalysisName <- descr$AnalysisName
-    # descr$sampleID <- sapply(strsplit(descr$AnalysisName, "_"), "[", options$codePosition)
-    obsDescr[[i]]  <- merge(rowList,
+    obsDescrTemp  <- merge(rowList,
                            descr,
                            all = TRUE)
+    obsDescrTemp$sampleID <- IDs
+    obsDescr[[i]] <- obsDescrTemp
   }
   dimDescr <- dim(obsDescr[[1]])
 
