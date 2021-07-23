@@ -157,7 +157,7 @@ parseMS_AA <- function(file, options) {
     cat(red(options$sampleType))
     levels(sampleType) <- options$sampleTypes
   } else {
-    levels(sampleType) <- c("blank", "standard", "qc", "sample")
+    levels(sampleType) <- c("BLANK", "CALIBRANT", "QUALITYCONTROL", "SAMPLE")
   }
   rawData$SampleType <- as.character(sampleType)
 
@@ -172,15 +172,16 @@ parseMS_AA <- function(file, options) {
   # we use analysisName that is unique and contain plate information
   # for multiplate imports.
   rowList <- data.frame("AnalysisName" = sID)
-  IDs <- sapply(strsplit(sID, "_"), "[", options$codePosition)
   obsDescr <- list()
   for (i in seq_along(compoundList)) {
     descr <- rawData[rawData$AnalyteName == compoundList[i],]
-    obsDescrTemp  <- merge(rowList,
-                           descr,
-                           all = TRUE)
-    obsDescrTemp$sampleID <- IDs
-    obsDescr[[i]] <- obsDescrTemp
+    obsDescr[[i]]  <- merge(rowList,
+                       descr,
+                       all = TRUE)
+
+    code <- sapply(strsplit(obsDescr[[i]]$AnalysisName, "_"), "[", options$codePosition)
+    obsDescr[[i]]$sampleID <- code
+
   }
   dimDescr <- dim(obsDescr[[1]])
 
