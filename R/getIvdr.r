@@ -5,8 +5,8 @@
 #'
 #' @export
 
-getIvdr <- function(path){
-  path <- file.path(path, "pdata", "1", "plasma_quant_report.xml")
+getIvdr <- function(path, reportName){
+  path <- file.path(path, "pdata", "1", reportName)
   if (file.exists(path)) {
     xml <- read_xml(path, options = "NOBLANKS")
     name <- xml_attr(xml_find_all(xml, ".//PARAMETER"), "name")
