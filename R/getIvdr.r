@@ -31,7 +31,26 @@ getIvdr <- function(path, reportName){
     refMax <- xml_attr(xml_find_all(xml, ".//REFERENCE"), "vmax")
     refMin <- xml_attr(xml_find_all(xml, ".//REFERENCE"), "vmin")
     refUnit <- xml_attr(xml_find_all(xml, ".//REFERENCE"), "unit")
-    return(data.frame(name, value, unit, refMax, refMin, refUnit))
+    return(data.frame(name,
+                      conc_v,
+                      concUnit_v,
+                      lod_v,
+                      lodUnit_v,
+                      loq_v,
+                      loqUnit_v,
+                      conc_vr,
+                      concUnit_vr,
+                      lod_vr,
+                      lodUnit_vr,
+                      loq_vr,
+                      loqUnit_vr,
+                      sigCorrUnit,
+                      sigCorr,
+                      rawConcUnit,
+                      rawConc,
+                      errConc,
+                      errConcUnit,
+                      refMax, refMin, refUnit))
   } else {
     cat(crayon::yellow("fusion::getIvdr >>", path, "not found\n"))
   }
