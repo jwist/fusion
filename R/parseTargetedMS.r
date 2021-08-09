@@ -12,7 +12,8 @@
 #' @export
 #' @importFrom utils data read.table
 #' @importFrom reshape2 dcast
-#' @importFrom crayon red blue yellow white green
+#' @importFrom crayon red blue yellow white green bold
+#' @importFrom utils read.delim2
 parseTargetedMS <- function(file, method, options) {
   cat(paste("fusion: using import method for",
             method, "\n"))

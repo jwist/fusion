@@ -1,6 +1,8 @@
 #' read experiment from a bruker folder (expno)
 #'
 #' @param path - the path to the expNo folder
+#' @param acqus - object with acquisiton parameters, if TRUE reads from the file
+#' @param procs - object with processing parameters, if TRUE reads from the file
 #' @return a list with all read elements
 #'
 #' @export

@@ -10,6 +10,10 @@ getIvdr(path, reportName)
 \item{path}{\itemize{
 \item the path to the expName folder
 }}
+
+\item{reportName}{\itemize{
+\item name of the file (as it may change)
+}}
 }
 \value{
 the values

@@ -1,6 +1,7 @@
 #' extract small molecules  quantification information from a bruker xml
 #'
 #' @param path - the path to the expName folder
+#' @param reportName - name of the file (as it may change)
 #' @return the values
 #'
 #' @export

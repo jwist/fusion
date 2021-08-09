@@ -10,6 +10,10 @@ readXML(xml, attr = FALSE)
 \item{xml}{\itemize{
 \item an xml object
 }}
+
+\item{attr}{\itemize{
+\item boolean object
+}}
 }
 \value{
 assign value to content
