@@ -154,7 +154,7 @@ parseMS_AA <- function(file, options) {
   sampleType <- as.factor(rawData$SampleType)
   cat(bold(blue(levels(sampleType)) %+% blue(" sample type was found")), fill = TRUE)
   if ("sampleTypes" %in% names(options)) {
-    cat(red(options$sampleType))
+    cat(red(options$sampleType), " using these from option\n")
     levels(sampleType) <- options$sampleTypes
   } else {
     levels(sampleType) <- c("BLANK", "CALIBRANT", "QUALITYCONTROL", "SAMPLE")

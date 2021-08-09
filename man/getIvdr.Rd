@@ -4,7 +4,7 @@
 \alias{getIvdr}
 \title{extract small molecules  quantification information from a bruker xml}
 \usage{
-getIvdr(path)
+getIvdr(path, reportName)
 }
 \arguments{
 \item{path}{\itemize{

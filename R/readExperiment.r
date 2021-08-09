@@ -35,7 +35,8 @@ readExperiment <- function(path, acqus = TRUE, procs = TRUE) {
       }
     }
 
-    if (file.exists(file.path(path, "pdata", "1", "plasma_quant_report.xml"))) {
+    if (file.exists(file.path(path, "pdata", "1", "plasma_quant_report.xml")) |
+        file.exists(file.path(path, "pdata", "1", "urine_quant_report_e.xml"))) {
       ivdr <- getIvdr(path)
       if (!is.null(ivdr)) {
         res <- c(res, list(ivdr = ivdr))
