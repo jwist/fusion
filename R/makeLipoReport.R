@@ -352,13 +352,13 @@ makeLipoReport <- function(lip, options = list()) {
 
 #' add a serie of value to an existing lipoprotein  quantification report
 #'
-#' @param values - a lipoprotein report with new values
+#' @param lip - a lipoprotein report with new values
 #' @param options - a list of options (should be as existing report)
 #' @param options$fold - if true use design for fold change (default = FALSE)
 #' @param options$scale - if true center and scale (align) the output (default = FALSE)
 #' @return print a report with overlayed values
 #' @export
-addValues <- function(values, options = list()) {
+addValues <- function(lip, options = list()) {
 
   if ("ncol" %in% names(options)) {
     ncol <- options$ncol

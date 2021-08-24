@@ -4,10 +4,10 @@
 \alias{addValues}
 \title{add a serie of value to an existing lipoprotein  quantification report}
 \usage{
-addValues(values, options = list())
+addValues(lip, options = list())
 }
 \arguments{
-\item{values}{\itemize{
+\item{lip}{\itemize{
 \item a lipoprotein report with new values
 }}
 
