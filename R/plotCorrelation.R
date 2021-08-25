@@ -108,11 +108,11 @@ plotCorrelation <- function(x, labels, trace, xaxis) {
 }
 
 
-x <- (matrix(rnorm(1000, 0.5, 0.1), 10, 100))
-labs <- paste("variable", c(1:nrow(x)))
-trace <- x[1,]
-xaxis <- seq(3.3, 3.1, length.out = ncol(x))
-plotCorrelation(x, labs, trace, xaxis)
+# x <- (matrix(rnorm(1000, 0.5, 0.1), 10, 100))
+# labs <- paste("variable", c(1:nrow(x)))
+# trace <- x[1,]
+# xaxis <- seq(3.3, 3.1, length.out = ncol(x))
+# plotCorrelation(x, labs, trace, xaxis)
 
 
 
