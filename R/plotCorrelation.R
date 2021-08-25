@@ -88,26 +88,25 @@ plotCorrelation <- function(x, labels, trace, xaxis) {
     maxTextWidth <- max(calcStringMetric(labels)$width)*0.7
 
     if (i %% 2 == 0) {
-      pushViewport(viewport(x = unit(1 + maxTextWidth/2, "inches"),
-                            y = unit(i - 0.5, "native"),
-                            height = unit(0.8, "native"),
-                            width = unit(maxTextWidth, "inches")))
-      grid.roundrect(gp = gpar(col = NA, fill = "black", alpha = 0.1))
-      grid.text(label = labels[i], gp = gpar(cex = 0.5), just = "center")
+       grid.roundrect(x = unit(1 + maxTextWidth/2, "inches"),
+                     y = unit(i - 0.5, "native"),
+                     height = unit(0.8, "native"),
+                     width = unit(maxTextWidth, "inches"),
+                     gp = gpar(col = NA, fill = "black", alpha = 0.1))
+      grid.text(x = unit(1 + maxTextWidth/2, "inches"),
+                y = unit(i - 0.5, "native"),
+                label = labels[i], gp = gpar(cex = 0.5), just = "center")
     } else {
-      pushViewport(viewport(x = unit(1 - maxTextWidth/2, "inches"),
-                            y = unit(i - 0.5, "native"),
-                            height = unit(0.8, "native"),
-                            width = unit(maxTextWidth, "inches")))
-      grid.text(label = labels[i], gp = gpar(cex = 0.5), just = "center")
+      grid.text(x = unit(1 - maxTextWidth/2, "inches"),
+                y = unit(i - 0.5, "native"),
+                label = labels[i], gp = gpar(cex = 0.5), just = "center")
     }
-    upViewport()
   }
   upViewport()
   upViewport()
 }
 
-
+#
 # x <- (matrix(rnorm(1000, 0.5, 0.1), 10, 100))
 # labs <- paste("variable", c(1:nrow(x)))
 # trace <- x[1,]

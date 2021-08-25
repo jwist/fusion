@@ -194,7 +194,7 @@ printTitle <- function(title, titleBoxPosition, titlePosition) {
 #' @export
 #' @importFrom grid grid.xaxis grid.yaxis pushViewport viewport grid.rect
 #' @importFrom grid grid.newpage grid.text gEdit upViewport gpar unit
-#' @importFrom grid grid.circle grid.points grid.line
+#' @importFrom grid grid.circle grid.points grid.lines
 makeLipoReport <- function(lip, options = list()) {
 
   if ("title" %in% names(options)) {
