@@ -125,21 +125,22 @@ plotCorrelation <- function(x, labels, trace, xaxis, options = list()) {
 }
 
 
-x <- (matrix(rnorm(1000, 0.5, 0.1), 10, 100))
-labs <- paste("variable", c(1:nrow(x)))
-trace <- x[1,]
-xaxis <- seq(3.3, 3.1, length.out = ncol(x))
-plotCorrelation(x, labs, trace, xaxis, options = list(alpha = 0.1))
-
-for (i in 1:9) {
-  x <- (matrix(rnorm(1000, 0.5, 0.1), 10, 100))
-  x[9,9] <- rnorm(1, 0.9, 0.05)
-  x[8,8] <- rnorm(1, 0.8, 0.05)
-  x[7,7] <- min(0, rnorm(1, 0.2, 0.1), na.rm = TRUE)
-  trace <- x[1,]
-  plotCorrelation(x = x, trace = trace, options = list(alpha = 0.1))
-
-}
+# x <- (matrix(rnorm(1000, 0.5, 0.1), 10, 100))
+# labs <- paste("variable", c(1:nrow(x)))
+# trace <- x[1,]
+# xaxis <- seq(3.3, 3.1, length.out = ncol(x))
+# plotCorrelation(x, labs, trace, xaxis, options = list(alpha = 0.1))
+#
+# for (i in 1:9) {
+#   x <- (matrix(rnorm(1000, 0.5, 0.1), 10, 100))
+#   x[9,9] <- rnorm(1, 0.9, 0.05)
+#   x[8,8] <- rnorm(1, 0.5, 0.05)
+#   x[7,7] <- max(0, rnorm(1, 0.2, 0.05))
+#   x[6,6] <- rnorm(1, 0.5, 0.1)
+#   trace <- x[1,]
+#   plotCorrelation(x = x, trace = trace, options = list(alpha = 0.1))
+#
+# }
 
 
 
