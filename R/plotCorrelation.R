@@ -5,14 +5,16 @@
 #' @param xaxis - the xaxis for the NMR trace
 #'
 #' @export
+#' @importFrom grid grid.xaxis grid.yaxis pushViewport viewport grid.rect
+#' @importFrom grid grid.newpage grid.text gEdit upViewport gpar unit
+#' @importFrom grid grid.circle calcStringMetric grid.roundrect
+#' @importFrom grDevices rgb colorRamp
 plotCorrelation <- function(x, labels, trace, xaxis) {
   grid.newpage()
   pushViewport(viewport(width = 0.9,
                         height = 0.9,
                         xscale=c(0, 4),
                         yscale=c(0, 3)))
-
-
 
   pushViewport(viewport(width = unit(3, "native"),
                         height = unit(2, "native"),
@@ -21,8 +23,6 @@ plotCorrelation <- function(x, labels, trace, xaxis) {
                         xscale=c(0, ncol(x)),
                         yscale=c(0, nrow(x))))
 
-
-  corp<- colorRampPalette(c("blue", "white", "red"))
   corp<- colorRamp(c("blue", "white", "red"))
 
   for (i in c(1:nrow(x))) {
@@ -85,7 +85,7 @@ plotCorrelation <- function(x, labels, trace, xaxis) {
                         yscale=c(0, nrow(x))))
 
   for (i in c(1:nrow(x))) {
-    maxTextWidth <- max(calcStringMetric(labs)$width)*0.7
+    maxTextWidth <- max(calcStringMetric(labels)$width)*0.7
 
     if (i %% 2 == 0) {
       pushViewport(viewport(x = unit(1 + maxTextWidth/2, "inches"),
@@ -93,13 +93,13 @@ plotCorrelation <- function(x, labels, trace, xaxis) {
                             height = unit(0.8, "native"),
                             width = unit(maxTextWidth, "inches")))
       grid.roundrect(gp = gpar(col = NA, fill = "black", alpha = 0.1))
-      grid.text(label = labs[i], gp = gpar(cex = 0.5), just = "center")
+      grid.text(label = labels[i], gp = gpar(cex = 0.5), just = "center")
     } else {
       pushViewport(viewport(x = unit(1 - maxTextWidth/2, "inches"),
                             y = unit(i - 0.5, "native"),
                             height = unit(0.8, "native"),
                             width = unit(maxTextWidth, "inches")))
-      grid.text(label = labs[i], gp = gpar(cex = 0.5), just = "center")
+      grid.text(label = labels[i], gp = gpar(cex = 0.5), just = "center")
     }
     upViewport()
   }
