@@ -10,7 +10,7 @@
 #' @importFrom grid grid.circle calcStringMetric grid.roundrect
 #' @importFrom grDevices rgb colorRamp
 plotCorrelation <- function(x, labels, trace, xaxis, options = list()) {
-
+  tictoc::tic("init")
   if ("alpha" %in% names(options)) {
     alpha <- options$alpha
   } else {
@@ -35,6 +35,9 @@ plotCorrelation <- function(x, labels, trace, xaxis, options = list()) {
   corp<- colorRamp(c("blue", "white", "red"))
 
   for (i in c(1:nrow(x))) {
+    grid.text(x = unit(-10, "inches"),
+              y = unit(nrow(x) + 1 - i - 0.5, "native"),
+              label = labels[i], gp = gpar(cex = 0.5), just = "center")
     for (j in c(1:ncol(x))) {
       grid.rect(x = unit(j - 0.5, "native"),
                 y = unit(nrow(x) + 1 - i - 0.5, "native"),
@@ -92,7 +95,8 @@ plotCorrelation <- function(x, labels, trace, xaxis, options = list()) {
     upViewport()
   }
   upViewport()
-
+  tictoc::toc()
+  tictoc::tic("label")
   if (!missing(labels) & !missing(xaxis)) {
     pushViewport(viewport(width = unit(1, "native"),
                           height = unit(2, "native"),
@@ -121,26 +125,26 @@ plotCorrelation <- function(x, labels, trace, xaxis, options = list()) {
     }
     upViewport()
   }
+  tictoc::toc()
   upViewport()
 }
 
 
-# x <- (matrix(rnorm(1000, 0.5, 0.1), 10, 100))
-# labs <- paste("variable", c(1:nrow(x)))
-# trace <- x[1,]
-# xaxis <- seq(3.3, 3.1, length.out = ncol(x))
-# plotCorrelation(x, labs, trace, xaxis, options = list(alpha = 0.1))
-#
-# for (i in 1:9) {
-#   x <- (matrix(rnorm(1000, 0.5, 0.1), 10, 100))
-#   x[9,9] <- rnorm(1, 0.9, 0.05)
-#   x[8,8] <- rnorm(1, 0.5, 0.05)
-#   x[7,7] <- max(0, rnorm(1, 0.2, 0.05))
-#   x[6,6] <- rnorm(1, 0.5, 0.1)
-#   trace <- x[1,]
-#   plotCorrelation(x = x, trace = trace, options = list(alpha = 0.1))
-#
-# }
+x <- (matrix(rnorm(1000, 0.5, 0.1), 10, 100))
+labs <- paste("variable", c(1:nrow(x)))
+trace <- x[1,]
+xaxis <- seq(3.3, 3.1, length.out = ncol(x))
+plotCorrelation(x, labs, trace, xaxis, options = list(alpha = 0.1))
+
+for (i in 1:9) {
+  x <- (matrix(rnorm(1000, 0.5, 0.1), 10, 100))
+  x[9,9] <- rnorm(1, 0.9, 0.05)
+  x[8,8] <- rnorm(1, 0.5, 0.05)
+  x[7,7] <- max(0, rnorm(1, 0.2, 0.05))
+  trace <- x[1,]
+  plotCorrelation(x = x, trace = trace, options = list(alpha = 0.1))
+
+}
 
 
 
