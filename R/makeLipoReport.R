@@ -9,6 +9,18 @@ printIndicator <- function(lip, row, column, options = list()) {
   indBgColor <- "black"
   indBgAlpha <- 0.1
 
+  if ("dotColor" %in% names(options)) {
+    dotColor <- options$dotColor
+  } else {
+    dotColor <- "black"
+  }
+  print(options$dotPch)
+  if ("dotPch" %in% names(options)) {
+    dotPch <- options$dotPch
+  } else {
+    dotPch <- 22
+  }
+
   if (options$fold) {
     indicatorWidth <- 1
   } else {
@@ -92,15 +104,17 @@ printIndicator <- function(lip, row, column, options = list()) {
     if (options$fold & lip$value < 0) {
       dotColor <- "red"
     } else {
-      dotColor <- "black"
+      dotColor <- dotColor
     }
   } else {
     dotColor <- "red"
   }
   grid.points(lip$value,
               1,
-              pch = 21,
-              gp=gpar(fill = dotColor, col=NA, cex = 0.5))
+              pch = dotPch,
+              gp=gpar(fill = dotColor,
+                      col=NA,
+                      cex = 0.5))
 
   upViewport()
 }
@@ -194,8 +208,19 @@ printTitle <- function(title, titleBoxPosition, titlePosition) {
 #' @export
 #' @importFrom grid grid.xaxis grid.yaxis pushViewport viewport grid.rect
 #' @importFrom grid grid.newpage grid.text gEdit upViewport gpar unit
-#' @importFrom grid grid.circle grid.points grid.lines
+#' @importFrom grid grid.circle grid.points grid.lines grid.raster
 makeLipoReport <- function(lip, options = list()) {
+  if ("dotColor" %in% names(options)) {
+    dotColor <- options$dotColor
+  } else {
+    dotColor <- "black"
+  }
+
+  if ("dotPch" %in% names(options)) {
+    dotPch <- options$dotPch
+  } else {
+    dotPch <- 21
+  }
 
   if ("title" %in% names(options)) {
     title <- options$title
@@ -329,7 +354,10 @@ makeLipoReport <- function(lip, options = list()) {
     printIndicator(lip[i,],
                    row,
                    column,
-                   options = list(fold = fold, add = FALSE))
+                   options = list(fold = fold,
+                                  add = FALSE,
+                                  dotColor = dotColor,
+                                  dotPch = dotPch))
 
     i <- i + 1
     r <- r + 1
@@ -350,7 +378,7 @@ makeLipoReport <- function(lip, options = list()) {
 # lip <- getLipoprotein("./inst/HB-COVID0001/10")
 # lip$id <- seq_along(lip$abbr)
 # makeLipoReport(lip, options = list(title = "Lipo", ncol = 3))
-# makeLipoReport(lip, options = list(fold = FALSE))
+# makeLipoReport(lip, options = list(fold = FALSE, dotColor = "blue"))
 # makeLipoReport(lip, options = list(fold = TRUE, scale = FALSE))
 
 #' add a serie of value to an existing lipoprotein  quantification report
@@ -362,6 +390,18 @@ makeLipoReport <- function(lip, options = list()) {
 #' @return print a report with overlayed values
 #' @export
 addValues <- function(lip, options = list()) {
+
+  if ("dotColor" %in% names(options)) {
+    dotColor <- options$dotColor
+  } else {
+    dotColor <- "black"
+  }
+
+  if ("dotPch" %in% names(options)) {
+    dotPch <- options$dotPch
+  } else {
+    dotPch <- 21
+  }
 
   if ("ncol" %in% names(options)) {
     ncol <- options$ncol
@@ -421,7 +461,10 @@ addValues <- function(lip, options = list()) {
     printIndicator(lip[i,],
                    row,
                    column,
-                   options = list(fold = fold, add = TRUE))
+                   options = list(fold = fold,
+                                  add = TRUE,
+                                  dotColor = dotColor,
+                                  dotPch = dotPch))
 
     i <- i + 1
     r <- r + 1
@@ -429,4 +472,6 @@ addValues <- function(lip, options = list()) {
 
 }
 
-# addValues(lip, options = list(fold = TRUE, scale = TRUE))
+# addValues(lip, options = list(fold = TRUE, scale = FALSE, dotColor = "red"))
+# makeLipoReport(lip, options = list(fold = FALSE, dotColor = "blue", dotPch = 21))
+# addValues(lip, options = list(dotColor = "red", dotPch = 22))
