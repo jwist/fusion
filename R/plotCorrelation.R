@@ -17,9 +17,9 @@ plotCorrelation <- function(x, labels, trace, xaxis, options = list()) {
     alpha <- 1
   }
 
-  if (!missing(labels) & !missing(xaxis)) {
-    grid.newpage()
-  }
+  # if (!missing(labels) & !missing(xaxis)) {
+  #   grid.newpage()
+  # }
   pushViewport(viewport(width = 0.9,
                         height = 0.9,
                         xscale=c(0, 4),
@@ -75,7 +75,7 @@ plotCorrelation <- function(x, labels, trace, xaxis, options = list()) {
                         x = unit(2.5, "native"),
                         y= unit(2.6, "native"),
                         xscale=c(0, ncol(x)),
-                        yscale=c(min(x), max(x))))
+                        yscale=c(min(trace), max(trace))))
 
   if (!missing(labels) & !missing(xaxis)) {
     tick <- seq(1, ncol(x), length.out = 30)
@@ -132,20 +132,22 @@ plotCorrelation <- function(x, labels, trace, xaxis, options = list()) {
 }
 
 
-# x <- (matrix(rnorm(36000, 0.5, 0.1), 60, 600))
-# labs <- paste("variable", c(1:nrow(x)))
-# trace <- x[1,]
-# xaxis <- seq(3.3, 3.1, length.out = ncol(x))
-# plotCorrelation(x, labs, trace, xaxis, options = list(alpha = 0.1))
-#
+# grid.newpage()
 # for (i in 1:9) {
-#   x <- (matrix(rnorm(36000, 0.5, 0.1), 60, 600))
+#   x <- (matrix(rnorm(12000, 0.5, 0.1), 20, 600))
 #   x[9,9] <- rnorm(1, 0.9, 0.05)
 #   x[8,8] <- rnorm(1, 0.5, 0.05)
 #   x[7,7] <- max(0, rnorm(1, 0.2, 0.05))
 #   trace <- x[1,]
 #   plotCorrelation(x = x, trace = trace, options = list(alpha = 0.1))
 # }
+#
+# x <- (matrix(rnorm(12000, 0.5, 0.1), 20, 600))
+# labs <- paste("variable", c(1:nrow(x)))
+# trace <- x[1,]
+# xaxis <- seq(3.3, 3.1, length.out = ncol(x))
+# plotCorrelation(x, labs, trace, xaxis, options = list(alpha = 0.1))
+
 
 
 
