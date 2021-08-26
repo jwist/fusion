@@ -35,9 +35,11 @@ plotCorrelation <- function(x, labels, trace, xaxis, options = list()) {
   corp<- colorRamp(c("blue", "white", "red"))
 
   for (i in c(1:nrow(x))) {
-    grid.text(x = unit(-10, "inches"),
+    if (!missing(labels) & !missing(xaxis)) {
+    grid.text(x = unit(-1, "inches"),
               y = unit(nrow(x) + 1 - i - 0.5, "native"),
               label = labels[i], gp = gpar(cex = 0.5), just = "center")
+    }
     for (j in c(1:ncol(x))) {
       grid.rect(x = unit(j - 0.5, "native"),
                 y = unit(nrow(x) + 1 - i - 0.5, "native"),
@@ -96,55 +98,54 @@ plotCorrelation <- function(x, labels, trace, xaxis, options = list()) {
   }
   upViewport()
   tictoc::toc()
-  tictoc::tic("label")
-  if (!missing(labels) & !missing(xaxis)) {
-    pushViewport(viewport(width = unit(1, "native"),
-                          height = unit(2, "native"),
-                          x = unit(0.5, "native"),
-                          y= unit(1, "native"),
-                          xscale=c(0, 1),
-                          yscale=c(0, nrow(x))))
-
-    for (i in c(1:nrow(x))) {
-      maxTextWidth <- max(calcStringMetric(labels)$width)*0.7
-
-      if (i %% 2 == 0) {
-        grid.roundrect(x = unit(1 + maxTextWidth/2, "inches"),
-                       y = unit(i - 0.5, "native"),
-                       height = unit(0.8, "native"),
-                       width = unit(maxTextWidth, "inches"),
-                       gp = gpar(col = NA, fill = "black", alpha = 0.1))
-        grid.text(x = unit(1 + maxTextWidth/2, "inches"),
-                  y = unit(i - 0.5, "native"),
-                  label = labels[i], gp = gpar(cex = 0.5), just = "center")
-      } else {
-        grid.text(x = unit(1 - maxTextWidth/2, "inches"),
-                  y = unit(i - 0.5, "native"),
-                  label = labels[i], gp = gpar(cex = 0.5), just = "center")
-      }
-    }
-    upViewport()
-  }
-  tictoc::toc()
+  # tictoc::tic("label")
+  # if (!missing(labels) & !missing(xaxis)) {
+  #   pushViewport(viewport(width = unit(1, "native"),
+  #                         height = unit(2, "native"),
+  #                         x = unit(0.5, "native"),
+  #                         y= unit(1, "native"),
+  #                         xscale=c(0, 1),
+  #                         yscale=c(0, nrow(x))))
+  #
+  #   for (i in c(1:nrow(x))) {
+  #     maxTextWidth <- max(calcStringMetric(labels)$width)*0.7
+  #
+  #     if (i %% 2 == 0) {
+  #       grid.roundrect(x = unit(1 + maxTextWidth/2, "inches"),
+  #                      y = unit(i - 0.5, "native"),
+  #                      height = unit(0.8, "native"),
+  #                      width = unit(maxTextWidth, "inches"),
+  #                      gp = gpar(col = NA, fill = "black", alpha = 0.1))
+  #       grid.text(x = unit(1 + maxTextWidth/2, "inches"),
+  #                 y = unit(i - 0.5, "native"),
+  #                 label = labels[i], gp = gpar(cex = 0.5), just = "center")
+  #     } else {
+  #       grid.text(x = unit(1 - maxTextWidth/2, "inches"),
+  #                 y = unit(i - 0.5, "native"),
+  #                 label = labels[i], gp = gpar(cex = 0.5), just = "center")
+  #     }
+  #   }
+  #   upViewport()
+  # }
+  # tictoc::toc()
   upViewport()
 }
 
 
-x <- (matrix(rnorm(1000, 0.5, 0.1), 10, 100))
-labs <- paste("variable", c(1:nrow(x)))
-trace <- x[1,]
-xaxis <- seq(3.3, 3.1, length.out = ncol(x))
-plotCorrelation(x, labs, trace, xaxis, options = list(alpha = 0.1))
-
-for (i in 1:9) {
-  x <- (matrix(rnorm(1000, 0.5, 0.1), 10, 100))
-  x[9,9] <- rnorm(1, 0.9, 0.05)
-  x[8,8] <- rnorm(1, 0.5, 0.05)
-  x[7,7] <- max(0, rnorm(1, 0.2, 0.05))
-  trace <- x[1,]
-  plotCorrelation(x = x, trace = trace, options = list(alpha = 0.1))
-
-}
+# x <- (matrix(rnorm(36000, 0.5, 0.1), 60, 600))
+# labs <- paste("variable", c(1:nrow(x)))
+# trace <- x[1,]
+# xaxis <- seq(3.3, 3.1, length.out = ncol(x))
+# plotCorrelation(x, labs, trace, xaxis, options = list(alpha = 0.1))
+#
+# for (i in 1:9) {
+#   x <- (matrix(rnorm(36000, 0.5, 0.1), 60, 600))
+#   x[9,9] <- rnorm(1, 0.9, 0.05)
+#   x[8,8] <- rnorm(1, 0.5, 0.05)
+#   x[7,7] <- max(0, rnorm(1, 0.2, 0.05))
+#   trace <- x[1,]
+#   plotCorrelation(x = x, trace = trace, options = list(alpha = 0.1))
+# }
 
 
 
