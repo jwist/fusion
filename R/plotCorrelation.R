@@ -17,9 +17,7 @@ plotCorrelation <- function(x, labels, trace, xaxis, options = list()) {
     alpha <- 1
   }
 
-  # if (!missing(labels) & !missing(xaxis)) {
-  #   grid.newpage()
-  # }
+  grid.newpage()
   pushViewport(viewport(width = 0.9,
                         height = 0.9,
                         xscale=c(0, 4),
@@ -32,21 +30,33 @@ plotCorrelation <- function(x, labels, trace, xaxis, options = list()) {
                         xscale=c(0, ncol(x)),
                         yscale=c(0, nrow(x))))
 
+  maxTextWidth <- max(calcStringMetric(labels)$width) * 0.7 #cex
+
   corp<- colorRamp(c("blue", "white", "red"))
 
   for (i in c(1:nrow(x))) {
     if (!missing(labels) & !missing(xaxis)) {
-    grid.text(x = unit(-1, "inches"),
+
+    grid.text(x = unit(-maxTextWidth/2, "inches"),
               y = unit(nrow(x) + 1 - i - 0.5, "native"),
               label = labels[i], gp = gpar(cex = 0.5), just = "center")
     }
     for (j in c(1:ncol(x))) {
+      if (length(dim(x)) > 2) {
+        if (is.na(x[i,j,1]) | is.na(x[i,j,2]) | is.na(x[i,j,3])) {
+          fill <- "black"
+        } else {
+          fill <- rgb(array(data = c(x[i,j,1], x[i,j,2], x[i,j,3]), dim = c(1,4))/256)
+        }
+      } else {
+        fill <- rgb(corp(x[i,j])/255)
+      }
       grid.rect(x = unit(j - 0.5, "native"),
                 y = unit(nrow(x) + 1 - i - 0.5, "native"),
                 width = unit(1, "native"),
                 height = unit(1, "native"),
                 gp = gpar(col = NA,
-                          fill = rgb(corp(x[i,j])/255),
+                          fill = fill,
                           alpha = alpha))
     }
   }
@@ -93,7 +103,7 @@ plotCorrelation <- function(x, labels, trace, xaxis, options = list()) {
                           y = unit(trace[i], "native"),
                           height = unit(1, "native"),
                           width = unit(1, "native")))
-    grid.circle()
+    grid.circle(gp = gpar(alpha = alpha))
     upViewport()
   }
   upViewport()
@@ -131,26 +141,41 @@ plotCorrelation <- function(x, labels, trace, xaxis, options = list()) {
   upViewport()
 }
 
-
-# grid.newpage()
-# for (i in 1:9) {
+meanColor <- function(matrixList) {
+  tictoc::tic("mean")
+  row <- nrow(matrixList[[1]])
+  col <- ncol(matrixList[[1]])
+  corp<- colorRamp(c("blue", "white", "red"), alpha = TRUE)
+  l <- length(matrixList)
+  avr <- corp(matrixList[[1]])^2
+  for (i in 2:l) {
+    avr <- avr + corp(matrixList[[i]])^2
+  }
+  res <- array(dim = c(row, col, 4))
+  res[,,1] <- sqrt(matrix(avr[,1], row, col)/l)
+  res[,,2] <- sqrt(matrix(avr[,2], row, col)/l)
+  res[,,3] <- sqrt(matrix(avr[,3], row, col)/l)
+  res[,,4] <- sqrt(matrix(avr[,1], row, col)/l)
+  tictoc::toc()
+  return(res)
+}
+#
+# matrixList <- list()
+# for (i in 1:50) {
 #   x <- (matrix(rnorm(12000, 0.5, 0.1), 20, 600))
 #   x[9,9] <- rnorm(1, 0.9, 0.05)
 #   x[8,8] <- rnorm(1, 0.5, 0.05)
 #   x[7,7] <- max(0, rnorm(1, 0.2, 0.05))
 #   trace <- x[1,]
-#   plotCorrelation(x = x, trace = trace, options = list(alpha = 0.1))
+#   matrixList[[i]] <- x
 # }
 #
-# x <- (matrix(rnorm(12000, 0.5, 0.1), 20, 600))
 # labs <- paste("variable", c(1:nrow(x)))
 # trace <- x[1,]
 # xaxis <- seq(3.3, 3.1, length.out = ncol(x))
-# plotCorrelation(x, labs, trace, xaxis, options = list(alpha = 0.1))
+# plotCorrelation(meanColor(matrixList), labs, trace, xaxis)
+#
 
-
-
-
-
+# png(filename = paste0("test_", j, ".png"), width = 2000, height = 600)
 
 
