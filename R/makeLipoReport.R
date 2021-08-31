@@ -495,5 +495,5 @@ getLipoTable <- function() {
                  "Reference Unit",
                  "Reference Range [Unit]")
  rownames(lipo) <- c(1:nrow(lipo))
- return(lipo[,c(1,2,4,10)])
+ return(lipo[,c(1,2,4,11)])
 }
