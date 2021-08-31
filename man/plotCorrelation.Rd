@@ -4,7 +4,7 @@
 \alias{plotCorrelation}
 \title{plot correlation between NMR trace (part of) and MS data}
 \usage{
-plotCorrelation(x, labels, trace, xaxis)
+plotCorrelation(x, labels, trace, xaxis, options = list())
 }
 \arguments{
 \item{x}{\itemize{

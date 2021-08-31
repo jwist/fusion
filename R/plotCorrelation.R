@@ -159,9 +159,9 @@ meanColor <- function(matrixList) {
   tictoc::toc()
   return(res)
 }
-#
+
 # matrixList <- list()
-# for (i in 1:50) {
+# for (i in 1:9) {
 #   x <- (matrix(rnorm(12000, 0.5, 0.1), 20, 600))
 #   x[9,9] <- rnorm(1, 0.9, 0.05)
 #   x[8,8] <- rnorm(1, 0.5, 0.05)
@@ -174,7 +174,7 @@ meanColor <- function(matrixList) {
 # trace <- x[1,]
 # xaxis <- seq(3.3, 3.1, length.out = ncol(x))
 # plotCorrelation(meanColor(matrixList), labs, trace, xaxis)
-#
+
 
 # png(filename = paste0("test_", j, ".png"), width = 2000, height = 600)
 
