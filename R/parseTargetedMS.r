@@ -234,7 +234,10 @@ parseMS_Tr <- function(file, options) {
             "line(s) read\n"))
 
   rawData <- rawData[-c(1,2),] # removing first title rows
-
+  
+  oldHeaders <- rawData[2,] # capturing column order
+  oldHeaders[1] <- "rowIndex"
+  
   fi <- rawData[,1] == "" # excluding empty rows
   rawData <- rawData[!fi,]
   cat(paste("fusion:",
@@ -264,6 +267,18 @@ parseMS_Tr <- function(file, options) {
             "line(s) of data found\n"))
 
   newData <- list()
+  headersOrder <- c("Name",
+             "Sample Text",
+             "Type",
+             "%Dev",
+             "Primary Flags",
+             "Conc.",
+             "Std. Conc",
+             "RT",
+             "Area",
+             "IS Area",
+             "Response")
+  
   for (i in 1:numberOfCompounds){
 
     rge <- spliter[i]:(spliter[i] + dataChkLength[i] - 1)
@@ -272,21 +287,13 @@ parseMS_Tr <- function(file, options) {
 
     cpndName <- strsplit(dataChk[1,1], ":  ")[[1]][2] # reading title
     dataChk <- dataChk[-1,] # removing title
-    names(dataChk) <- c("idx",
-                        "index",
-                        "Name",
-                        "Sample Text",
-                        "Type",
-                        "%Dev",
-                        "Primary Flags",
-                        "Conc.",
-                        "Std. Conc",
-                        "RT",
-                        "Area",
-                        "IS Area",
-                        "Response")
+    
+    idx <- match(headersOrder, oldHeaders)
+    dataChk <- dataChk[,idx]
+    names(dataChk) <- headersOrder
+    
     newData[[i]] <- list(cpndName = cpndName, #reading data chunk
-                         dataChk = dataChk[,2:13])
+                         dataChk = dataChk)
   }
 
   newDataLength <- sum(unlist(lapply(newData, function(x) dim(x$dataChk)[1])))
@@ -328,7 +335,7 @@ parseMS_Tr <- function(file, options) {
             crayon::blue$bold(cpndName) %+%
             crayon::blue(" ignored for that method."), fill = TRUE)
     } else {
-    dataCol <- data.frame(chk[[2]]$`Conc.`)
+    dataCol <- data.frame(as.numeric(unlist(chk[[2]]$`Conc.`)))
     names(dataCol) <- cpndName
     if (identical(chk[[2]]$Name, sampleNames)){
       if (cpndName %in% mw$analyte) {
