@@ -1,6 +1,8 @@
 #' read experiment from a bruker folder (expno)
 #'
 #' @param path - the path to the expNo folder
+#' @param acqus - object with acquisiton parameters, if TRUE reads from the file
+#' @param procs - object with processing parameters, if TRUE reads from the file
 #' @return a list with all read elements
 #'
 #' @export
@@ -35,7 +37,8 @@ readExperiment <- function(path, acqus = TRUE, procs = TRUE) {
       }
     }
 
-    if (file.exists(file.path(path, "pdata", "1", "plasma_quant_report.xml"))) {
+    if (file.exists(file.path(path, "pdata", "1", "plasma_quant_report.xml")) |
+        file.exists(file.path(path, "pdata", "1", "urine_quant_report_e.xml"))) {
       ivdr <- getIvdr(path)
       if (!is.null(ivdr)) {
         res <- c(res, list(ivdr = ivdr))

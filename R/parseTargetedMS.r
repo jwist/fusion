@@ -12,7 +12,8 @@
 #' @export
 #' @importFrom utils data read.table
 #' @importFrom reshape2 dcast
-#' @importFrom crayon red blue yellow white green
+#' @importFrom crayon red blue yellow white green bold
+#' @importFrom utils read.delim2
 parseTargetedMS <- function(file, method, options) {
   cat(paste("fusion: using import method for",
             method, "\n"))
@@ -154,7 +155,7 @@ parseMS_AA <- function(file, options) {
   sampleType <- as.factor(rawData$SampleType)
   cat(bold(blue(levels(sampleType)) %+% blue(" sample type was found")), fill = TRUE)
   if ("sampleTypes" %in% names(options)) {
-    cat(red(options$sampleType))
+    cat(red(options$sampleType), " using these from option\n")
     levels(sampleType) <- options$sampleTypes
   } else {
     levels(sampleType) <- c("BLANK", "CALIBRANT", "QUALITYCONTROL", "SAMPLE")

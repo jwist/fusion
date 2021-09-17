@@ -10,6 +10,14 @@ readExperiment(path, acqus = TRUE, procs = TRUE)
 \item{path}{\itemize{
 \item the path to the expNo folder
 }}
+
+\item{acqus}{\itemize{
+\item object with acquisiton parameters, if TRUE reads from the file
+}}
+
+\item{procs}{\itemize{
+\item object with processing parameters, if TRUE reads from the file
+}}
 }
 \value{
 a list with all read elements
