@@ -226,7 +226,7 @@ parseMS_AA <- function(file, options) {
 parseMS_Tr <- function(file, options) {
   mw <- tMsTestsets$mw
   rawData <- read.table(file,
-                        fill = TRUE,
+                        # fill = TRUE,
                         sep = "\t",
                         dec = ".")
 
@@ -234,11 +234,11 @@ parseMS_Tr <- function(file, options) {
   cat(paste("fusion:", nrow(rawData),
             "line(s) read\n"))
 
-  rawData <- rawData[-c(1,2),] # removing first title rows
-  
-  oldHeaders <- rawData[2,] # capturing column order
+  oldHeaders <- rawData[7,] # capturing column order
   oldHeaders[1] <- "rowIndex"
-  
+
+  rawData <- rawData[-c(1:4),] # removing first title rows
+
   fi <- rawData[,1] == "" # excluding empty rows
   rawData <- rawData[!fi,]
   cat(paste("fusion:",
@@ -279,7 +279,7 @@ parseMS_Tr <- function(file, options) {
              "Area",
              "IS Area",
              "Response")
-  
+
   for (i in 1:numberOfCompounds){
 
     rge <- spliter[i]:(spliter[i] + dataChkLength[i] - 1)
@@ -288,11 +288,11 @@ parseMS_Tr <- function(file, options) {
 
     cpndName <- strsplit(dataChk[1,1], ":  ")[[1]][2] # reading title
     dataChk <- dataChk[-1,] # removing title
-    
+
     idx <- match(headersOrder, oldHeaders)
     dataChk <- dataChk[,idx]
     names(dataChk) <- headersOrder
-    
+
     newData[[i]] <- list(cpndName = cpndName, #reading data chunk
                          dataChk = dataChk)
   }
