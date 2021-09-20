@@ -223,12 +223,42 @@ parseMS_AA <- function(file, options) {
   return(da)
 }
 
+preParseTr <- function(file) {
+  res <- readLines(file)
+  li <- sapply(res, function(x) length(strsplit(x, "\t")[[1]]))
+  le <- unique(li)
+
+  if (length(le) > 2) {
+    stop(crayon::red("fusion::preParseTr export format not supported (ask Nathan for help)"))
+  }
+
+  if (le[2] < le[1]) {
+    stop(crayon::red("fusion::preParseTr export format not supported (ask Nathan for help)"))
+  }
+
+  dim <- table(unname(li))
+  cat(paste("fusion:",
+            dim,
+            "line(s) of length", le, "data found\n"))
+
+  ne <- lapply(res, function(x) {
+    ch <- strsplit(x, "\t")[[1]]
+    if (length(ch) == le[2]) {
+      return(ch[1:le[2]])
+    } else {
+      return(c(ch, "NA"))
+    }
+  })
+
+  new <- do.call("rbind", ne)
+
+  return(new)
+}
+
 parseMS_Tr <- function(file, options) {
   mw <- tMsTestsets$mw
-  rawData <- read.table(file,
-                        # fill = TRUE,
-                        sep = "\t",
-                        dec = ".")
+
+  rawData <- preParseTr(file)
 
   cat(paste("fusion: using import method for tryptophan\n"))
   cat(paste("fusion:", nrow(rawData),
@@ -291,10 +321,10 @@ parseMS_Tr <- function(file, options) {
 
     idx <- match(headersOrder, oldHeaders)
     dataChk <- dataChk[,idx]
-    names(dataChk) <- headersOrder
+    colnames(dataChk) <- headersOrder
 
     newData[[i]] <- list(cpndName = cpndName, #reading data chunk
-                         dataChk = dataChk)
+                         dataChk = data.frame(dataChk))
   }
 
   newDataLength <- sum(unlist(lapply(newData, function(x) dim(x$dataChk)[1])))
