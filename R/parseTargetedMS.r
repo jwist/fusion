@@ -228,29 +228,19 @@ preParseTr <- function(file) {
   li <- sapply(res, function(x) length(strsplit(x, "\t")[[1]]))
   le <- unique(li)
 
-  if (length(le) > 2) {
-    stop(crayon::red("fusion::preParseTr export format not supported (ask Nathan for help)"))
-  }
-
-  if (le[2] < le[1]) {
-    stop(crayon::red("fusion::preParseTr export format not supported (ask Nathan for help)"))
-  }
-
-  dim <- table(unname(li))
-  cat(paste("fusion:",
-            dim,
-            "line(s) of length", le, "data found\n"))
-
   ne <- lapply(res, function(x) {
     ch <- strsplit(x, "\t")[[1]]
-    if (length(ch) == le[2]) {
-      return(ch[1:le[2]])
-    } else {
-      return(c(ch, "NA"))
+    if (length(ch) == max(le)) {
+      return(ch)
+    } else if (length(ch) > 0){
+      if (grepl("Compound", ch)[1] | length(ch) > 1) {
+        return(c(ch, rep("NA", max(le) - length(ch))))
+      }
     }
   })
 
   new <- do.call("rbind", ne)
+  new <- new[-1,]
 
   return(new)
 }
@@ -263,13 +253,10 @@ parseMS_Tr <- function(file, options) {
   cat(paste("fusion: using import method for tryptophan\n"))
   cat(paste("fusion:", nrow(rawData),
             "line(s) read\n"))
-
-  oldHeaders <- rawData[7,] # capturing column order
+  oldHeaders <- rawData[2,] # capturing column order
   oldHeaders[1] <- "rowIndex"
 
-  rawData <- rawData[-c(1:4),] # removing first title rows
-
-  fi <- rawData[,1] == "" # excluding empty rows
+  fi <- rawData[,1] == "" # excluding title rows
   rawData <- rawData[!fi,]
   cat(paste("fusion:",
             sum(fi),
