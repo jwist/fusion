@@ -233,7 +233,7 @@ preParseTr <- function(file) {
     if (length(ch) == max(le)) {
       return(ch)
     } else if (length(ch) > 0){
-      if (grepl("Compound", ch)[1] | length(ch) > 1) {
+      if (grepl("Compound", ch)[1] & length(ch) > 1) {
         return(c(ch, rep("NA", max(le) - length(ch))))
       }
     }
