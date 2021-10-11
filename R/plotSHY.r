@@ -284,7 +284,10 @@ plotSHY <- function(cor, sig, txt, labels, trace, xaxis, options = list()) {
 #' @return a matrix of colors
 #' @export
 corToColor <- function(mat) {
-  mat <- rescale(mat, to = c(0, 1))
+  if (max(mat, na.rm = TRUE) > 1 | min(mat, na.rm = TRUE) < -1) {
+    stop("input values should be between -1 and 1")
+  }
+  mat <- rescale(mat, to = c(0, 1), from = c(-1,1))
   tictoc::tic("mean")
   row <- nrow(mat)
   col <- ncol(mat)
