@@ -1,5 +1,7 @@
-#' plot correlation between NMR trace (part of) and MS data
-#' @param x - a matrix with correlation values
+#' plot correlation between NMR trace (part of) and MS data with segments
+#' @param cor - a matrix with correlation values
+#' @param sig - a matrix with significance values
+#' @param txt - a matrix with text
 #' @param labels - the name of the MS values (x rows)
 #' @param trace - the NMR trace to plot (values)
 #' @param xaxis - the xaxis for the NMR trace
@@ -275,6 +277,12 @@ plotSHY <- function(cor, sig, txt, labels, trace, xaxis, options = list()) {
 # #
 #
 # # png(filename = paste0("test_", j, ".png"), width = 2000, height = 600)
+
+
+#' convert a matrix to a color matrix
+#' @param mat - a matrix
+#' @return a matrix of colors
+#' @export
 corToColor <- function(mat) {
   mat <- rescale(mat, to = c(0, 1))
   tictoc::tic("mean")
