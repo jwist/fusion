@@ -244,7 +244,7 @@ plotSHY <- function(cor, sig, txt, labels, trace, xaxis, options = list()) {
   upViewport()
 }
 
-# plotSHY(cor = corToColor(matrixList[[1]][,1:3]),
+# plotSHY(cor = corToColor(rescale(matrixList[[1]][,1:3], to = c(-1,1))),
 #         sig = matrixList[[1]][,1:3]/100,
 #         txt = rescale(matrixList[[1]][,1:3], to = c(-1,1)),
 #         labs,
