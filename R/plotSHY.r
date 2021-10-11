@@ -7,7 +7,7 @@
 #' @export
 #' @importFrom grid grid.xaxis grid.yaxis pushViewport viewport grid.rect
 #' @importFrom grid grid.newpage grid.text gEdit upViewport gpar unit
-#' @importFrom grid grid.circle calcStringMetric grid.roundrect
+#' @importFrom grid grid.circle calcStringMetric grid.roundrect grid.convertY
 #' @importFrom grDevices rgb colorRamp
 plotSHY <- function(cor, sig, txt, labels, trace, xaxis, options = list()) {
   tictoc::tic("init")
@@ -29,6 +29,8 @@ plotSHY <- function(cor, sig, txt, labels, trace, xaxis, options = list()) {
     columnWidth <- sapply(options$columns, function(x) sum(xaxis >= x[1] & xaxis <= x[2] ))
     columnMin <- min(columnCenter - columnWidth / 2)
     columnMax <- max(columnCenter + columnWidth / 2)
+    print(columnMin)
+    print(columnMax)
   } else {
     columns <- FALSE
   }
@@ -61,21 +63,28 @@ plotSHY <- function(cor, sig, txt, labels, trace, xaxis, options = list()) {
                         xscale=c(0, Ncol),
                         yscale=c(0, nrow(x))))
 
-  maxTextWidth <- max(calcStringMetric(labels)$width) * 0.8 #cex
-  print(maxTextWidth)
+  maxTextWidth <- convertY(unit(max(calcStringMetric(labels)$width), "inches"), "native", valueOnly = TRUE)
 
   corp<- colorRamp(c("blue", "white", "red"))
 
   for (i in c(1:nrow(x))) {
     if (!missing(labels) & !missing(xaxis)) {
-      grid.text(x = unit(-maxTextWidth, "inches"),
+      grid.text(x = unit(-maxTextWidth + columnMin - (0.05 * Ncol), "native"),
                 y = unit(nrow(x) + 1 - i - 0.5, "native"),
-                label = labels[i], gp = gpar(cex = 0.8), just = "center")
+                label = labels[i], gp = gpar(cex = 0.8), just = "right")
     }
     for (j in c(1:length(options$columns))) {
       if (length(dim(x)) > 2) {
         if (is.na(x[i,j,1]) | is.na(x[i,j,2]) | is.na(x[i,j,3])) {
           fill <- "black"
+          pushViewport(viewport(x = unit(columnCenter[[j]], "native"),
+                                y = unit(nrow(x) + 1 - i - 0.5, "native"),
+                                width = unit(columnWidth[[j]], "native"),
+                                height = unit(1, "native"),
+                                xscale = c(0,1),
+                                yscale = c(0,1)))
+          grid.rect(gp = gpar(fill = NA, alpha = alpha))
+          upViewport()
         } else {
           fill <- rgb(array(data = c(x[i,j,1], x[i,j,2], x[i,j,3]), dim = c(1,4))/256)
           pushViewport(viewport(x = unit(columnCenter[[j]], "native"),
@@ -90,7 +99,7 @@ plotSHY <- function(cor, sig, txt, labels, trace, xaxis, options = list()) {
             grid.text(x = 0.5, y = 0.15, label = round(txt[i,j], digits = 2), gp = gpar(cex = 0.7, just = "center"))
             grid.text(x = 0.5, y = 0.875, label = numToSignificance(sig[i, j]), gp = gpar(cex = 0.7, just = "center"))
           } else {
-            grid.rect(gp = gpar(fill = NA, alpha = alpha))
+            # grid.rect(gp = gpar(fill = NA, alpha = alpha))
           }
           upViewport()
         }
@@ -110,6 +119,14 @@ plotSHY <- function(cor, sig, txt, labels, trace, xaxis, options = list()) {
                           y = 0.5,
                           angle = 90))
     grid.text(label = ylab)
+    upViewport()
+
+    pushViewport(viewport(width = unit(Ncol, "native"),
+                          height = 0.1,
+                          x = 0.96,
+                          y = 0.5,
+                          angle = 90))
+    grid.text(label = "color scale")
     upViewport()
 
     pushViewport(viewport(width = 1,
@@ -140,6 +157,7 @@ plotSHY <- function(cor, sig, txt, labels, trace, xaxis, options = list()) {
     grid.yaxis(at=round(c(min(trace), max(trace)), 2),
                gp = gpar(cex = 0.6))
   }
+
   # draw points for trace
   for (i in c(1:Ncol)) {
     pushViewport(viewport(x = unit(i - 0.5, "native"),
@@ -198,14 +216,35 @@ plotSHY <- function(cor, sig, txt, labels, trace, xaxis, options = list()) {
   upViewport()
 
 
+  # ploting color scale
+  colorScale <- rev(seq(-1,1, length.out = nrow(x)))
+  sc <- corToColor(matrix(colorScale))
+  pushViewport(viewport(width = unit(0.05, "native"),
+                        height = unit(2, "native"),
+                        x = unit(4, "native"),
+                        y = unit(1, "native"),
+                        xscale=c(0, 1),
+                        yscale=c(0, nrow(x))))
+  for (i in c(1:nrow(x))) {
+    pushViewport(viewport(x = unit(0.5, "native"),
+                          y = unit(nrow(x) + 1 - i - 0.5, "native"),
+                          width = unit(1, "native"),
+                          height = unit(1, "native"),
+                          xscale = c(0,1),
+                          yscale = c(0,1)))
+    grid.rect(gp = gpar(fill =  rgb(array(data = c(sc[i,1,1], sc[i,1,2], sc[i,1,3]), dim = c(1,4))/256)))
+    grid.text(label = round(colorScale[i], 1), x = 2.5, y = 0.5, gp = gpar(cex = 0.7))
+    upViewport()
+  }
+  upViewport()
 
   tictoc::toc()
   upViewport()
 }
-#
+
 # plotSHY(cor = corToColor(matrixList[[1]][,1:3]),
 #         sig = matrixList[[1]][,1:3]/100,
-#         txt = matrixList[[1]][,1:3],
+#         txt = rescale(matrixList[[1]][,1:3], to = c(-1,1)),
 #         labs,
 #         trace * 2,
 #         xaxis,
@@ -216,27 +255,28 @@ plotSHY <- function(cor, sig, txt, labels, trace, xaxis, options = list()) {
 #                        columns = list("seg1" = c(3.13, 3.19),
 #                                       "seg2" = c(3.19, 3.21),
 #                                       "seg3" = c(3.21, 3.24))))
-# #
+#
 # #
 # matrixList <- list()
 # for (i in 1:9) {
-#   x <- (matrix(rnorm(12000, 0.5, 0.1), 10, 20))
-#   x[9,9] <- rnorm(1, 0.9, 0.05)
-#   x[8,8] <- rnorm(1, 0.5, 0.05)
-#   x[7,7] <- max(0, rnorm(1, 0.2, 0.05))
+#   x <- (matrix(rnorm(12000, 0, 1), 10, 40))
 #   x[2,2] <- NA
+#   x[2,3] <- 1
+#   x[3,3] <- 1
+#   x[3,1] <- -0.1
 #   trace <- x[1,]
 #   matrixList[[i]] <- x
 # }
-#
+# #
 # labs <- paste("variable", c(1:nrow(x)))
 # trace <- x[1,]
 # xaxis <- seq(3.3, 3.1, length.out = ncol(x))
-# # plotSHY(meanColor(matrixList), labs, trace, xaxis, options = list(segments = c(3.13, 3.16, 3.2, 3.22)))
+# # # plotSHY(meanColor(matrixList), labs, trace, xaxis, options = list(segments = c(3.13, 3.16, 3.2, 3.22)))
+# #
 #
-
-# png(filename = paste0("test_", j, ".png"), width = 2000, height = 600)
+# # png(filename = paste0("test_", j, ".png"), width = 2000, height = 600)
 corToColor <- function(mat) {
+  mat <- rescale(mat, to = c(0, 1))
   tictoc::tic("mean")
   row <- nrow(mat)
   col <- ncol(mat)
