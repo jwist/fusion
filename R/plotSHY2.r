@@ -359,39 +359,39 @@ upViewport()
   upViewport()
 }
 
-plotSHY2(corList = list(corToColor(rescale(matrixList[[1]][,1:3], to = c(-1,1))),
-                   corToColor(rescale(matrixList[[2]][,1:3], to = c(-1,1)))),
-        sigList = list(matrixList[[1]][,1:3]/100,
-                   matrixList[[2]][,1:3]/100),
-        txtList = list(rescale(matrixList[[1]][,1:3], to = c(-1,1)),
-                   rescale(matrixList[[2]][,1:3], to = c(-1,1))),
-        labs,
-        trace = list(trace * 2, trace * 4),
-        xaxis,
-        options = list(alpha = 0.1,
-                       xlab = "xlab",
-                       ylab = "ylab",
-                       colors = c("blue", "red", "green"),
-                       columns = list("seg1" = c(3.13, 3.19),
-                                      "seg2" = c(3.19, 3.21),
-                                      "seg3" = c(3.21, 3.24)),
-                       columnHeader = c("a", "b", "c"),
-                       rowHeader = LETTERS[1:nrow(matrixList[[1]])]))
+# plotSHY2(corList = list(corToColor(rescale(matrixList[[1]][,1:3], to = c(-1,1))),
+#                    corToColor(rescale(matrixList[[2]][,1:3], to = c(-1,1)))),
+#         sigList = list(matrixList[[1]][,1:3]/100,
+#                    matrixList[[2]][,1:3]/100),
+#         txtList = list(rescale(matrixList[[1]][,1:3], to = c(-1,1)),
+#                    rescale(matrixList[[2]][,1:3], to = c(-1,1))),
+#         labs,
+#         trace = list(trace * 2, trace * 4),
+#         xaxis,
+#         options = list(alpha = 0.1,
+#                        xlab = "xlab",
+#                        ylab = "ylab",
+#                        colors = c("blue", "red", "green"),
+#                        columns = list("seg1" = c(3.13, 3.19),
+#                                       "seg2" = c(3.19, 3.21),
+#                                       "seg3" = c(3.21, 3.24)),
+#                        columnHeader = c("a", "b", "c"),
+#                        rowHeader = LETTERS[1:nrow(matrixList[[1]])]))
 
 
-matrixList <- list()
-for (i in 1:9) {
-  x <- (matrix(rnorm(12000, 0, 1), 10, 40))
-  x[2,2] <- NA
-  x[2,3] <- 1
-  x[3,3] <- 1
-  x[3,1] <- -0.1
-  trace <- x[1,]
-  matrixList[[i]] <- x
-}
+# matrixList <- list()
+# for (i in 1:9) {
+#   x <- (matrix(rnorm(12000, 0, 1), 10, 40))
+#   x[2,2] <- NA
+#   x[2,3] <- 1
+#   x[3,3] <- 1
+#   x[3,1] <- -0.1
+#   trace <- x[1,]
+#   matrixList[[i]] <- x
+# }
+# #
+# labs <- paste("variable", c(1:nrow(x)))
+# trace <- x[1,]
+# xaxis <- seq(3.3, 3.1, length.out = ncol(x))
 #
-labs <- paste("variable", c(1:nrow(x)))
-trace <- x[1,]
-xaxis <- seq(3.3, 3.1, length.out = ncol(x))
-
 
