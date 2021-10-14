@@ -11,11 +11,14 @@
 #' @importFrom grid grid.newpage grid.text gEdit upViewport gpar unit
 #' @importFrom grid grid.circle calcStringMetric grid.roundrect grid.convertY
 #' @importFrom grDevices rgb colorRamp
-plotSHY <- function(cor, sig, txt, labels, trace, xaxis, options = list()) {
+plotSHY2 <- function(corList, sigList, txtList, labels, trace, xaxis, options = list()) {
   tictoc::tic("init")
 
-  x <- cor
-  Ncol <- length(trace)
+  x <- corList[[1]]
+  sig <- sigList[[1]]
+  txt <- txtList[[1]]
+  # x <- cor
+  Ncol <- length(trace[[1]])
 
   if ("alpha" %in% names(options)) {
     alpha <- options$alpha
@@ -49,6 +52,17 @@ plotSHY <- function(cor, sig, txt, labels, trace, xaxis, options = list()) {
     ylab  <- ""
   }
 
+  if ("columnHeader" %in% names(options)) {
+    columnHeader <- options$columnHeader
+  } else {
+    columnHeader  <- rep("", Ncol)
+  }
+
+  if ("rowHeader" %in% names(options)) {
+    rowHeader <- options$rowHeader
+  } else {
+    rowHeader  <- rep("", Ncol)
+  }
 
   grid.newpage()
   pushViewport(viewport(width = 0.9,
@@ -75,7 +89,42 @@ plotSHY <- function(cor, sig, txt, labels, trace, xaxis, options = list()) {
                 y = unit(nrow(x) + 1 - i - 0.5, "native"),
                 label = labels[i], gp = gpar(cex = 0.8), just = "right")
     }
+
+    # plot row header
+    pushViewport(viewport(x = unit(unit(-0.35 + columnCenter[[length(options$columns)]] - columnWidth[[length(options$columns)]] / 2, "native"), "native"),
+                          y = unit(nrow(x) + 1 - i - 0.5, "native"),
+                          width = unit(0.7, "native"),
+                          height = unit(1, "native"),
+                          xscale = c(0,1),
+                          yscale = c(0,1)))
+    grid.rect(gp = gpar(fill = "black", alpha = alpha))
+    upViewport()
+
+    pushViewport(viewport(x = unit(unit(-0.3 + columnCenter[[length(options$columns)]] - columnWidth[[length(options$columns)]] / 2, "native"), "native"),
+                          y = unit(nrow(x) + 1 - i - 0.5, "native"),
+                          width = unit(0.6, "native"),
+                          height = unit(1, "native"),
+                          xscale = c(0,1),
+                          yscale = c(0,1),
+                          angle = 90))
+    grid.text(x = 0.5, y = 0.5, label = rowHeader[i], gp = gpar(cex = 1, just = "center"))
+    upViewport()
+
     for (j in c(1:length(options$columns))) {
+
+      # plot column header
+      if (i == 1) {
+        pushViewport(viewport(x = unit(columnCenter[[j]], "native"),
+                              y = unit(nrow(x) + 0.15, "native"),
+                              width = unit(columnWidth[[j]], "native"),
+                              height = unit(0.3, "native"),
+                              xscale = c(0,1),
+                              yscale = c(0,1)))
+        grid.rect(gp = gpar(fill = "black", alpha = alpha))
+        grid.text(x = 0.5, y = 0.5, label = columnHeader[j], gp = gpar(cex = 1, just = "center"))
+        upViewport()
+      }
+
       if (length(dim(x)) > 2) {
         if (is.na(x[i,j,1]) | is.na(x[i,j,2]) | is.na(x[i,j,3])) {
           fill <- "black"
@@ -97,9 +146,10 @@ plotSHY <- function(cor, sig, txt, labels, trace, xaxis, options = list()) {
                                 yscale = c(0,1)))
           if (numToSignificance(sig[i, j]) != "NS" & !is.na(sig[i, j])) {
             grid.rect(gp = gpar(fill = NA, alpha = alpha))
+            grid.text(x = 0.25, y = 0.15, label = round(txt[i,j], digits = 2), gp = gpar(cex = 1, just = "center"))
+            grid.text(x = 0.25, y = 0.8, label = numToSignificance(sig[i, j]), gp = gpar(cex = 1, just = "center"))
+            grid.clip(x = 0.25, y = 0.55, width = 0.5, height = 1)
             grid.circle(x = 0.5, y = 0.55, r = 0.3, gp = gpar(fill = fill, col = NA))
-            grid.text(x = 0.5, y = 0.15, label = round(txt[i,j], digits = 2), gp = gpar(cex = 1, just = "center"))
-            grid.text(x = 0.5, y = 0.875, label = numToSignificance(sig[i, j]), gp = gpar(cex = 1, just = "center"))
           } else {
             # grid.rect(gp = gpar(fill = NA, alpha = alpha))
           }
@@ -112,6 +162,54 @@ plotSHY <- function(cor, sig, txt, labels, trace, xaxis, options = list()) {
 
     }
   }
+
+
+  x <- corList[[2]]
+  sig <- sigList[[2]]
+  txt <- txtList[[2]]
+  for (i in c(1:nrow(x))) {
+
+    for (j in c(1:length(options$columns))) {
+
+      if (length(dim(x)) > 2) {
+        if (is.na(x[i,j,1]) | is.na(x[i,j,2]) | is.na(x[i,j,3])) {
+          fill <- "black"
+          pushViewport(viewport(x = unit(columnCenter[[j]], "native"),
+                                y = unit(nrow(x) + 1 - i - 0.5, "native"),
+                                width = unit(columnWidth[[j]], "native"),
+                                height = unit(1, "native"),
+                                xscale = c(0,1),
+                                yscale = c(0,1)))
+          grid.rect(gp = gpar(fill = NA, alpha = alpha))
+          upViewport()
+        } else {
+          fill <- rgb(array(data = c(x[i,j,1], x[i,j,2], x[i,j,3]), dim = c(1,4))/256)
+          pushViewport(viewport(x = unit(columnCenter[[j]], "native"),
+                                y = unit(nrow(x) + 1 - i - 0.5, "native"),
+                                width = unit(columnWidth[[j]], "native"),
+                                height = unit(1, "native"),
+                                xscale = c(0,1),
+                                yscale = c(0,1)))
+          if (numToSignificance(sig[i, j]) != "NS" & !is.na(sig[i, j])) {
+            grid.rect(gp = gpar(fill = NA, alpha = alpha))
+            grid.text(x = 0.75, y = 0.15, label = round(txt[i,j], digits = 2), gp = gpar(cex = 1, just = "center"))
+            grid.text(x = 0.75, y = 0.8, label = numToSignificance(sig[i, j]), gp = gpar(cex = 1, just = "center"))
+            grid.clip(x = 0.75, y = 0.55, width = 0.5, height = 1)
+            grid.circle(x = 0.5, y = 0.55, r = 0.3, gp = gpar(fill = fill, col = NA))
+          } else {
+            # grid.rect(gp = gpar(fill = NA, alpha = alpha))
+          }
+          upViewport()
+        }
+      } else {
+        fill <- rgb(corp(x[i,j])/255)
+      }
+
+
+    }
+  }
+
+
 
   # labels
   if (!missing(labels) & !missing(xaxis)) {
@@ -142,12 +240,16 @@ plotSHY <- function(cor, sig, txt, labels, trace, xaxis, options = list()) {
   upViewport()
 
   # ploting trace
+  minTrace <- min(sapply(trace, function(x) min(x)))
+  maxTrace <- max(sapply(trace, function(x) max(x)))
+  print(minTrace)
+  print(maxTrace)
   pushViewport(viewport(width = unit(3, "native"),
                         height = unit(0.7, "native"),
                         x = unit(2.5, "native"),
                         y= unit(2.6, "native"),
                         xscale=c(0, Ncol),
-                        yscale=c(min(trace), max(trace))))
+                        yscale=c(minTrace, maxTrace)))
 
   if (!missing(labels) & !missing(xaxis)) {
     tick <- seq(1, Ncol, length.out = 15)
@@ -156,21 +258,34 @@ plotSHY <- function(cor, sig, txt, labels, trace, xaxis, options = list()) {
                gp = gpar(cex = 0.6),
                edits = gEdit(gPath="labels", rot=90))
 
-    grid.yaxis(at=round(c(min(trace), max(trace)), 2),
+    grid.yaxis(at=round(c(minTrace, maxTrace), 2),
                gp = gpar(cex = 0.6))
   }
 
-  # draw points for trace
-  for (i in c(1:Ncol)) {
-    pushViewport(viewport(x = unit(i - 0.5, "native"),
-                          y = unit(trace[i], "native"),
-                          height = unit(1, "native"),
-                          width = unit(1, "native")))
+# draw points for trace
+for (i in c(1:Ncol)) {
+  pushViewport(viewport(x = unit(i - 0.5, "native"),
+                        y = unit(trace[[1]][i], "native"),
+                        height = unit(1, "native"),
+                        width = unit(1, "native")))
 
-      grid.circle(gp = gpar(alpha = 0.8))
-    upViewport()
-  }
+  grid.circle(gp = gpar(alpha = 0.8))
   upViewport()
+}
+
+
+# draw points for trace
+for (i in c(1:Ncol)) {
+  pushViewport(viewport(x = unit(i - 0.5, "native"),
+                        y = unit(trace[[2]][i], "native"),
+                        height = unit(1, "native"),
+                        width = unit(1, "native")))
+
+  grid.circle(gp = gpar(alpha = 0.8, fill = "red"))
+  upViewport()
+}
+upViewport()
+
 
   # draw segment shade
   pushViewport(viewport(width = unit(3, "native"),
@@ -190,7 +305,7 @@ plotSHY <- function(cor, sig, txt, labels, trace, xaxis, options = list()) {
     grid.lines(c(0, 0), c(0, 1), gp = gpar(alpha = 0.5, col = "black", lwd = 2, lty = 2))
     grid.lines(c(1, 1), c(0, 1), gp = gpar(alpha = 0.5, col = "black", lwd = 2, lty = 2))
     if (columns) {
-      grid.text(label = columnName[j], x = 0.5, y = max(trace) * 1.2)
+      grid.text(label = columnName[j], x = 0.5, y = maxTrace * 1.2)
     }
     upViewport()
   }
@@ -244,61 +359,39 @@ plotSHY <- function(cor, sig, txt, labels, trace, xaxis, options = list()) {
   upViewport()
 }
 
-# plotSHY(cor = corToColor(rescale(matrixList[[1]][,1:3], to = c(-1,1))),
-#         sig = matrixList[[1]][,1:3]/100,
-#         txt = rescale(matrixList[[1]][,1:3], to = c(-1,1)),
-#         labs,
-#         trace * 2,
-#         xaxis,
-#         options = list(alpha = 0.1,
-#                        xlab = "xlab",
-#                        ylab = "ylab",
-#                        colors = c("blue", "red", "green"),
-#                        columns = list("seg1" = c(3.13, 3.19),
-#                                       "seg2" = c(3.19, 3.21),
-#                                       "seg3" = c(3.21, 3.24))))
-# #
-# # #
-# matrixList <- list()
-# for (i in 1:9) {
-#   x <- (matrix(rnorm(12000, 0, 1), 10, 40))
-#   x[2,2] <- NA
-#   x[2,3] <- 1
-#   x[3,3] <- 1
-#   x[3,1] <- -0.1
-#   trace <- x[1,]
-#   matrixList[[i]] <- x
-# }
-# #
-# labs <- paste("variable", c(1:nrow(x)))
-# trace <- x[1,]
-# xaxis <- seq(3.3, 3.1, length.out = ncol(x))
-# # # plotSHY(meanColor(matrixList), labs, trace, xaxis, options = list(segments = c(3.13, 3.16, 3.2, 3.22)))
-# #
-#
-# # png(filename = paste0("test_", j, ".png"), width = 2000, height = 600)
+plotSHY2(corList = list(corToColor(rescale(matrixList[[1]][,1:3], to = c(-1,1))),
+                   corToColor(rescale(matrixList[[2]][,1:3], to = c(-1,1)))),
+        sigList = list(matrixList[[1]][,1:3]/100,
+                   matrixList[[2]][,1:3]/100),
+        txtList = list(rescale(matrixList[[1]][,1:3], to = c(-1,1)),
+                   rescale(matrixList[[2]][,1:3], to = c(-1,1))),
+        labs,
+        trace = list(trace * 2, trace * 4),
+        xaxis,
+        options = list(alpha = 0.1,
+                       xlab = "xlab",
+                       ylab = "ylab",
+                       colors = c("blue", "red", "green"),
+                       columns = list("seg1" = c(3.13, 3.19),
+                                      "seg2" = c(3.19, 3.21),
+                                      "seg3" = c(3.21, 3.24)),
+                       columnHeader = c("a", "b", "c"),
+                       rowHeader = LETTERS[1:nrow(matrixList[[1]])]))
 
 
-#' convert a matrix to a color matrix
-#' @param mat - a matrix
-#' @return a matrix of colors
-#' @export
-corToColor <- function(mat) {
-  if (max(mat, na.rm = TRUE) > 1 | min(mat, na.rm = TRUE) < -1) {
-    stop("input values should be between -1 and 1")
-  }
-  mat <- rescale(mat, to = c(0, 1), from = c(-1,1))
-  tictoc::tic("mean")
-  row <- nrow(mat)
-  col <- ncol(mat)
-  corp<- colorRamp(c("blue", "white", "red"), alpha = TRUE)
-  av <- corp(mat)
-  res <- array(dim = c(row, col, 4))
-  res[,,1] <- matrix(av[,1], row, col)
-  res[,,2] <- matrix(av[,2], row, col)
-  res[,,3] <- matrix(av[,3], row, col)
-  res[,,4] <- matrix(av[,1], row, col)
-  tictoc::toc()
-  return(res)
+matrixList <- list()
+for (i in 1:9) {
+  x <- (matrix(rnorm(12000, 0, 1), 10, 40))
+  x[2,2] <- NA
+  x[2,3] <- 1
+  x[3,3] <- 1
+  x[3,1] <- -0.1
+  trace <- x[1,]
+  matrixList[[i]] <- x
 }
+#
+labs <- paste("variable", c(1:nrow(x)))
+trace <- x[1,]
+xaxis <- seq(3.3, 3.1, length.out = ncol(x))
+
 
