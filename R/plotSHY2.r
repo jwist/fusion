@@ -1,15 +1,16 @@
 #' plot correlation between NMR trace (part of) and MS data with segments
-#' @param cor - a matrix with correlation values
-#' @param sig - a matrix with significance values
-#' @param txt - a matrix with text
+#' @param corList - a list with correlation values
+#' @param sigList - a list with significance values
+#' @param txtList - a List with text
 #' @param labels - the name of the MS values (x rows)
-#' @param trace - the NMR trace to plot (values)
+#' @param trace - a list of NMR trace to plot (values)
 #' @param xaxis - the xaxis for the NMR trace
 #'
 #' @export
 #' @importFrom grid grid.xaxis grid.yaxis pushViewport viewport grid.rect
 #' @importFrom grid grid.newpage grid.text gEdit upViewport gpar unit
-#' @importFrom grid grid.circle calcStringMetric grid.roundrect grid.convertY
+#' @importFrom grid grid.circle calcStringMetric grid.roundrect
+#' @importFrom grid grid.convertY grid.clip popViewport
 #' @importFrom grDevices rgb colorRamp
 plotSHY2 <- function(corList, sigList, txtList, labels, trace, xaxis, options = list()) {
   tictoc::tic("init")
@@ -79,7 +80,7 @@ plotSHY2 <- function(corList, sigList, txtList, labels, trace, xaxis, options = 
                         xscale=c(0, Ncol),
                         yscale=c(0, nrow(x))))
 
-  maxTextWidth <- convertY(unit(max(calcStringMetric(labels)$width), "inches"), "native", valueOnly = TRUE)
+  maxTextWidth <- grid.convertY(unit(max(calcStringMetric(labels)$width), "inches"), "native", valueOnly = TRUE)
 
   corp<- colorRamp(c("blue", "white", "red"))
 
@@ -334,6 +335,7 @@ upViewport()
 
 
   # ploting color scale
+
   colorScale <- rev(seq(-1,1, length.out = nrow(x)))
   sc <- corToColor(matrix(colorScale))
   pushViewport(viewport(width = unit(0.05, "native"),
@@ -377,11 +379,11 @@ upViewport()
 #                                       "seg3" = c(3.21, 3.24)),
 #                        columnHeader = c("a", "b", "c"),
 #                        rowHeader = LETTERS[1:nrow(matrixList[[1]])]))
-
-
+#
+#
 # matrixList <- list()
 # for (i in 1:9) {
-#   x <- (matrix(rnorm(12000, 0, 1), 10, 40))
+#   x <- (matrix(rnorm(12000, 0, 1), 15, 200))
 #   x[2,2] <- NA
 #   x[2,3] <- 1
 #   x[3,3] <- 1

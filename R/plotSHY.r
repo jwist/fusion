@@ -8,7 +8,7 @@
 #'
 #' @export
 #' @importFrom grid grid.xaxis grid.yaxis pushViewport viewport grid.rect
-#' @importFrom grid grid.newpage grid.text gEdit upViewport gpar unit
+#' @importFrom grid grid.newpage grid.text gEdit upViewport gpar unit popViewport
 #' @importFrom grid grid.circle calcStringMetric grid.roundrect grid.convertY
 #' @importFrom grDevices rgb colorRamp
 plotSHY <- function(cor, sig, txt, labels, trace, xaxis, options = list()) {
@@ -65,7 +65,7 @@ plotSHY <- function(cor, sig, txt, labels, trace, xaxis, options = list()) {
                         xscale=c(0, Ncol),
                         yscale=c(0, nrow(x))))
 
-  maxTextWidth <- convertY(unit(max(calcStringMetric(labels)$width), "inches"), "native", valueOnly = TRUE)
+  maxTextWidth <- grid.convertY(unit(max(calcStringMetric(labels)$width), "inches"), "native", valueOnly = TRUE)
 
   corp<- colorRamp(c("blue", "white", "red"))
 
@@ -282,6 +282,7 @@ plotSHY <- function(cor, sig, txt, labels, trace, xaxis, options = list()) {
 #' convert a matrix to a color matrix
 #' @param mat - a matrix
 #' @return a matrix of colors
+#' @importFrom scales rescale
 #' @export
 corToColor <- function(mat) {
   if (max(mat, na.rm = TRUE) > 1 | min(mat, na.rm = TRUE) < -1) {
@@ -301,4 +302,3 @@ corToColor <- function(mat) {
   tictoc::toc()
   return(res)
 }
-

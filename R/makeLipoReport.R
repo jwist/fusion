@@ -1,4 +1,10 @@
 
+#' print lipoprotein indicator in report
+#' @param lip - indicator value
+#' @param row - row value
+#' @param column - column value
+#' @param options = a list with options
+#' @importFrom stats dist
 printIndicator <- function(lip, row, column, options = list()) {
   refTextColor <- "black"
   refTextAlpha <- 0.7
@@ -123,6 +129,12 @@ printIndicator <- function(lip, row, column, options = list()) {
 # lip$value <- runif(112, -10, 5)
 # makeLipoReport(lip, options = list(fold = TRUE))
 
+#' print strip in lipoprotein report
+#' @param lip - lipo value
+#' @param row - row value
+#' @param column - column value
+#' @param options - a list of options
+#' @importFrom grid viewport pushViewport grid.rect grid.text upViewport
 printStrip <- function(lip, row, column, options = list()) {
 
   if ("textColor" %in% names(options)) {
@@ -159,7 +171,12 @@ printStrip <- function(lip, row, column, options = list()) {
   upViewport()
 }
 
-
+#' print caption for lipoprotein report
+#' @param caption - the caption
+#' @param row - row value
+#' @param column - column value
+#' @importFrom grid viewport pushViewport grid.text upViewport
+#' @importFrom grid grid.raster popViewport
 printCaption <- function(caption, row, column) {
   png <- logo
   vp<-viewport(x=unit(1+column, "native"),
@@ -181,6 +198,11 @@ printCaption <- function(caption, row, column) {
   popViewport(1)
 }
 
+#' print title for lipoprotein report
+#' @param title - the title
+#' @param titleBoxPosition - position
+#' @param titlePosition - position of the title in the box
+#' @importFrom grid viewport pushViewport grid.text popViewport
 printTitle <- function(title, titleBoxPosition, titlePosition) {
 
   vp<-viewport(x=titleBoxPosition[1],
