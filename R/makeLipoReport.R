@@ -21,6 +21,12 @@ printIndicator <- function(lip, row, column, options = list()) {
     indBgAlpha <- 0.1
   }
 
+  if ("refLabels" %in% names(options)) {
+    refLabels <- options$refLabels
+  } else {
+    refLabels <- TRUE
+  }
+
   if ("labels" %in% names(options)) {
     labels <- options$labels
   } else {
@@ -113,19 +119,21 @@ printIndicator <- function(lip, row, column, options = list()) {
                  y = unit(c(0.5, 1.5), "native"))
     }
     # print upper and lower bounds
-    if (!options$fold) {
-      grid.text(lip$refMin,
-                gp=gpar(col = refTextColor, alpha = refTextAlpha, cex = 0.5),
-                just = "left",
-                x = -0.35)
-      grid.text(lip$refMax,
-                gp=gpar(col = refTextColor, alpha = refTextAlpha, cex = 0.5),
-                just = "right",
-                x = 1.35)
-      grid.text(paste0(" [", lip$refUnit,"]"),
-                gp=gpar(col = unitTextColor, alpha = unitTextAlpha, cex=0.5),
-                just = "left",
-                x = 1.35)
+    if (refLabels) {
+      if (!options$fold) {
+        grid.text(lip$refMin,
+                  gp=gpar(col = refTextColor, alpha = refTextAlpha, cex = 0.5),
+                  just = "left",
+                  x = -0.35)
+        grid.text(lip$refMax,
+                  gp=gpar(col = refTextColor, alpha = refTextAlpha, cex = 0.5),
+                  just = "right",
+                  x = 1.35)
+        grid.text(paste0(" [", lip$refUnit,"]"),
+                  gp=gpar(col = unitTextColor, alpha = unitTextAlpha, cex=0.5),
+                  just = "left",
+                  x = 1.35)
+      }
     }
   }
   # draw dot
@@ -575,7 +583,7 @@ addValues <- function(lip, options = list()) {
       options <- c(options, minRange = minRange[i], maxRange = maxRange[i])
     }
 
-    options <- c(options, labels = labels, indBgAlpha = 0)
+    options <- c(options, labels = labels, indBgAlpha = 0, refLabels = FALSE)
 
     printIndicator(lip[i,],
                    row,
