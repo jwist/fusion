@@ -142,7 +142,7 @@ printIndicator <- function(lip, row, column, options = list()) {
   upViewport()
 }
 
-
+# lip <- getLipoprotein("./inst/HB-COVID0001/10")
 # lip$refMin <- rep(-5, 112)
 # lip$refMax <- rep(10, 112)
 # lip$value <- runif(112, -10, 5)
@@ -152,7 +152,7 @@ printIndicator <- function(lip, row, column, options = list()) {
 # makeLipoReport(lip, options = list(minRange = minRange, maxRange = maxRange))
 # lip$value <- seq(12, -1, length.out = 112)
 # addValues(lip, options = list(minRange = minRange, maxRange = maxRange))
-
+#
 #' print strip in lipoprotein report
 #' @param lip - lipo value
 #' @param row - row value
@@ -417,10 +417,10 @@ makeLipoReport <- function(lip, options = list()) {
     #     lip$refMax <- max(lip$value, lip$refMax)
     #   }
     # } else {
-    #   fold = FALSE
+    fold = FALSE
     # }
 
-    options <- list(#fold = fold,
+    options <- list(fold = fold,
          add = FALSE,
          dotColor = dotColor,
          dotPch = dotPch)
@@ -556,10 +556,10 @@ addValues <- function(lip, options = list()) {
     #     lip$refMax <- max(lip$value, lip$refMax)
     #   }
     # } else {
-    #   fold = FALSE
+    fold = FALSE
     # }
 
-    options <- list(#fold = fold,
+    options <- list(fold = fold,
                     add = FALSE,
                     dotColor = dotColor,
                     dotPch = dotPch)
