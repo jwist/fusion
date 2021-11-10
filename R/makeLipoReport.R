@@ -13,7 +13,13 @@ printIndicator <- function(lip, row, column, options = list()) {
   valueTextColor <- "black"
   valueTextAlpha <- 1
   indBgColor <- "black"
-  indBgAlpha <- 0.1
+  # indBgAlpha <- 0.1
+
+  if ("indBgAlpha" %in% names(options)) {
+    indBgAlpha <- options$indBgAlpha
+  } else {
+    indBgAlpha <- 0.1
+  }
 
   if ("labels" %in% names(options)) {
     labels <- options$labels
@@ -569,7 +575,7 @@ addValues <- function(lip, options = list()) {
       options <- c(options, minRange = minRange[i], maxRange = maxRange[i])
     }
 
-    options <- c(options, labels = labels)
+    options <- c(options, labels = labels, indBgAlpha = 0)
 
     printIndicator(lip[i,],
                    row,
