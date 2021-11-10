@@ -456,6 +456,12 @@ makeLipoReport <- function(lip, options = list()) {
 #' @export
 addValues <- function(lip, options = list()) {
 
+  if ("labels" %in% names(options)) {
+    labels <- options$labels
+  } else {
+    labels <- TRUE
+  }
+
   if ("dotColor" %in% names(options)) {
     dotColor <- options$dotColor
   } else {
@@ -547,6 +553,8 @@ addValues <- function(lip, options = list()) {
       indRange <- c(minRange, maxRange)
       options <- c(options, indRange = indRange)
     }
+
+    options <- c(options, labels = labels)
 
     printIndicator(lip[i,],
                    row,
