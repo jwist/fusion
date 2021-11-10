@@ -152,7 +152,7 @@ printIndicator <- function(lip, row, column, options = list()) {
 # makeLipoReport(lip, options = list(minRange = minRange, maxRange = maxRange))
 # lip$value <- seq(12, -1, length.out = 112)
 # addValues(lip, options = list(minRange = minRange, maxRange = maxRange))
-#
+
 #' print strip in lipoprotein report
 #' @param lip - lipo value
 #' @param row - row value
@@ -579,7 +579,7 @@ addValues <- function(lip, options = list()) {
     i <- i + 1
     r <- r + 1
   }
-
+  upViewport()
 }
 
 # addValues(lip, options = list(fold = TRUE, scale = FALSE, dotColor = "red"))
