@@ -33,8 +33,13 @@ printIndicator <- function(lip, row, column, options = list()) {
     indicatorWidth <- 0.5
   }
 
-  min <- min(lip$value, lip$refMin)
-  max <- max(lip$value, lip$refMax)
+  if ("indRange" %in% names(options)) {
+    min <- indRange[1]
+    max <- indRange[2]
+  } else {
+    min <- min(lip$value, lip$refMin)
+    max <- max(lip$value, lip$refMax)
+  }
 
   m <- (max + min)/2
   d <- dist(c(max, min))
@@ -263,6 +268,20 @@ makeLipoReport <- function(lip, options = list()) {
     ncol <- 2
   }
 
+  if ("minRange" %in% names(options)) {
+    minRange <- options$minRange
+    isFixedMin <- TRUE
+  } else {
+    isFixedMin <- FALSE
+  }
+
+  if ("maxRange" %in% names(options)) {
+    maxRange <- options$maxRange
+    isFixedMax <- TRUE
+  } else {
+    isFixedMax <- FALSE
+  }
+
   if (ncol == 2) {
     width <- 0.95
     height <- 0.9
@@ -373,13 +392,21 @@ makeLipoReport <- function(lip, options = list()) {
     } else {
       fold = FALSE
     }
+
+    options <- list(fold = fold,
+         add = FALSE,
+         dotColor = dotColor,
+         dotPch = dotPch)
+
+    if (isFixedMin & isFixedMax) {
+      indRange <- c(minRange, maxRange)
+      options <- c(options, indRange = indRange)
+    }
+
     printIndicator(lip[i,],
                    row,
                    column,
-                   options = list(fold = fold,
-                                  add = FALSE,
-                                  dotColor = dotColor,
-                                  dotPch = dotPch))
+                   options = options)
 
     i <- i + 1
     r <- r + 1
@@ -404,12 +431,11 @@ makeLipoReport <- function(lip, options = list()) {
 # makeLipoReport(lip, options = list(fold = TRUE, scale = FALSE))
 
 #' add a serie of value to an existing lipoprotein  quantification report
-#'
 #' @param lip - a lipoprotein report with new values
 #' @param options - a list of options (should be as existing report)
 #' @param options$fold - if true use design for fold change (default = FALSE)
 #' @param options$scale - if true center and scale (align) the output (default = FALSE)
-#' @return print a report with overlayed values
+#' @return print a report with overlaid values
 #' @export
 addValues <- function(lip, options = list()) {
 
@@ -443,6 +469,20 @@ addValues <- function(lip, options = list()) {
     nRows = nrow(lip) + 6
   } else {
     stop("fusion::makeLipoReport -> only 2 and 3 columns are supported")
+  }
+
+  if ("minRange" %in% names(options)) {
+    minRange <- options$minRange
+    isFixedMin <- TRUE
+  } else {
+    isFixedMin <- FALSE
+  }
+
+  if ("maxRange" %in% names(options)) {
+    maxRange <- options$maxRange
+    isFixedMax <- TRUE
+  } else {
+    isFixedMax <- FALSE
   }
 
   pushViewport(viewport(width = width,
@@ -480,13 +520,21 @@ addValues <- function(lip, options = list()) {
     } else {
       fold = FALSE
     }
+
+    options <- list(fold = fold,
+                    add = FALSE,
+                    dotColor = dotColor,
+                    dotPch = dotPch)
+
+    if (isFixedMin & isFixedMax) {
+      indRange <- c(minRange, maxRange)
+      options <- c(options, indRange = indRange)
+    }
+
     printIndicator(lip[i,],
                    row,
                    column,
-                   options = list(fold = fold,
-                                  add = TRUE,
-                                  dotColor = dotColor,
-                                  dotPch = dotPch))
+                   options = options)
 
     i <- i + 1
     r <- r + 1
