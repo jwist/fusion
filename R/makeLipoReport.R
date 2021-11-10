@@ -15,6 +15,12 @@ printIndicator <- function(lip, row, column, options = list()) {
   indBgColor <- "black"
   indBgAlpha <- 0.1
 
+  if ("labels" %in% names(options)) {
+    labels <- options$labels
+  } else {
+    labels <- TRUE
+  }
+
   if ("dotColor" %in% names(options)) {
     dotColor <- options$dotColor
   } else {
@@ -58,18 +64,20 @@ printIndicator <- function(lip, row, column, options = list()) {
                y = unit(c(1, 1), "native"),
                gp = gpar(lwd=8, col = indBgColor, alpha = indBgAlpha))
 
-    # draw value
-    if (lip$value < m){
-      pos <- lip$value + d/20
-      just <- "left"
-    } else {
-      pos <- lip$value - d/20
-      just <- "right"
+    if (labels) {
+      # draw value
+      if (lip$value < m){
+        pos <- lip$value + d/20
+        just <- "left"
+      } else {
+        pos <- lip$value - d/20
+        just <- "right"
+      }
+      grid.text(round(lip$value, 2),
+                gp=gpar(col = valueTextColor, alpha = valueTextAlpha, cex=0.5),
+                just = just,
+                x=unit(pos, "native"))
     }
-    grid.text(round(lip$value, 2),
-              gp=gpar(col = valueTextColor, alpha = valueTextAlpha, cex=0.5),
-              just = just,
-              x=unit(pos, "native"))
 
     # draw line
     if (options$fold) {
@@ -237,6 +245,13 @@ printTitle <- function(title, titleBoxPosition, titlePosition) {
 #' @importFrom grid grid.newpage grid.text gEdit upViewport gpar unit
 #' @importFrom grid grid.circle grid.points grid.lines grid.raster
 makeLipoReport <- function(lip, options = list()) {
+
+  if ("labels" %in% names(options)) {
+    labels <- options$labels
+  } else {
+    labels <- TRUE
+  }
+
   if ("dotColor" %in% names(options)) {
     dotColor <- options$dotColor
   } else {
@@ -402,6 +417,8 @@ makeLipoReport <- function(lip, options = list()) {
       indRange <- c(minRange, maxRange)
       options <- c(options, indRange = indRange)
     }
+
+    options <- c(options, labels = labels)
 
     printIndicator(lip[i,],
                    row,
