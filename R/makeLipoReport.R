@@ -420,7 +420,7 @@ makeLipoReport <- function(lip, options = list()) {
     #   fold = FALSE
     # }
 
-    options <- list(fold = fold,
+    options <- list(#fold = fold,
          add = FALSE,
          dotColor = dotColor,
          dotPch = dotPch)
@@ -559,7 +559,7 @@ addValues <- function(lip, options = list()) {
     #   fold = FALSE
     # }
 
-    options <- list(fold = fold,
+    options <- list(#fold = fold,
                     add = FALSE,
                     dotColor = dotColor,
                     dotPch = dotPch)
