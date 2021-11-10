@@ -39,11 +39,15 @@ printIndicator <- function(lip, row, column, options = list()) {
     indicatorWidth <- 0.5
   }
 
-  if ("indRange" %in% names(options)) {
-    min <- indRange[1]
-    max <- indRange[2]
+  if ("minRange" %in% names(options)) {
+    min <- options$minRange
   } else {
     min <- min(lip$value, lip$refMin)
+  }
+
+  if ("maxRange" %in% names(options)) {
+    max <- options$maxRange
+  } else {
     max <- max(lip$value, lip$refMax)
   }
 
@@ -137,10 +141,17 @@ printIndicator <- function(lip, row, column, options = list()) {
 
   upViewport()
 }
-# lip$refMin <- runif(112, -12, -11)
-# lip$refMax <- runif(112, 6, 8)
+
+
+# lip$refMin <- rep(-5, 112)
+# lip$refMax <- rep(10, 112)
 # lip$value <- runif(112, -10, 5)
-# makeLipoReport(lip, options = list(fold = TRUE))
+# lip$value <- seq(-1, 12, length.out = 112)
+# minRange <- rep(-10, 112)
+# maxRange <- rep(20, 112)
+# makeLipoReport(lip, options = list(minRange = minRange, maxRange = maxRange))
+# lip$value <- seq(12, -1, length.out = 112)
+# addValues(lip, options = list(minRange = minRange, maxRange = maxRange))
 
 #' print strip in lipoprotein report
 #' @param lip - lipo value
@@ -316,6 +327,7 @@ makeLipoReport <- function(lip, options = list()) {
                         height = height,
                         xscale=c(0, ncol * 2),
                         yscale=c(0, (nRows %/% ncol))))
+
   # grid.rect()
   i <- 1
   c <- 1
@@ -392,21 +404,21 @@ makeLipoReport <- function(lip, options = list()) {
                options = list(bgColor = "red",
                               textColor = "red"))
 
-    # print indicator
-    if ("fold" %in% names(options)) {
-      fold = options$fold
-      if ("scale" %in% names(options)) {
-        if (options$scale) {
-          lip$refMin <- min(lip$value, lip$refMin)
-          lip$refMax <- max(lip$value, lip$refMax)
-        }
-      } else {
-        lip$refMin <- min(lip$value, lip$refMin)
-        lip$refMax <- max(lip$value, lip$refMax)
-      }
-    } else {
-      fold = FALSE
-    }
+    # # print indicator
+    # if ("fold" %in% names(options)) {
+    #   fold = options$fold
+    #   if ("scale" %in% names(options)) {
+    #     if (options$scale) {
+    #       lip$refMin <- min(lip$value, lip$refMin)
+    #       lip$refMax <- max(lip$value, lip$refMax)
+    #     }
+    #   } else {
+    #     lip$refMin <- min(lip$value, lip$refMin)
+    #     lip$refMax <- max(lip$value, lip$refMax)
+    #   }
+    # } else {
+    #   fold = FALSE
+    # }
 
     options <- list(fold = fold,
          add = FALSE,
@@ -414,8 +426,8 @@ makeLipoReport <- function(lip, options = list()) {
          dotPch = dotPch)
 
     if (isFixedMin & isFixedMax) {
-      indRange <- c(minRange, maxRange)
-      options <- c(options, indRange = indRange)
+      indRange <- c(minRange[i], maxRange[i])
+      options <- c(options, minRange = minRange[i], maxRange = maxRange[i])
     }
 
     options <- c(options, labels = labels)
@@ -424,7 +436,6 @@ makeLipoReport <- function(lip, options = list()) {
                    row,
                    column,
                    options = options)
-
     i <- i + 1
     r <- r + 1
   }
@@ -440,6 +451,10 @@ makeLipoReport <- function(lip, options = list()) {
   }
 
 }
+# makeLipoReport(lipo, options = list(labels = FALSE))
+# minRange <- lipo$value - 1
+# maxRange <- lipo$refMax
+# makeLipoReport(lipo, options = list(minRange = minRange, maxRange = maxRange))
 
 # lip <- getLipoprotein("./inst/HB-COVID0001/10")
 # lip$id <- seq_along(lip$abbr)
@@ -529,20 +544,20 @@ addValues <- function(lip, options = list()) {
     }
 
     # print indicator
-    if ("fold" %in% names(options)) {
-      fold = options$fold
-      if ("scale" %in% names(options)) {
-        if (options$scale) {
-          lip$refMin <- min(lip$value, lip$refMin)
-          lip$refMax <- max(lip$value, lip$refMax)
-        }
-      } else {
-        lip$refMin <- min(lip$value, lip$refMin)
-        lip$refMax <- max(lip$value, lip$refMax)
-      }
-    } else {
-      fold = FALSE
-    }
+    # if ("fold" %in% names(options)) {
+    #   fold = options$fold
+    #   if ("scale" %in% names(options)) {
+    #     if (options$scale) {
+    #       lip$refMin <- min(lip$value, lip$refMin)
+    #       lip$refMax <- max(lip$value, lip$refMax)
+    #     }
+    #   } else {
+    #     lip$refMin <- min(lip$value, lip$refMin)
+    #     lip$refMax <- max(lip$value, lip$refMax)
+    #   }
+    # } else {
+    #   fold = FALSE
+    # }
 
     options <- list(fold = fold,
                     add = FALSE,
@@ -550,8 +565,8 @@ addValues <- function(lip, options = list()) {
                     dotPch = dotPch)
 
     if (isFixedMin & isFixedMax) {
-      indRange <- c(minRange, maxRange)
-      options <- c(options, indRange = indRange)
+      indRange <- c(minRange[i], maxRange[i])
+      options <- c(options, minRange = minRange[i], maxRange = maxRange[i])
     }
 
     options <- c(options, labels = labels)
