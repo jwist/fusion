@@ -11,9 +11,6 @@ corToColor(mat)
 \item a matrix
 }}
 }
-\value{
-a matrix of colors
-}
 \description{
 convert a matrix to a color matrix
 }

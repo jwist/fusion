@@ -1,3 +1,28 @@
+
+#' convert a matrix to a color matrix
+#' @param mat - a matrix
+#' @export
+#' @importFrom scales rescale
+#'
+corToColor <- function(mat) {
+  if (max(mat, na.rm = TRUE) > 1 | min(mat, na.rm = TRUE) < -1) {
+    stop("input values should be between -1 and 1")
+  }
+  mat <- rescale(mat, to = c(0, 1), from = c(-1,1))
+  tictoc::tic("mean")
+  row <- nrow(mat)
+  col <- ncol(mat)
+  corp<- colorRamp(c("blue", "white", "red"), alpha = TRUE)
+  av <- corp(mat)
+  res <- array(dim = c(row, col, 4))
+  res[,,1] <- matrix(av[,1], row, col)
+  res[,,2] <- matrix(av[,2], row, col)
+  res[,,3] <- matrix(av[,3], row, col)
+  res[,,4] <- matrix(av[,1], row, col)
+  tictoc::toc()
+  return(res)
+}
+
 #' plot correlation between NMR trace (part of) and MS data with segments
 #' @param cor - a matrix with correlation values
 #' @param sig - a matrix with significance values
@@ -279,26 +304,3 @@ plotSHY <- function(cor, sig, txt, labels, trace, xaxis, options = list()) {
 # # png(filename = paste0("test_", j, ".png"), width = 2000, height = 600)
 
 
-#' convert a matrix to a color matrix
-#' @param mat - a matrix
-#' @return a matrix of colors
-#' @importFrom scales rescale
-#' @export
-corToColor <- function(mat) {
-  if (max(mat, na.rm = TRUE) > 1 | min(mat, na.rm = TRUE) < -1) {
-    stop("input values should be between -1 and 1")
-  }
-  mat <- rescale(mat, to = c(0, 1), from = c(-1,1))
-  tictoc::tic("mean")
-  row <- nrow(mat)
-  col <- ncol(mat)
-  corp<- colorRamp(c("blue", "white", "red"), alpha = TRUE)
-  av <- corp(mat)
-  res <- array(dim = c(row, col, 4))
-  res[,,1] <- matrix(av[,1], row, col)
-  res[,,2] <- matrix(av[,2], row, col)
-  res[,,3] <- matrix(av[,3], row, col)
-  res[,,4] <- matrix(av[,1], row, col)
-  tictoc::toc()
-  return(res)
-}

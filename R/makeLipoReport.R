@@ -516,6 +516,8 @@ getLipoTable <- function() {
                  "Min Value (ref.)",
                  "Reference Unit",
                  "Reference Range [Unit]")
+ # correcting typo in xml
+ lipo$Compound[9] <- "Apo-B100 / Apo-A1"
  rownames(lipo) <- c(1:nrow(lipo))
  return(lipo[,c(1,2,4,11)])
 }
