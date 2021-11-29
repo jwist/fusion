@@ -24,7 +24,7 @@ addValues(lip, options = list())
 }}
 }
 \value{
-print a report with overlayed values
+print a report with overlaid values
 }
 \description{
 add a serie of value to an existing lipoprotein  quantification report

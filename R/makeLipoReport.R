@@ -10,57 +10,29 @@ printIndicator <- function(lip, row, column, options = list()) {
   refTextAlpha <- 0.7
   unitTextColor <- "black"
   unitTextAlpha <- 0.7
+  unitTextAlpha <- 0.7
   valueTextColor <- "black"
   valueTextAlpha <- 1
   indBgColor <- "black"
-  # indBgAlpha <- 0.1
+  indBgAlpha <- 0.1
+  refLabels <- TRUE
+  labels <- TRUE
+  dotColor <- "black"
+  dotPch <- 22
+  dotAlpha <- 1
+  range <- c(min(lip$value, lip$refMin), max(lip$value, lip$refMax))
 
-  if ("indBgAlpha" %in% names(options)) {
-    indBgAlpha <- options$indBgAlpha
-  } else {
-    indBgAlpha <- 0.1
+  for (name in names(options)) {
+    assign(name, options[name][[1]])
   }
 
-  if ("refLabels" %in% names(options)) {
-    refLabels <- options$refLabels
-  } else {
-    refLabels <- TRUE
-  }
-
-  if ("labels" %in% names(options)) {
-    labels <- options$labels
-  } else {
-    labels <- TRUE
-  }
-
-  if ("dotColor" %in% names(options)) {
-    dotColor <- options$dotColor
-  } else {
-    dotColor <- "black"
-  }
-
-  if ("dotPch" %in% names(options)) {
-    dotPch <- options$dotPch
-  } else {
-    dotPch <- 22
-  }
+  min <- range[1]
+  max <- range[2]
 
   if (options$fold) {
     indicatorWidth <- 1
   } else {
     indicatorWidth <- 0.5
-  }
-
-  if ("minRange" %in% names(options)) {
-    min <- options$minRange
-  } else {
-    min <- min(lip$value, lip$refMin)
-  }
-
-  if ("maxRange" %in% names(options)) {
-    max <- options$maxRange
-  } else {
-    max <- max(lip$value, lip$refMax)
   }
 
   m <- (max + min)/2
@@ -94,7 +66,23 @@ printIndicator <- function(lip, row, column, options = list()) {
                 just = just,
                 x=unit(pos, "native"))
     }
-
+    # print upper and lower bounds
+    if (refLabels) {
+      if (!options$fold) {
+        grid.text(lip$refMin,
+                  gp=gpar(col = refTextColor, alpha = refTextAlpha, cex = 0.5),
+                  just = "left",
+                  x = -0.35)
+        grid.text(lip$refMax,
+                  gp=gpar(col = refTextColor, alpha = refTextAlpha, cex = 0.5),
+                  just = "right",
+                  x = 1.35)
+        grid.text(paste0(" [", lip$refUnit,"]"),
+                  gp=gpar(col = unitTextColor, alpha = unitTextAlpha, cex=0.5),
+                  just = "left",
+                  x = 1.35)
+      }
+    }
     # draw line
     if (options$fold) {
       lineColor <- "black"
@@ -118,23 +106,7 @@ printIndicator <- function(lip, row, column, options = list()) {
       grid.lines(x = unit(c(lip$value,lip$value), "native"),
                  y = unit(c(0.5, 1.5), "native"))
     }
-    # print upper and lower bounds
-    if (refLabels) {
-      if (!options$fold) {
-        grid.text(lip$refMin,
-                  gp=gpar(col = refTextColor, alpha = refTextAlpha, cex = 0.5),
-                  just = "left",
-                  x = -0.35)
-        grid.text(lip$refMax,
-                  gp=gpar(col = refTextColor, alpha = refTextAlpha, cex = 0.5),
-                  just = "right",
-                  x = 1.35)
-        grid.text(paste0(" [", lip$refUnit,"]"),
-                  gp=gpar(col = unitTextColor, alpha = unitTextAlpha, cex=0.5),
-                  just = "left",
-                  x = 1.35)
-      }
-    }
+
   }
   # draw dot
   if (lip$value > lip$refMin & lip$value < lip$refMax){
@@ -147,10 +119,11 @@ printIndicator <- function(lip, row, column, options = list()) {
     dotColor <- "red"
   }
   grid.points(lip$value,
-              1,
-              pch = dotPch,
-              gp=gpar(fill = dotColor,
-                      col=NA,
+              0.5,
+              pch = 20,
+              gp=gpar(fill = "blue",
+                      alpha = 1,
+                      col= NA,
                       cex = 0.5))
 
   upViewport()
@@ -160,12 +133,16 @@ printIndicator <- function(lip, row, column, options = list()) {
 # lip$refMin <- rep(-5, 112)
 # lip$refMax <- rep(10, 112)
 # lip$value <- runif(112, -10, 5)
-# lip$value <- seq(-1, 12, length.out = 112)
-# minRange <- rep(-10, 112)
+# lip$value <- seq(-20, 20, length.out = 112)
+# minRange <- rep(-20, 112)
 # maxRange <- rep(20, 112)
-# makeLipoReport(lip, options = list(minRange = minRange, maxRange = maxRange))
-# lip$value <- seq(12, -1, length.out = 112)
-# addValues(lip, options = list(minRange = minRange, maxRange = maxRange))
+# makeLipoReport(lip, options = list(minRange = minRange, maxRange = maxRange,  dotAlpha = 0.3, labels = FALSE))
+# lip$value <- seq(20, -20, length.out = 112)
+# addValues(lip, options = list(minRange = minRange, maxRange = maxRange, labels = FALSE))
+# lip$value <- rep(-4, 112)
+# addValues(lip, options = list(minRange = minRange, maxRange = maxRange, dotColor = "blue", dotAlpha = 0.1, labels = FALSE))
+# lip$value <- rep(9, 112)
+# addValues(lip, options = list(minRange = minRange, maxRange = maxRange, dotColor = NA, dotAlpha = 1, labels = FALSE))
 
 #' print strip in lipoprotein report
 #' @param lip - lipo value
@@ -271,55 +248,22 @@ printTitle <- function(title, titleBoxPosition, titlePosition) {
 #' @importFrom grid grid.circle grid.points grid.lines grid.raster
 makeLipoReport <- function(lip, options = list()) {
 
-  if ("labels" %in% names(options)) {
-    labels <- options$labels
-  } else {
-    labels <- TRUE
-  }
-
-  if ("dotColor" %in% names(options)) {
-    dotColor <- options$dotColor
-  } else {
-    dotColor <- "black"
-  }
-
-  if ("dotPch" %in% names(options)) {
-    dotPch <- options$dotPch
-  } else {
-    dotPch <- 21
-  }
-
-  if ("title" %in% names(options)) {
-    title <- options$title
-  } else {
-    title <- ""
-  }
-
-  if ("caption" %in% names(options)) {
-    caption <- options$caption
-  } else {
-    caption <- "Lipoprotein Report
+  # labels <- TRUE
+  # dotColor <- "black"
+  # dotPch <- 21
+  title <- ""
+  caption <- "Lipoprotein Report
     Powered by phenocare/fusion ©2021"
+  ncol <- 2
+
+  if ("minRange" %in% names(options) & "maxRange" %in% names(options)) {
+    isFixed <- TRUE
+  } else {
+    isFixed <- FALSE
   }
 
-  if ("ncol" %in% names(options)) {
-    ncol <- options$ncol
-  } else {
-    ncol <- 2
-  }
-
-  if ("minRange" %in% names(options)) {
-    minRange <- options$minRange
-    isFixedMin <- TRUE
-  } else {
-    isFixedMin <- FALSE
-  }
-
-  if ("maxRange" %in% names(options)) {
-    maxRange <- options$maxRange
-    isFixedMax <- TRUE
-  } else {
-    isFixedMax <- FALSE
+  for (name in names(options)) {
+    assign(name, options[name][[1]])
   }
 
   if (ncol == 2) {
@@ -431,20 +375,21 @@ makeLipoReport <- function(lip, options = list()) {
     #     lip$refMax <- max(lip$value, lip$refMax)
     #   }
     # } else {
-    fold = FALSE
+    # fold = FALSE
     # }
 
-    options <- list(fold = fold,
-         add = FALSE,
-         dotColor = dotColor,
-         dotPch = dotPch)
+    # options <- list(fold = fold,
+    #      add = FALSE,
+    #      dotColor = dotColor,
+    #      dotPch = dotPch)
+    # options$fold <- fold
+    # options$add <- FALSE
 
-    if (isFixedMin & isFixedMax) {
-      indRange <- c(minRange[i], maxRange[i])
-      options <- c(options, minRange = minRange[i], maxRange = maxRange[i])
+    if (isFixed & isFixed) {
+      options$range <- c(minRange[i], maxRange[i])
     }
-
-    options <- c(options, labels = labels)
+    options$fold <- FALSE
+    options$add <- FALSE
 
     printIndicator(lip[i,],
                    row,
@@ -485,28 +430,22 @@ makeLipoReport <- function(lip, options = list()) {
 #' @export
 addValues <- function(lip, options = list()) {
 
-  if ("labels" %in% names(options)) {
-    labels <- options$labels
+  # labels <- TRUE
+  # dotColor <- "black"
+  # dotPch <- 21
+  title <- ""
+  caption <- "Lipoprotein Report
+    Powered by phenocare/fusion ©2021"
+  ncol <- 2
+
+  if ("minRange" %in% names(options) & "maxRange" %in% names(options)) {
+    isFixed <- TRUE
   } else {
-    labels <- TRUE
+    isFixed <- FALSE
   }
 
-  if ("dotColor" %in% names(options)) {
-    dotColor <- options$dotColor
-  } else {
-    dotColor <- "black"
-  }
-
-  if ("dotPch" %in% names(options)) {
-    dotPch <- options$dotPch
-  } else {
-    dotPch <- 21
-  }
-
-  if ("ncol" %in% names(options)) {
-    ncol <- options$ncol
-  } else {
-    ncol <- 2
+  for (name in names(options)) {
+    assign(name, options[name][[1]])
   }
 
   if (ncol == 2) {
@@ -570,25 +509,19 @@ addValues <- function(lip, options = list()) {
     #     lip$refMax <- max(lip$value, lip$refMax)
     #   }
     # } else {
-    fold = FALSE
+    # fold = FALSE
     # }
-
-    options <- list(fold = fold,
-                    add = FALSE,
-                    dotColor = dotColor,
-                    dotPch = dotPch)
-
-    if (isFixedMin & isFixedMax) {
-      indRange <- c(minRange[i], maxRange[i])
-      options <- c(options, minRange = minRange[i], maxRange = maxRange[i])
+    if (isFixed & isFixed) {
+      options$range <- c(minRange[i], maxRange[i])
     }
-
-    options <- c(options, labels = labels, indBgAlpha = 0, refLabels = FALSE)
+    options$fold <- FALSE
+    options$add <- FALSE
 
     printIndicator(lip[i,],
                    row,
                    column,
                    options = options)
+
 
     i <- i + 1
     r <- r + 1
@@ -605,21 +538,21 @@ addValues <- function(lip, options = list()) {
 #' @export
 getLipoTable <- function() {
 
- lipo$range <- paste0(lipo$refMin, " - ", lipo$refMax,
-                                    " (", lipo$refUnit, ")")
- names(lipo) <-c("Fraction",
-                 "Compound",
-                 "Abbreviation",
-                 "ID",
-                 "Type",
-                 "Value",
-                 "Unit",
-                 "Max Value (ref.)",
-                 "Min Value (ref.)",
-                 "Reference Unit",
-                 "Reference Range [Unit]")
- # correcting typo in xml
- lipo$Compound[9] <- "Apo-B100 / Apo-A1"
- rownames(lipo) <- c(1:nrow(lipo))
- return(lipo[,c(1,2,4,11)])
+  lipo$range <- paste0(lipo$refMin, " - ", lipo$refMax,
+                       " (", lipo$refUnit, ")")
+  names(lipo) <-c("Fraction",
+                  "Compound",
+                  "Abbreviation",
+                  "ID",
+                  "Type",
+                  "Value",
+                  "Unit",
+                  "Max Value (ref.)",
+                  "Min Value (ref.)",
+                  "Reference Unit",
+                  "Reference Range [Unit]")
+  # correcting typo in xml
+  lipo$Compound[9] <- "Apo-B100 / Apo-A1"
+  rownames(lipo) <- c(1:nrow(lipo))
+  return(lipo[,c(1,2,4,11)])
 }
