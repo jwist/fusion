@@ -60,16 +60,23 @@ getTRY <- function(path){
                        levels = c("Analyte", "Blank", "ltr", "QC", "Standard"),
                        labels = c("analyte", "blank", "ltr", "qc", "standard"))
   # creating LTR type
-  idx <- grep("LTR|PLASMA", sampleID)
+  idx <- grep("LTR", sampleID)
   sampleType[idx] <- "ltr"
 
   # adding required fields (columns)
   COMPOUND$sampleID <- sampleID
   COMPOUND$sampleType <- sampleType
 
-
+  # dividing by molecular weight
+  compoundNames <- unique(COMPOUND$name)
+  mw <- tMsTestsets$mw
   .Data <- dcast(COMPOUND, sampleid ~ name, value.var = "analconc")[, -1]
-  obsDescr <- split(COMPOUND, 1:35)
+  .Data <- sapply(.Data, function(x) as.numeric(x))
+  idx <- match(compoundNames, mw$analyte)
+  idx <- idx[!is.na(idx)]
+  .Data[,idx] <- as.matrix(.Data[,idx]) / mw$mw
+
+  obsDescr <- split(COMPOUND, 1:N)
   varName <- colnames(.Data)
 
   # creating dataElement
@@ -82,6 +89,9 @@ getTRY <- function(path){
   return(da)
 }
 
+# getTRY("tests/testthat/2021-09-21_LGW_COVID_HARVARD_RE-EDIT_P43.xml")
+# path <- "tests/testthat/xml_test_cambridge_plate_1.xml"
+# da <- getTRY(path = path)
 #
 # xml_name(xml)
 # xml_attrs(xml)
@@ -98,9 +108,6 @@ getTRY <- function(path){
 #
 # xml_name(xml_children(xml_children(xml_children(xml_children(xml_children(xml)[[3]]))[[3]])))
 #
-
-
-
 # response <- xml_attrs(xml_find_all(xml, "//CALIBRATIONDATA/COMPOUND/RESPONSE"))
 # RESPONSE <- data.frame(do.call("rbind", lapply(response, function(x) unlist(x))))
 # curve <- xml_attrs(xml_find_all(xml, "//CALIBRATIONDATA/COMPOUND/CURVE"))
