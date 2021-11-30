@@ -34,6 +34,9 @@ getTRY <- function(path){
 
   COMPOUND <- cbind(COM, PEAK, ISPEAK)
 
+  # retrieving compound names
+  compoundNames <- unique(COMPOUND$name)
+
   # performing a few data integrity checks
   ## nrow(COMPOUND) must be a ntuple of the number of compounds
   if (!nrow(COMPOUND) / nrow(sampleInfo) == nrow(COMPOUND) %/% nrow(sampleInfo)) {
@@ -67,17 +70,38 @@ getTRY <- function(path){
   COMPOUND$sampleID <- sampleID
   COMPOUND$sampleType <- sampleType
 
-  # dividing by molecular weight
-  compoundNames <- unique(COMPOUND$name)
-  mw <- tMsTestsets$mw
-  .Data <- dcast(COMPOUND, sampleid ~ name, value.var = "analconc")[, -1]
-  .Data <- sapply(.Data, function(x) as.numeric(x))
-  idx <- match(compoundNames, mw$analyte)
-  idx <- idx[!is.na(idx)]
-  .Data[,idx] <- as.matrix(.Data[,idx]) / mw$mw
+  # casting the data
+  # (as.numeric is mandatory otherwise dcast will order id in alphabetical order)
+  .Data <- dcast(COMPOUND, as.numeric(sampleid) ~ as.numeric(id), value.var = "analconc")
+
+  # checking that data are matched with sampleInfo
+  if(!identical(as.character(.Data[,1]), sampleInfo$id)){
+    cat(crayon::red("fusion::getTRY >> sampleInfo not in the same order as .Data"))
+  } else {
+    .Data <- .Data[,-1]
+  }
 
   obsDescr <- split(COMPOUND, 1:N)
-  varName <- colnames(.Data)
+  #checking that description matches data columns
+  if(!identical(unname(sapply(obsDescr, function(x) unique(x$id))), colnames(.Data))) {
+    cat(crayon::red("fusion::getTRY >> order of data and obsDescr does not match\n"))
+  } else {
+    varName <- unname(sapply(obsDescr, function(x) unique(x$name)))
+  }
+
+  # making data numeric
+  .Data <- sapply(.Data, function(x) as.numeric(x))
+
+  # dividing by molecular weight
+  mw <- tMsTestsets$mw
+  idx <- match(varName, mw$analyte)
+  for (i in 1:length(varName)) {
+    if(varName[i] %in% mw$analyte) {
+      .Data[,i] <- .Data[,i] / mw$mw[which(mw$analyte == varName[i])]
+    } else {
+      cat(crayon::yellow("fusion::getTRY >> ", varName[i], "molecular weight not found\n"))
+    }
+  }
 
   # creating dataElement
   da <- new("dataElement",
@@ -92,7 +116,7 @@ getTRY <- function(path){
 # getTRY("tests/testthat/2021-09-21_LGW_COVID_HARVARD_RE-EDIT_P43.xml")
 # path <- "tests/testthat/xml_test_cambridge_plate_1.xml"
 # da <- getTRY(path = path)
-#
+# #COMPOUND$analconc[COMPOUND$name == "tryptophan"][9]
 # xml_name(xml)
 # xml_attrs(xml)
 # xml_name(xml_children(xml))
