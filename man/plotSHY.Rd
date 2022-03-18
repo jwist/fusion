@@ -30,6 +30,10 @@ plotSHY(cor, sig, txt, labels, trace, xaxis, options = list())
 \item{xaxis}{\itemize{
 \item the xaxis for the NMR trace
 }}
+
+\item{options}{\itemize{
+\item options
+}}
 }
 \description{
 plot correlation between NMR trace (part of) and MS data with segments

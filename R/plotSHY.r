@@ -30,6 +30,7 @@ corToColor <- function(mat) {
 #' @param labels - the name of the MS values (x rows)
 #' @param trace - the NMR trace to plot (values)
 #' @param xaxis - the xaxis for the NMR trace
+#' @param options - options
 #'
 #' @export
 #' @importFrom grid grid.xaxis grid.yaxis pushViewport viewport grid.rect

@@ -13,6 +13,10 @@ plotMap(
 )
 }
 \arguments{
+\item{data}{\itemize{
+\item a data frame with countries
+}}
+
 \item{latitude}{\itemize{
 \item the latitude range
 }}
@@ -27,10 +31,6 @@ plotMap(
 
 \item{breaks}{\itemize{
 \item breaks for color range
-}}
-
-\item{values}{\itemize{
-\item a data frame with countries
 }}
 }
 \value{

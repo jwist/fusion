@@ -14,14 +14,6 @@ makeLipoReport(lip, options = list())
 \item{options}{\itemize{
 \item a list of options
 }}
-
-\item{options$fold}{\itemize{
-\item if true use design for fold change (default = FALSE)
-}}
-
-\item{options$scale}{\itemize{
-\item if true center and scale (align) the output (default = FALSE)
-}}
 }
 \value{
 print a report

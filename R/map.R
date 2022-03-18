@@ -7,7 +7,7 @@
 
 #' plot a geographical map
 #'
-#' @param values - a data frame with countries
+#' @param data - a data frame with countries
 #' @param latitude - the latitude range
 #' @param longitude - the longitude range
 #' @param colorRange - color range

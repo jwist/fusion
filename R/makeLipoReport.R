@@ -238,8 +238,6 @@ printTitle <- function(title, titleBoxPosition, titlePosition) {
 #'
 #' @param lip - a lipoprotein report
 #' @param options - a list of options
-#' @param options$fold - if true use design for fold change (default = FALSE)
-#' @param options$scale - if true center and scale (align) the output (default = FALSE)
 #' @return print a report
 #'
 #' @export
@@ -421,11 +419,12 @@ makeLipoReport <- function(lip, options = list()) {
 # makeLipoReport(lip, options = list(fold = FALSE, dotColor = "blue"))
 # makeLipoReport(lip, options = list(fold = TRUE, scale = FALSE))
 
+# options$fold - if true use design for fold change (default = FALSE)
+# options$scale - if true center and scale (align) the output (default = FALSE)
+
 #' add a serie of value to an existing lipoprotein  quantification report
 #' @param lip - a lipoprotein report with new values
 #' @param options - a list of options (should be as existing report)
-#' @param options$fold - if true use design for fold change (default = FALSE)
-#' @param options$scale - if true center and scale (align) the output (default = FALSE)
 #' @return print a report with overlaid values
 #' @export
 addValues <- function(lip, options = list()) {
