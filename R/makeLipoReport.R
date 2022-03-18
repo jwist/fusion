@@ -253,7 +253,7 @@ makeLipoReport <- function(lip, options = list()) {
   # dotPch <- 21
   title <- ""
   caption <- "Lipoprotein Report
-    Powered by phenocare/fusion ©2021"
+    Powered by phenocare/fusion \u00A92021"
   ncol <- 2
 
   if ("minRange" %in% names(options) & "maxRange" %in% names(options)) {
@@ -435,7 +435,7 @@ addValues <- function(lip, options = list()) {
   # dotPch <- 21
   title <- ""
   caption <- "Lipoprotein Report
-    Powered by phenocare/fusion ©2021"
+    Powered by phenocare/fusion \u00A92021"
   ncol <- 2
 
   if ("minRange" %in% names(options) & "maxRange" %in% names(options)) {
@@ -521,7 +521,6 @@ addValues <- function(lip, options = list()) {
                    row,
                    column,
                    options = options)
-
 
     i <- i + 1
     r <- r + 1
