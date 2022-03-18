@@ -47,7 +47,7 @@ getLipoprotein <- function(path){
 #' @return a data.frame with information
 #' @export
 getLipoTable <- function() {
-
+  data(lipo)
   lipo$range <- paste0(lipo$refMin, " - ", lipo$refMax,
                        " (", lipo$refUnit, ")")
   names(lipo) <-c("Fraction",
