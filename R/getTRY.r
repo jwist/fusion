@@ -113,10 +113,6 @@ getTRY <- function(path){
   return(da)
 }
 
-# getTRY("tests/testthat/2021-09-21_LGW_COVID_HARVARD_RE-EDIT_P43.xml")
-# path <- "tests/testthat/xml_test_cambridge_plate_1.xml"
-# da <- getTRY(path = path)
-# #COMPOUND$analconc[COMPOUND$name == "tryptophan"][9]
 # xml_name(xml)
 # xml_attrs(xml)
 # xml_name(xml_children(xml))
@@ -144,6 +140,6 @@ getTRY <- function(path){
 # DETERMINATION <- data.frame(do.call("rbind", lapply(determination, function(x) unlist(x))))
 # responsefactor <- xml_attrs(xml_find_all(xml, "//CALIBRATIONDATA/COMPOUND/CURVE/RESPONSEFACTOR"))
 # RESPONSEFACTOR <- data.frame(do.call("rbind", lapply(responsefactor, function(x) unlist(x))))
-#
+
 
 

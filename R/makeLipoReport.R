@@ -529,30 +529,4 @@ addValues <- function(lip, options = list()) {
   upViewport()
 }
 
-# addValues(lip, options = list(fold = TRUE, scale = FALSE, dotColor = "red"))
-# makeLipoReport(lip, options = list(fold = FALSE, dotColor = "blue", dotPch = 21))
-# addValues(lip, options = list(dotColor = "red", dotPch = 22))
 
-#' get names and description of lipoproteins IVDr parameters
-#' @return a data.frame with information
-#' @export
-getLipoTable <- function() {
-
-  lipo$range <- paste0(lipo$refMin, " - ", lipo$refMax,
-                       " (", lipo$refUnit, ")")
-  names(lipo) <-c("Fraction",
-                  "Compound",
-                  "Abbreviation",
-                  "ID",
-                  "Type",
-                  "Value",
-                  "Unit",
-                  "Max Value (ref.)",
-                  "Min Value (ref.)",
-                  "Reference Unit",
-                  "Reference Range [Unit]")
-  # correcting typo in xml
-  lipo$Compound[9] <- "Apo-B100 / Apo-A1"
-  rownames(lipo) <- c(1:nrow(lipo))
-  return(lipo[,c(1,2,4,11)])
-}

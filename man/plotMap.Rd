@@ -9,7 +9,7 @@ plotMap(
   latitude = c(-45, 15),
   longitude = c(-150, 180),
   colorRange = c("#ffeeee", "#ff0000"),
-  breaks = c(100, 200, 500, 1000, 3000)
+  breaks = c(10, 20, 50, 100, 150)
 )
 }
 \arguments{

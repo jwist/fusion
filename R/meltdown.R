@@ -76,8 +76,10 @@ meltdown <- function() {
                                                 "Tyrosine",
                                                 "Valine"),
                                        sampleType = c())
-
-                   )
+                   ),
+    "boxType" = list("Num9x9",
+                     "Let8x12",
+                     "Num10x10")
   )
   cat("replicates goes with # (we don't use _ or -)\n")
   return(melt)
