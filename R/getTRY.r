@@ -1,16 +1,70 @@
 #' extract targeted MS data from task export xml file
 #'
 #' @param path - the path to the expName folder
-#' @return a dataElement object
+#' @param options list of options
+#' \itemize{
+#'    \item codePosition - position of the code in the file name
+#'    \item columnList - list of columns to be selected
+#' }
+#' @return a dataElement
 #'
 #' @export
 #' @importFrom xml2 read_xml xml_attr xml_find_all xml_attrs
-getTRY <- function(path){
+#' @importFrom dplyr %>%
+getTRY <- function(path, options = list()){
+  # get sampleID position in title
+  if ("codePosition" %in% names(options)) {
+    codePosition <- options$codePosition
+  } else {
+    codePosition <- 8
+  }
+  # get list of metabolites if not default
+  if ("columnsList" %in% names(options)) {
+    columnsList <- options$columnsList
+  } else {
+    columnsList <- c("tryptophan",
+                     "3-hydroxykynurenine",
+                     "3-hydroxyanthranilic acid",
+                     "kynurenic acid",
+                     "nicotinamide riboside",
+                     "quinolinic acid",
+                     "nicotinic acid",
+                     "indole-3-acetic acid",
+                     "picolinic acid",
+                     "xanthurenic acid",
+                     "kynurenine",
+                     "citrulline",
+                     "dopamine",
+                     "5-hydroxyindole acetic acid",
+                     "neopterin",
+                     "beta-nicotinamide mononucleotide",
+                     "serotonin",
+                     "nicotinamide adenine dinucleotide",
+                     "SIL tryptophan D5",
+                     "SIL 3-hydroxykynurenine 13C215N",
+                     "SIL 3-hydroxyanthranilic acid D3",
+                     "SIL kynurenic acid D5",
+                     "SIL nicotinamide riboside D3",
+                     "SIL quinolinic acid D3",
+                     "SIL nicotinic acid D4",
+                     "SIL picolinic acid D3",
+                     "SIL xanthurenic acid D4",
+                     "SIL kynurenine D4",
+                     "SIL indole-3-acetic acid D4",
+                     "SIL citrulline D7",
+                     "SIL dopamine D4",
+                     "SIL 5-hydroxyindole acetic acid D5",
+                     "SIL neopterin 13C5",
+                     "SIL beta-nicotinamide mononucleotide D3",
+                     "Melatonin")
+  }
+
   xml <- read_xml(path)
   # retrieving sample information from SAMPLELISTDATA
   sample <- xml_children(xml_find_all(xml, "//GROUPDATA/GROUP/SAMPLELISTDATA"))
   sample <- data.frame(do.call("rbind", lapply(xml_attrs(sample), function(x) unlist(x))))
-  sampleInfo <- sample %>% dplyr::select(c(id, name,
+  sampleInfo <- sample %>% dplyr::select(c(id,
+                                           name,
                                            createdate,
                                            createtime,
                                            type,
@@ -38,6 +92,12 @@ getTRY <- function(path){
   compoundNames <- unique(COMPOUND$name)
 
   # performing a few data integrity checks
+  # checking for missing metabolites
+  missing <- setdiff(columnsList, compoundNames)
+  if (length(missing) > 0) {
+    msg <- paste("fusion::getTryXML >> Missing metabolites:", missing, "\n")
+    message(crayon::red(msg))
+  }
   ## nrow(COMPOUND) must be a ntuple of the number of compounds
   if (!nrow(COMPOUND) / nrow(sampleInfo) == nrow(COMPOUND) %/% nrow(sampleInfo)) {
     cat(crayon::red("fusion::getTRY >> dimension problems"))
@@ -57,7 +117,22 @@ getTRY <- function(path){
   }
 
   # creating proper columns for dataElement
-  sampleID <- sampleInfo$name[idx]
+  code <- sampleInfo$name[idx]
+  sampleID <- gsub(
+    " ",
+    "",
+    makeUnique(
+      sapply(
+        strsplit(code, "_"), "[", codePosition),
+      fromFirst = TRUE))
+
+  sourceID <- gsub(
+    " ",
+    "",
+    makeUnique(
+      sapply(
+        strsplit(code, "_"), "[", codePosition + 1),
+      fromFirst = TRUE))
 
   sampleType <- factor(sampleInfo$type[idx],
                        levels = c("Analyte", "Blank", "ltr", "QC", "Standard"),
@@ -68,6 +143,7 @@ getTRY <- function(path){
 
   # adding required fields (columns)
   COMPOUND$sampleID <- sampleID
+  COMPOUND$sourceID <- sourceID
   COMPOUND$sampleType <- sampleType
 
   # casting the data
@@ -109,7 +185,7 @@ getTRY <- function(path){
             obsDescr = obsDescr,
             varName = unlist(varName),
             type = "T-MS",
-            method = "tryptophane")
+            method = "tryptophan")
   return(da)
 }
 

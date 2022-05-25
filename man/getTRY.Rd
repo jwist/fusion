@@ -4,15 +4,21 @@
 \alias{getTRY}
 \title{extract targeted MS data from task export xml file}
 \usage{
-getTRY(path)
+getTRY(path, options = list())
 }
 \arguments{
 \item{path}{\itemize{
 \item the path to the expName folder
 }}
+
+\item{options}{list of options
+\itemize{
+\item codePosition - position of the code in the file name
+\item columnList - list of columns to be selected
+}}
 }
 \value{
-a dataElement object
+a dataElement
 }
 \description{
 extract targeted MS data from task export xml file
