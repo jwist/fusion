@@ -19,7 +19,7 @@ parseTargetedMS <- function(file, method, options) {
             method, "\n"))
 
   if (method == "tryptophan") {
-    da <- parseTryXML(file, options)
+    da <- parseTRY(file, options)
   }
   if (method == "aminoAcids") {
     da <- parseMS_AA(file, options)
