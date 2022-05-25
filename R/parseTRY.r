@@ -11,7 +11,7 @@
 #' @export
 #' @importFrom xml2 read_xml xml_attr xml_find_all xml_attrs
 #' @importFrom dplyr %>%
-getTRY <- function(path, options = list()){
+parseTRY <- function(path, options = list()){
   id <- name <- createdate <- createtime <- type <- desc <- stdconc <- NULL
   vial <- inletmethodname <- msmethodname <- tunemethodname <- instrument <- NULL
   # get sampleID position in title
@@ -169,6 +169,8 @@ getTRY <- function(path, options = list()){
 
   # making data numeric
   .Data <- sapply(.Data, function(x) as.numeric(x))
+  colnames(.Data) <- varName
+  rownames(.Data) <- sampleInfo$name
 
   # dividing by molecular weight
   mw <- tMsTestsets$mw
