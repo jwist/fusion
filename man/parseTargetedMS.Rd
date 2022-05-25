@@ -4,7 +4,7 @@
 \alias{parseTargetedMS}
 \title{importation function for targeted MS assays}
 \usage{
-parseTargetedMS(file, method, options)
+parseTargetedMS(file, method, options = list())
 }
 \arguments{
 \item{file}{\itemize{
