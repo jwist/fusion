@@ -29,7 +29,8 @@ Imports:
     stats,
     scales,
     dplyr,
-    tictoc
+    tictoc,
+    data.table
 Depends: 
     R (>= 2.10)
 StagedInstall: no
