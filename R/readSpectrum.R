@@ -34,6 +34,7 @@ readSpectrum <- function(path, procs = TRUE, options = list()){
     # removing SR (useful for JEDI experiments)
     if ("uncalibrate" %in% names(options)) {
       if (options$uncalibrate) {
+        # a negative SR value means an uncalibrated signal on the right of 0
         BF1 <- readParam(pathAcqus, "BF1")
         SR_p <- (sf - BF1) * 1e6 / sf
         SR <- (sf - BF1) * 1e6
@@ -74,7 +75,7 @@ readSpectrum <- function(path, procs = TRUE, options = list()){
       if ("length.out" %in% names(options)) {
         length.out <- options$length.out
       } else {
-        fi <- s$x > from & s$x < to
+        fi <- x > from & x < to
         length.out <- sum(fi)
       }
 
