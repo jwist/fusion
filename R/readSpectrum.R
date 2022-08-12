@@ -32,7 +32,7 @@ readSpectrum <- function(path, procs = TRUE, options = list()){
 
     # removing SR (useful for JEDI experiments)
     if ("uncalibrate" %in% names(options)) {
-      if (uncalibrate) {
+      if (options$uncalibrate) {
         BF1 <- readParam(pathAcqus, "BF1")
         SR_p <- (SF - BF1)
         SR <- (SF - BF1) * 1e6
