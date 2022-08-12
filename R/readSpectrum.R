@@ -27,19 +27,20 @@ readSpectrum <- function(path, procs = TRUE, options = list()){
     nc <- readParam(pathProcs, "NC_proc")
     size <- readParam(pathProcs, "FTSIZE") # it should be equivalent to use SI
     sf <-readParam(pathProcs, "SF") # SF is equal to acqus/BF1
-    sw <- readParam(pathProcs, "SW_p") / sf # SW_p is equal to acqus/SW_h
+    sw_p <- readParam(pathProcs, "SW_p")
+    sw <- sw_p / sf # SW_p is equal to acqus/SW_h
     offset <- readParam(pathProcs, "OFFSET")
 
     # removing SR (useful for JEDI experiments)
     if ("uncalibrate" %in% names(options)) {
       if (options$uncalibrate) {
         BF1 <- readParam(pathAcqus, "BF1")
-        SR_p <- (SF - BF1)
-        SR <- (SF - BF1) * 1e6
+        SR_p <- (sf - BF1) * 1e6 / sf
+        SR <- (sf - BF1) * 1e6
         offset <- offset - SR_p
 
         cat(crayon::blue("fusion::readSpectrum >> calibration (SR) removed:",
-                         SR_p,
+                         SR_p, "ppm", SR, "Hz",
                          "\n"))
       }
     }
