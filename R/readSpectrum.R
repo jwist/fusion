@@ -45,9 +45,10 @@ readSpectrum <- function(path, procs = TRUE, options = list()){
     }
 
     # computing increment, ppm axis and reading spectra
+    y <- read1r(path1r, size, nc, endian)
     inc <- sw / (length(y) - 1) # ok
     x <- seq(from = offset, to = (offset - sw), by = -inc)
-    y <- read1r(path1r, size, nc, endian)
+
 
     # applying eretic correction if provided
     if ("ereticFactor" %in% names(options)) {
