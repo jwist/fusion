@@ -15,7 +15,9 @@ readSpectrum <- function(path, procs = TRUE, options = list()){
     } else {
       pathProcs <- procs
     }
+    pathAcqus <- file.path(path, "acqus")
 
+    # reading important parameters
     if(readParam(pathProcs, "BYTORDP") == 0) {
       endian <- "little"
     } else {
@@ -23,13 +25,29 @@ readSpectrum <- function(path, procs = TRUE, options = list()){
     }
 
     nc <- readParam(pathProcs, "NC_proc")
-    size <- readParam(pathProcs, "FTSIZE")
-    y <- read1r(path1r, size, nc, endian)
-    sf <-readParam(pathProcs, "SF")
-    sw <- readParam(pathProcs, "SW_p") / sf
-    inc <- sw/(length(y) - 1)
+    size <- readParam(pathProcs, "FTSIZE") # it should be equivalent to use SI
+    sf <-readParam(pathProcs, "SF") # SF is equal to acqus/BF1
+    sw <- readParam(pathProcs, "SW_p") / sf # SW_p is equal to acqus/SW_h
     offset <- readParam(pathProcs, "OFFSET")
+
+    # removing SR (useful for JEDI experiments)
+    if ("uncalibrate" %in% names(options)) {
+      if (uncalibrate) {
+        BF1 <- readParam(pathAcqus, "BF1")
+        SR_p <- (SF - BF1)
+        SR <- (SF - BF1) * 1e6
+        offset <- offset - SR_p
+
+        cat(crayon::blue("fusion::readSpectrum >> calibration (SR) removed:",
+                         SR_p,
+                         "\n"))
+      }
+    }
+
+    # computing increment, ppm axis and reading spectra
+    inc <- sw / (length(y) - 1) # ok
     x <- seq(from = offset, to = (offset - sw), by = -inc)
+    y <- read1r(path1r, size, nc, endian)
 
     # applying eretic correction if provided
     if ("ereticFactor" %in% names(options)) {
@@ -40,21 +58,16 @@ readSpectrum <- function(path, procs = TRUE, options = list()){
                        "\n"))
     }
 
-    # correcting for offset if provided (useful for JEDI experiments)
-    if ("offset" %in% names(options)) {
-      x <- x + options$offset
-
-      cat(crayon::blue("fusion::readSpectrum >> spectra corrected for offset:",
-                       options$offset,
-                       "\n"))
-    }
-
     # if upper and lower bounds are provided the spectra is extrapolated to fit
     # those boundaries. If no length.out is provided, them similar length is
     # used.
     if ("fromTo" %in% names(options)) {
       from <- options$fromTo[1]
       to <- options$fromTo[2]
+
+      if (from > to) {
+        cat(crayon::blue("fusion::readSpectrum >> from should be smaller than to\n"))
+      }
 
       if ("length.out" %in% names(options)) {
         length.out <- options$length.out
