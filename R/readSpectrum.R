@@ -31,6 +31,17 @@ readSpectrum <- function(path, procs = TRUE, options = list()){
     sw <- sw_p / sf # SW_p is equal to acqus/SW_h
     offset <- readParam(pathProcs, "OFFSET")
 
+    # read additional information for output
+    phc0 <- readParam(pathProcs, "PHC0")
+    phc1 <- readParam(pathProcs, "PHC1")
+
+    if (phc1 != 0) {
+      cat(crayon::yellow("fusion::readSpectrum >> phc0 is expected to be 0 in IVDr experiments,\n",
+                         "instead phc1 was found to be:",
+                       phc1,
+                       "\n"))
+    }
+
     # removing SR (useful for JEDI experiments)
     if ("uncalibrate" %in% names(options)) {
       if (options$uncalibrate) {
@@ -99,7 +110,12 @@ readSpectrum <- function(path, procs = TRUE, options = list()){
                        ")\n"))
     }
 
-    spec <- data.table(x, y)
+    info <- c(SF = sf,
+              PHC0 = phc0,
+              PHC1 = phc1,
+              SR = SR)
+    spec <- list(info  = info,
+                 spec = data.table(x, y))
     return(spec)
 
   } else {
