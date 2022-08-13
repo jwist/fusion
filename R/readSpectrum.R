@@ -83,14 +83,14 @@ readSpectrum <- function(path, procs = TRUE, options = list()){
     }
 
     # applying eretic correction if provided
-    if ("erretic" %in% names(options)) {
-      y <- y / options$erretic
+    if ("eretic" %in% names(options)) {
+      y <- y / options$eretic
       if (im) {
-        yi <- yi / options$erretic
+        yi <- yi / options$eretic
       }
 
       cat(crayon::blue("fusion::readSpectrum >> spectra corrected for eretic:",
-                       options$ereticFactor,
+                       options$eretic,
                        "\n"))
     }
 
