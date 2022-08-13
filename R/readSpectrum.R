@@ -3,11 +3,16 @@
 #' @param path - the path to the expNo folder
 #' @param procs - the name of the folder with experiments
 #' @param options - options
+#' @param options$uncalibrate - if true, calibration will be removed (SR set to 0)
+#' @param options$eretic - provide eretic correction to be applied
+#' @param options$fromTo - provide lower and upper bound for common grid
+#' @param options$length.out -set the length of the final data
 #' @return a vector with spectra (real part and x axis)
 #'
 #' @export
 readSpectrum <- function(path, procs = TRUE, options = list()){
   path1r <- file.path(path, "pdata", "1", "1r")
+  path1i <- file.path(path, "pdata", "1", "1i")
 
   if (file.exists(path1r)) {
     if (is.logical(procs) && isTRUE(procs)) {
@@ -17,13 +22,24 @@ readSpectrum <- function(path, procs = TRUE, options = list()){
     }
     pathAcqus <- file.path(path, "acqus")
 
+    if ("im" %in% names(options)) {
+      im <- options$im
+    } else {
+      im = FALSE
+    }
+
+    if ("uncalibrate" %in% names(options)) {
+      uncalibrate <- options$uncalibrate
+    } else {
+      uncalibrate <- FALSE
+    }
+
     # reading important parameters
     if(readParam(pathProcs, "BYTORDP") == 0) {
       endian <- "little"
     } else {
       endian = "big"
     }
-
     nc <- readParam(pathProcs, "NC_proc")
     size <- readParam(pathProcs, "FTSIZE") # it should be equivalent to use SI
     sf <-readParam(pathProcs, "SF") # SF is equal to acqus/BF1
@@ -38,23 +54,22 @@ readSpectrum <- function(path, procs = TRUE, options = list()){
     if (phc1 != 0) {
       cat(crayon::yellow("fusion::readSpectrum >> phc0 is expected to be 0 in IVDr experiments,\n",
                          "instead phc1 was found to be:",
-                       phc1,
-                       "\n"))
+                         phc1,
+                         "\n"))
     }
 
     # removing SR (useful for JEDI experiments)
-    if ("uncalibrate" %in% names(options)) {
-      if (options$uncalibrate) {
-        # a negative SR value means an uncalibrated signal on the right of 0
-        bf1 <- readParam(pathAcqus, "BF1")
-        SR_p <- (sf - bf1) * 1e6 / sf
-        SR <- (sf - bf1) * 1e6
-        offset <- offset + SR_p
 
-        cat(crayon::blue("fusion::readSpectrum >> calibration (SR) removed:",
-                         SR_p, "ppm", SR, "Hz",
-                         "\n"))
-      }
+    if (options$uncalibrate) {
+      # a negative SR value means an uncalibrated signal on the right of 0
+      bf1 <- readParam(pathAcqus, "BF1")
+      SR_p <- (sf - bf1) * 1e6 / sf
+      SR <- (sf - bf1) * 1e6
+      offset <- offset + SR_p
+
+      cat(crayon::blue("fusion::readSpectrum >> calibration (SR) removed:",
+                       SR_p, "ppm", SR, "Hz",
+                       "\n"))
     }
 
     # computing increment, ppm axis and reading spectra
@@ -62,10 +77,17 @@ readSpectrum <- function(path, procs = TRUE, options = list()){
     inc <- sw / (length(y) - 1) # ok
     x <- seq(from = offset, to = (offset - sw), by = -inc)
 
+    # reading imaginary data if necessary
+    if (im) {
+      yi <- read1r(path1i, size, nc, endian)
+    }
 
     # applying eretic correction if provided
-    if ("ereticFactor" %in% names(options)) {
-      y <- y / options$ereticFactor
+    if ("erretic" %in% names(options)) {
+      y <- y / options$erretic
+      if (im) {
+        yi <- yi / options$erretic
+      }
 
       cat(crayon::blue("fusion::readSpectrum >> spectra corrected for eretic:",
                        options$ereticFactor,
@@ -95,11 +117,18 @@ readSpectrum <- function(path, procs = TRUE, options = list()){
                   length.out = length.out)
 
       y <- interp1(x = x,
-                     y = y,
-                     xi = newX,
-                     method = "spline")
+                   y = y,
+                   xi = newX,
+                   method = "spline")
 
-      x <- newX
+      xr <- newX
+
+      if (im) {
+        yi <- interp1(x = x,
+                      y = yi,
+                      xi = newX,
+                      method = "spline")
+      }
 
       cat(crayon::blue("fusion::readSpectrum >> spectra in common grid (from:",
                        from,
@@ -114,12 +143,17 @@ readSpectrum <- function(path, procs = TRUE, options = list()){
               PHC0 = phc0,
               PHC1 = phc1,
               SR = SR)
-    spec <- list(info  = info,
-                 spec = data.table(x, y))
+    if (im) {
+      spec <- list(info  = info,
+                   spec = data.table(xr, y, yi))
+    } else {
+      spec <- list(info  = info,
+                   spec = data.table(xr, y))
+    }
+
     return(spec)
 
   } else {
     cat(crayon::yellow("fusion::readSpectrum >> data not found for", path, "\n"))
   }
 }
-

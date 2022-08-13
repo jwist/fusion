@@ -18,6 +18,20 @@ readSpectrum(path, procs = TRUE, options = list())
 \item{options}{\itemize{
 \item options
 }}
+
+\item{options$uncalibrate}{\itemize{
+\item if true, calibration will be removed (SR set to 0)
+}}
+
+\item{options$eretic}{\itemize{
+\item provide eretic correction to be applied
+}}
+
+\item{options$fromTo}{\itemize{
+\item provide lower and upper bound for common grid
+}}
+
+\item{options$length.out}{-set the length of the final data}
 }
 \value{
 a vector with spectra (real part and x axis)
