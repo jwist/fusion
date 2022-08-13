@@ -35,10 +35,10 @@ readSpectrum <- function(path, procs = TRUE, options = list()){
     if ("uncalibrate" %in% names(options)) {
       if (options$uncalibrate) {
         # a negative SR value means an uncalibrated signal on the right of 0
-        BF1 <- readParam(pathAcqus, "BF1")
-        SR_p <- (sf - BF1) * 1e6 / sf
-        SR <- (sf - BF1) * 1e6
-        offset <- offset - SR_p
+        bf1 <- readParam(pathAcqus, "BF1")
+        SR_p <- (sf - bf1) * 1e6 / sf
+        SR <- (sf - bf1) * 1e6
+        offset <- offset + SR_p
 
         cat(crayon::blue("fusion::readSpectrum >> calibration (SR) removed:",
                          SR_p, "ppm", SR, "Hz",
