@@ -29,14 +29,14 @@ readParams <- function(filePath) {
       value <- strsplit(value, " ")
       if (length(value[[1]]) > 1) {
         for (i in 2:length(value[[1]])) {
-          content <- c(content, list(c(path = path[length(path)],
-                                       name = paste0(gsub("##\\$", "", param[1]), "_", i - 2),
-                                       value = value[[1]][i])))
+          content <- c(content, list(c(path = unlist(path[length(path)]),
+                                       name = unlist(paste0(gsub("##\\$", "", param[1]), "_", i - 2)),
+                                       value = unlist(value[[1]][i]))))
         }
       } else {
-        content <- c(content, list(c(path = path[length(path)],
-                                     name = gsub("##\\$", "", param[1]),
-                                     value = value)))
+        content <- c(content, list(c(path = unlist(path[length(path)]),
+                                     name = unlist(gsub("##\\$", "", param[1])),
+                                     value = unlist(value))))
       }
     }
     counter <- counter + 1
