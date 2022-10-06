@@ -8,7 +8,8 @@
 #' @param options$fromTo - provide lower and upper bound for common grid
 #' @param options$length.out -set the length of the final data
 #' @return a vector with spectra (real part and x axis)
-#'
+#' @importFrom signal interp1
+#' @importFrom data.table data.table
 #' @export
 readSpectrum <- function(path, procs = TRUE, options = list()){
   path1r <- file.path(path, "pdata", "1", "1r")
@@ -60,11 +61,11 @@ readSpectrum <- function(path, procs = TRUE, options = list()){
 
     # removing SR (useful for JEDI experiments)
 
-    if (options$uncalibrate) {
+    bf1 <- readParam(pathAcqus, "BF1")
+    SR_p <- (sf - bf1) * 1e6 / sf
+    SR <- (sf - bf1) * 1e6
+    if (uncalibrate) {
       # a negative SR value means an uncalibrated signal on the right of 0
-      bf1 <- readParam(pathAcqus, "BF1")
-      SR_p <- (sf - bf1) * 1e6 / sf
-      SR <- (sf - bf1) * 1e6
       offset <- offset + SR_p
 
       cat(crayon::blue("fusion::readSpectrum >> calibration (SR) removed:",
