@@ -15,22 +15,35 @@ readSpectrum <- function(path, procs = TRUE, options = list()){
   path1r <- file.path(path, "pdata", "1", "1r")
   path1i <- file.path(path, "pdata", "1", "1i")
 
-  if (file.exists(path1r)) {
-    if (is.logical(procs) && isTRUE(procs)) {
-      pathProcs <- file.path(path, "pdata", "1", "procs")
-    } else {
-      pathProcs <- procs
-    }
-    pathAcqus <- file.path(path, "acqus")
+  if (is.logical(procs) && isTRUE(procs)) {
+    pathProcs <- file.path(path, "pdata", "1", "procs")
+  } else {
+    pathProcs <- procs
+  }
+  pathAcqus <- file.path(path, "acqus")
 
-    # checking that file is not empty
+  # checking that file is not empty
+  if (file.exists(pathProcs)) {
     if (is.null(readParam(pathProcs, "NC_proc"))) {
+      cat(crayon::yellow("fusion::readSpectrum >> empty procs file for", path, "\n"))
       return(NULL)
     }
-    if (is.null(readParam(pathAcqus, "BF1"))) {
-      return(NULL)
-    }
+  } else {
+    cat(crayon::yellow("fusion::readSpectrum >> procs file not found for", path, "\n"))
+    return(NULL)
+  }
 
+  if (file.exists(pathAcqus)) {
+    if (is.null(readParam(pathAcqus, "BF1"))) {
+      cat(crayon::yellow("fusion::readSpectrum >> empty acqus for", path, "\n"))
+      return(NULL)
+    }
+  } else {
+    cat(crayon::yellow("fusion::readSpectrum >> acqus file not found for", path, "\n"))
+    return(NULL)
+  }
+
+  if (file.exists(path1r)) {
     if ("im" %in% names(options)) {
       im <- options$im
     } else {
