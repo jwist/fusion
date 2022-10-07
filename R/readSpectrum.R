@@ -62,16 +62,26 @@ readSpectrum <- function(path, procs = TRUE, options = list()){
     } else {
       endian = "big"
     }
+
     nc <- readParam(pathProcs, "NC_proc")
     size <- readParam(pathProcs, "FTSIZE") # it should be equivalent to use SI
     sf <-readParam(pathProcs, "SF") # SF is equal to acqus/BF1
     sw_p <- readParam(pathProcs, "SW_p")
-    sw <- sw_p / sf # SW_p is equal to acqus/SW_h
     offset <- readParam(pathProcs, "OFFSET")
 
     # read additional information for output
     phc0 <- readParam(pathProcs, "PHC0")
     phc1 <- readParam(pathProcs, "PHC1")
+
+    bf1 <- readParam(pathAcqus, "BF1")
+
+    # checking for empty params
+    params <- c(endian, nc, size, sf, sw_p, offset, phc0, phc1, bf1)
+    fi <- is.na(params)
+    if (sum(fi) > 0) {
+      cat(crayon::yellow("fusion::readSpectrum >> empty parameter for", path, "\n"))
+      return(NULL)
+    }
 
     if (phc1 != 0) {
       cat(crayon::yellow("fusion::readSpectrum >> phc1 is expected to be 0 in IVDr experiments,\n",
@@ -81,8 +91,7 @@ readSpectrum <- function(path, procs = TRUE, options = list()){
     }
 
     # removing SR (useful for JEDI experiments)
-
-    bf1 <- readParam(pathAcqus, "BF1")
+    sw <- sw_p / sf # SW_p is equal to acqus/SW_h
     SR_p <- (sf - bf1) * 1e6 / sf
     SR <- (sf - bf1) * 1e6
     if (uncalibrate) {
