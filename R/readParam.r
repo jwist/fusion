@@ -10,6 +10,7 @@ readParam <- function(path, paramName){
   txt <- readLines(buf, n = -1, warn = FALSE)
   if (length(txt) == 0) {
     cat(crayon::red("fusion::readParam file", paramName, "is empty\n"))
+    close(buf)
     return(NULL)
   }
   close(buf)
