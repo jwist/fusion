@@ -8,6 +8,10 @@
 readParam <- function(path, paramName){
   buf <- file(path, open = "r")
   txt <- readLines(buf, n = -1, warn = FALSE)
+  if (length(txt) == 0) {
+    cat(crayon::red("fusion::readParam file", paramName, "is empty\n"))
+    return(NULL)
+  }
   close(buf)
   parameter <- strsplit(txt[grep(paste0(paramName, "="), txt)], "=")[[1]][2]
   if (grepl("<", parameter) == TRUE) {

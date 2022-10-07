@@ -23,6 +23,14 @@ readSpectrum <- function(path, procs = TRUE, options = list()){
     }
     pathAcqus <- file.path(path, "acqus")
 
+    # checking that file is not empty
+    if (is.null(readParam(pathProcs, "NC_proc"))) {
+      return(NULL)
+    }
+    if (is.null(readParam(pathAcqus, "BF1"))) {
+      return(NULL)
+    }
+
     if ("im" %in% names(options)) {
       im <- options$im
     } else {
@@ -53,7 +61,7 @@ readSpectrum <- function(path, procs = TRUE, options = list()){
     phc1 <- readParam(pathProcs, "PHC1")
 
     if (phc1 != 0) {
-      cat(crayon::yellow("fusion::readSpectrum >> phc0 is expected to be 0 in IVDr experiments,\n",
+      cat(crayon::yellow("fusion::readSpectrum >> phc1 is expected to be 0 in IVDr experiments,\n",
                          "instead phc1 was found to be:",
                          phc1,
                          "\n"))
