@@ -50,6 +50,13 @@ readSpectrum <- function(path, procs = TRUE, options = list()){
       im = FALSE
     }
 
+    if (im) {
+      if (!file.exists(path1i)) {
+        cat(crayon::yellow("fusion::readSpectrum >> imaginary data not found for", path, "\n"))
+        return(NULL)
+      }
+    }
+
     if ("uncalibrate" %in% names(options)) {
       uncalibrate <- options$uncalibrate
     } else {
