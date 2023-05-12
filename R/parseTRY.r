@@ -147,6 +147,7 @@ parseTRY <- function(path, options = list()){
   COMPOUND$sampleID <- sampleID
   COMPOUND$sourceID <- sourceID
   COMPOUND$sampleType <- sampleType
+  COMPOUND$expname <- basename(path)
 
   # casting the data
   # (as.numeric is mandatory otherwise dcast will order id in alphabetical order)
