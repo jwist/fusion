@@ -1,11 +1,11 @@
 Package: fusion
 Title: Fusion: an integrated dataset library for metabolic profiling
-Version: 0.0.0.9000
+Version: 0.0.1.0
 Authors@R: 
     person(given = "Julien",
            family = "Wist",
            role = c("aut", "cre"),
-           email = "julien.wist@correounivalle.edu.co",
+           email = "julien.wist@murdoch.edu.au",
            comment = c(ORCID = "0000-0002-3416-2572"))
 Description: Classes that allows integration of complex datasets from NMR and MS.
 License: MIT + file LICENSE
@@ -14,23 +14,13 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Suggests: 
-    testthat,
-    covr
-URL: https://github.com/jwist/fusion
-BugReports: https://github.com/jwist/fusion/issues
+    testthat
+URL: https://github.com/phenological/fusion
+BugReports: https://github.com/phenological/fusion/issues
 Config/testthat/edition: 3
 Imports: 
     methods,
-    readxl,
-    crayon,
-    xml2,
-    reshape2,
-    grid,
-    stats,
-    scales,
-    dplyr,
-    tictoc,
-    data.table
+    crayon
 Depends: 
-    R (>= 2.10)
+    R (>= 4.1)
 StagedInstall: no
