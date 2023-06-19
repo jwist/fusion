@@ -44,16 +44,16 @@ setClass("NMRSignal1D",
                                          shiftRange = "numeric",
                                          heightRangePer = "numeric",
                                          shape = "list",
-                                         diaIDs = "list"),
+                                         diaIDs = "character"),
          prototype(peaks = list(),
                    nbAtoms = 0,
                    integration = 0,
                    chemicalShift = NA_real_,
                    multiplicity = NA_character_,
                    shiftRange = NA_real_,
-                   heightRangePer = NA_real_
+                   heightRangePer = NA_real_,
                    shape = list(),
-                   diaIDs = list()),
+                   diaIDs = NA_character_),
          validity = function(object) {
            if (object@nbAtoms < 0) {
              stop(crayon::red("fusion:ClassNMRSignal1D >> nbAtoms must greather or equal than 0"))
@@ -76,7 +76,8 @@ setClass("NMRSignal1D",
 #' @slot signals a list of NMRSignal1D
 #' @slot category A string specifying a category for the compound. ie.e: ['metabolite', 'substrate source']
 #' @slot name A human readable name for the analyte
-#' @slot moleculeID A string used to identify a molecule(inchi or diaID)
+#' @slot inchiKey A string used to identify a molecule
+#' @slot diaID A canonical molecule ID
 #' @return a dataElement
 #' @export
 #' @importFrom crayon %+%
@@ -90,7 +91,7 @@ setClass("Analyte",
                    category = NA_character_,
                    name = NA_character_,
                    inchiKey = NA_character_,
-                   diaID = NA_character_,),
+                   diaID = NA_character_),
          validity = function(object) {
            # Check that peaks are of type NMRSignal1D
            if (length(object@signals) > 0) {
@@ -107,8 +108,10 @@ setClass("Analyte",
 #' @slot signals a list of NMRSignal1D
 #' @slot from start point for ROI
 #' @slot to end point for ROI
-#' @slot from start point for ROI
-#' @slot to end point for ROI
+#' @slot ppm Array of x-values from spectrum
+#' @slot experimental Array of y-values from spectrum
+#' @slot fitted Array of y-values given by the optimization
+#' @slot signalOutput A list of signal inputs with the optimized paramaters
 #' @return a dataElement
 #' @export
 #' @importFrom crayon %+%
@@ -119,20 +122,21 @@ setClass("NMRSignalModel",
                                          ppm = "numeric",
                                          experimental = "numeric",
                                          fitted = "numeric",
-                                         signalOutput = "list",
-),
-prototype(signals = list(),
-          x = list(),
-                   y = list()),
+                                         signalOutput = "list"),
+         prototype(signalsInput = list(),
+                   from = NA_real_,
+                   to = NA_real_,
+                   ppm = NA_real_,
+                   experimental = NA_real_,
+                   fitted = NA_real_,
+                   signalOutput = list()
+                   ),
          validity = function(object) {
            # Check that peaks are of type NMRSignal1D
-           if (length(object@signals) > 0) {
-             if (!class(object@signals[[1]])[[1]] == "NMRSignal1D") {
+           if (length(object@signalsInput) > 0) {
+             if (!class(object@signalsInput[[1]])[[1]] == "NMRSignal1D") {
                stop(crayon::red("fusion:ClassAnalyte >> peaks must be of type NMRSignal1D"))
              }
-           }
-           if (length(object@x) != length(object@y)) {
-             stop(crayon::red("fusion:NMRSignalModel >> x and y must have the same length"))
            }
            TRUE
          }
