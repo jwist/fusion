@@ -24,10 +24,14 @@ setClass("NMRPeak1D",
 #' @slot peaks a list of NMRPeak1D
 #' @slot nbAtoms Number of atoms associated with the signal
 #' @slot integration Raw non-normalized integration of the signal
+#' @slot chemicalShift (optional) The chemical shift of the signal. Not always its center
 #' @slot multiplicity (optional) A compiled NMR multiplicity pattern i.e [s|d|t|q|s,...|dd,...]
+#' @slot shiftRange (optional) Range of x-peaks variation. It is an absolute value. Should be positive
+#' @slot heightRangePer (optional) Proportional range of y-peaks variation. Must be between 0 and 1
+
 #' @slot shape (optional) A peak shape for the different peaks conforming the signal. Internal components overrides this shape
 #' @slot diaIDs (optional) A list of atom ids to which this signal is assigned.
-
+#' 
 #' @return a dataElement
 #' @export
 #' @importFrom crayon %+%
@@ -35,13 +39,19 @@ setClass("NMRSignal1D",
          representation = representation(peaks = "list",
                                          nbAtoms = "numeric",
                                          integration = "numeric",
+                                         chemicalShift = "numeric",
                                          multiplicity = "character",
+                                         shiftRange = "numeric",
+                                         heightRangePer = "numeric",
                                          shape = "list",
                                          diaIDs = "list"),
          prototype(peaks = list(),
                    nbAtoms = 0,
                    integration = 0,
+                   chemicalShift = NA_real_,
                    multiplicity = NA_character_,
+                   shiftRange = NA_real_,
+                   heightRangePer = NA_real_
                    shape = list(),
                    diaIDs = list()),
          validity = function(object) {
