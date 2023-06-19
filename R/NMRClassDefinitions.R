@@ -1,0 +1,129 @@
+#' An S4 class for NMRPeak1D
+#'
+#' @slot x Ordinate of the peak
+#' @slot y height of the peak
+#' @slot fwhm Full width at half maximum of peak
+#' @slot shape (optional) A peak shape for the different peaks conforming the signal. It uses the parent shape if void
+
+#' @return a dataElement
+#' @export
+#' @importFrom crayon %+%
+setClass("NMRPeak1D",
+         representation = representation(x = "numeric",
+                                         y = "numeric",
+                                         fwhm = "numeric",
+                                         shape = "list"),
+         prototype(x = NA_real_,
+                   y = NA_real_,
+                   fwhm = NA_real_,
+                   shape = list())
+)
+
+#' An S4 class for NMRSignal1D
+#'
+#' @slot peaks a list of NMRPeak1D
+#' @slot nbAtoms Number of atoms associated with the signal
+#' @slot integration Raw non-normalized integration of the signal
+#' @slot multiplicity (optional) A compiled NMR multiplicity pattern i.e [s|d|t|q|s,...|dd,...]
+#' @slot shape (optional) A peak shape for the different peaks conforming the signal. Internal components overrides this shape
+#' @slot diaIDs (optional) A list of atom ids to which this signal is assigned.
+
+#' @return a dataElement
+#' @export
+#' @importFrom crayon %+%
+setClass("NMRSignal1D",
+         representation = representation(peaks = "list",
+                                         nbAtoms = "numeric",
+                                         integration = "numeric",
+                                         multiplicity = "character",
+                                         shape = "list",
+                                         diaIDs = "list"),
+         prototype(peaks = list(),
+                   nbAtoms = 0,
+                   integration = 0,
+                   multiplicity = NA_character_,
+                   shape = list(),
+                   diaIDs = list()),
+         validity = function(object) {
+           if (object@nbAtoms < 0) {
+             stop(crayon::red("fusion:ClassNMRSignal1D >> nbAtoms must greather or equal than 0"))
+           }
+           if (object@integration < 0) {
+             stop(crayon::red("fusion:ClassNMRSignal1D >> integration must greather or equal than 0"))
+           }
+           # Check that peaks are of type NMRPeak1D
+           if (length(object@peaks) > 0) {
+             if (!class(object@peaks[[1]])[[1]] == "NMRPeak1D") {
+               stop(crayon::red("fusion:ClassNMRSignal1D >> peaks must be of type NMRPeak1D"))
+             }
+           }
+           TRUE
+         }
+)
+
+#' An S4 class for Analyte
+#'
+#' @slot signals a list of NMRSignal1D
+#' @slot category A string specifying a category for the compound. ie.e: ['metabolite', 'substrate source']
+#' @slot name A human readable name for the analyte
+#' @slot moleculeID A string used to identify a molecule(inchi or diaID)
+#' @return a dataElement
+#' @export
+#' @importFrom crayon %+%
+setClass("Analyte",
+         representation = representation(signals = "list",
+                                         category = 'character',
+                                         name = "character",
+                                         inchiKey = "character",
+                                         diaID = "character"),
+         prototype(signals = list(),
+                   category = NA_character_,
+                   name = NA_character_,
+                   inchiKey = NA_character_,
+                   diaID = NA_character_,),
+         validity = function(object) {
+           # Check that peaks are of type NMRSignal1D
+           if (length(object@signals) > 0) {
+             if (!class(object@signals[[1]])[[1]] == "NMRSignal1D") {
+               stop(crayon::red("fusion:ClassAnalyte >> peaks must be of type NMRSignal1D"))
+             }
+           }
+           TRUE
+         }
+)
+
+#' An S4 class for NMRSignalModel
+#'
+#' @slot signals a list of NMRSignal1D
+#' @slot from start point for ROI
+#' @slot to end point for ROI
+#' @slot from start point for ROI
+#' @slot to end point for ROI
+#' @return a dataElement
+#' @export
+#' @importFrom crayon %+%
+setClass("NMRSignalModel",
+         representation = representation(signalsInput = "list",
+                                         from = "numeric",
+                                         to = "numeric",
+                                         ppm = "numeric",
+                                         experimental = "numeric",
+                                         fitted = "numeric",
+                                         signalOutput = "list",
+),
+prototype(signals = list(),
+          x = list(),
+                   y = list()),
+         validity = function(object) {
+           # Check that peaks are of type NMRSignal1D
+           if (length(object@signals) > 0) {
+             if (!class(object@signals[[1]])[[1]] == "NMRSignal1D") {
+               stop(crayon::red("fusion:ClassAnalyte >> peaks must be of type NMRSignal1D"))
+             }
+           }
+           if (length(object@x) != length(object@y)) {
+             stop(crayon::red("fusion:NMRSignalModel >> x and y must have the same length"))
+           }
+           TRUE
+         }
+)
