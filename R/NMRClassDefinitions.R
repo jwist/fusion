@@ -44,7 +44,8 @@ setClass("NMRSignal1D",
                                          shiftRange = "numeric",
                                          heightRangePer = "numeric",
                                          shape = "list",
-                                         diaIDs = "character"),
+                                         diaIDs = "character",
+                                         analyte = "list"),
          prototype(peaks = list(),
                    nbAtoms = 0,
                    integration = 0,
@@ -111,7 +112,7 @@ setClass("Analyte",
 #' @slot ppm Array of x-values from spectrum
 #' @slot experimental Array of y-values from spectrum
 #' @slot fitted Array of y-values given by the optimization
-#' @slot signalOutput A list of signal inputs with the optimized paramaters
+#' @slot signalOutput A list of signal inputs with the optimized parameters
 #' @return a dataElement
 #' @export
 #' @importFrom crayon %+%
@@ -129,8 +130,7 @@ setClass("NMRSignalModel",
                    ppm = NA_real_,
                    experimental = NA_real_,
                    fitted = NA_real_,
-                   signalOutput = list()
-                   ),
+                   signalOutput = list()),
          validity = function(object) {
            # Check that peaks are of type NMRSignal1D
            if (length(object@signalsInput) > 0) {
