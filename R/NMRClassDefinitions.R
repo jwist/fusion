@@ -113,6 +113,7 @@ setClass("Analyte",
 #' @slot experimental Array of y-values from spectrum
 #' @slot fitted Array of y-values given by the optimization
 #' @slot signalOutput A list of signal inputs with the optimized parameters
+#' @slot error A list of different errors. I'll explain later
 #' @return a dataElement
 #' @export
 #' @importFrom crayon %+%
@@ -123,14 +124,16 @@ setClass("NMRSignalModel",
                                          ppm = "numeric",
                                          experimental = "numeric",
                                          fitted = "numeric",
-                                         signalOutput = "list"),
+                                         signalOutput = "list",
+                                         error = "list"),
          prototype(signalsInput = list(),
                    from = NA_real_,
                    to = NA_real_,
                    ppm = NA_real_,
                    experimental = NA_real_,
                    fitted = NA_real_,
-                   signalOutput = list()),
+                   signalOutput = list(),
+                   error = list()),
          validity = function(object) {
            # Check that peaks are of type NMRSignal1D
            if (length(object@signalsInput) > 0) {
