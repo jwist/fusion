@@ -28,10 +28,9 @@ setClass("NMRPeak1D",
 #' @slot multiplicity (optional) A compiled NMR multiplicity pattern i.e [s|d|t|q|s,...|dd,...]
 #' @slot shiftRange (optional) Range of x-peaks variation. It is an absolute value. Should be positive
 #' @slot heightRangePer (optional) Proportional range of y-peaks variation. Must be between 0 and 1
-
 #' @slot shape (optional) A peak shape for the different peaks conforming the signal. Internal components overrides this shape
 #' @slot diaIDs (optional) A list of atom ids to which this signal is assigned.
-#' 
+#' @slot analyte (optional) The name/id of the analyte
 #' @return a dataElement
 #' @export
 #' @importFrom crayon %+%
@@ -45,7 +44,7 @@ setClass("NMRSignal1D",
                                          heightRangePer = "numeric",
                                          shape = "list",
                                          diaIDs = "character",
-                                         analyte = "list"),
+                                         analyte = "character"),
          prototype(peaks = list(),
                    nbAtoms = 0,
                    integration = 0,
@@ -54,7 +53,8 @@ setClass("NMRSignal1D",
                    shiftRange = NA_real_,
                    heightRangePer = NA_real_,
                    shape = list(),
-                   diaIDs = NA_character_),
+                   diaIDs = NA_character_,
+                   analyte = NA_character_),
          validity = function(object) {
            if (object@nbAtoms < 0) {
              stop(crayon::red("fusion:ClassNMRSignal1D >> nbAtoms must greather or equal than 0"))
