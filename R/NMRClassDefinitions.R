@@ -125,7 +125,7 @@ setClass("NMRSignalModel",
                                          experimental = "numeric",
                                          fitted = "numeric",
                                          signalOutput = "list",
-                                         error = "list"),
+                                         error = "numeric"),
          prototype(signalsInput = list(),
                    from = NA_real_,
                    to = NA_real_,
@@ -133,7 +133,7 @@ setClass("NMRSignalModel",
                    experimental = NA_real_,
                    fitted = NA_real_,
                    signalOutput = list(),
-                   error = list()),
+                   error = NA_real_),
          validity = function(object) {
            # Check that peaks are of type NMRSignal1D
            if (length(object@signalsInput) > 0) {
