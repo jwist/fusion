@@ -18,6 +18,23 @@ setClass("NMRPeak1D",
                    fwhm = NA_real_,
                    shape = list())
 )
+setGeneric("toJSON", function(obj, control=NA) standardGeneric("toJSON")) 
+
+setMethod("toJSON", signature(obj="NMRPeak1D", control="ANY"),
+          function(obj, control=NA) {
+            json <- "{"
+            sep <- ""
+            for(slotName in names(getSlots(is(obj)))) {
+              value <- slot(obj, slotName)
+              if (length(value) > 0 && all(!is.na(value))) {
+                json <- paste0(json, sep, '"',slotName, '":', toJSON(value, control))
+                sep <- ","
+              }
+            }
+            
+            return(paste0(json, "}"))
+          }
+)
 
 #' An S4 class for NMRSignal1D
 #'
@@ -72,6 +89,22 @@ setClass("NMRSignal1D",
          }
 )
 
+setMethod("toJSON", signature(obj="NMRSignal1D", control="ANY"),
+          function(obj, control=NA) {
+            json <- "{"
+            sep <- ""
+            for(slotName in names(getSlots(is(obj)))) {
+              value <- slot(obj, slotName)
+              if (length(value) > 0 && all(!is.na(value))) {
+                json <- paste0(json, sep, '"',slotName, '":', toJSON(value, control))
+                sep <- ","
+                
+              }
+            }
+            return(paste0(json, "}"))
+          }
+)
+
 #' An S4 class for Analyte
 #'
 #' @slot signals a list of NMRSignal1D
@@ -102,6 +135,22 @@ setClass("Analyte",
            }
            TRUE
          }
+)
+
+setMethod("toJSON", signature(obj="Analyte", control="ANY"),
+          function(obj, control=NA) {
+            json <- "{"
+            sep <- ""
+            for(slotName in names(getSlots(is(obj)))) {
+              value <- slot(obj, slotName)
+              if (length(value) > 0 && all(!is.na(value))) {
+                json <- paste0(json, sep, '"',slotName, '":', toJSON(value, control))
+                sep <- ","
+                
+              }
+            }
+            return(paste0(json, "}"))
+          }
 )
 
 #' An S4 class for NMRSignalModel
@@ -143,4 +192,90 @@ setClass("NMRSignalModel",
            }
            TRUE
          }
+)
+
+setMethod("toJSON", signature(obj="NMRSignalModel", control="ANY"),
+          function(obj, control=NA) {
+            json <- "{"
+            sep <- ""
+            slotNames = names(getSlots(is(obj)))
+            
+            # A hack to avoid the xy being exported
+            if ("no_xy" %in% names(control)) {
+              if (control["no_xy"])
+                slotNames <- slotNames[!(slotNames %in% c('experimental', 'ppm'))]
+            }
+            
+            for(slotName in slotNames) {
+              value <- slot(obj, slotName)
+              if (length(value) > 0 && all(!is.na(value))) {
+                json <- paste0(json, sep, '"',slotName, '":', toJSON(value, control))
+                sep <- ","
+                
+              }
+            }
+            return(paste0(json, "}"))
+          }
+)
+
+setMethod("toJSON", signature(obj="list", control="ANY"),
+          function(obj, control=NA) {
+            lnames <- names(obj)
+            if (is.null(lnames)) {
+              json <- "["
+              sep <- ""
+              for (i in 1:length(obj)) {
+                json <- paste0(json, sep, toJSON(obj[[i]], control))
+                sep <- ","
+              }
+              return(paste0(json, "]"))
+            } else {
+              json <- "{"
+              sep <- ""
+              for (i in 1:length(obj)) {
+                slotName <- lnames[i]
+                if (slotName == "")
+                  slotName = i
+                json <- paste0(json, sep, '"',slotName, '":', toJSON(obj[[i]], control))
+                sep <- ","
+              }
+              return(paste0(json, "}"))
+            }
+          }
+)
+
+setMethod("toJSON", signature(obj="vector", control="ANY"),
+          function(obj, control=NA) {
+            return(jsonlite::toJSON(obj, control))
+          }
+)
+setMethod("toJSON", signature(obj="numeric", control="ANY"),
+          function(obj, control=NA) {
+            if (length(obj) > 1) {
+              json <- "["
+              sep <- ""
+              for (i in 1:length(obj)) {
+                json <- paste0(json, sep, toJSON(obj[[i]], control))
+                sep <- ","
+              }
+              return(paste0(json, "]"))
+            } else {
+              return(obj)
+            }
+          }
+)
+setMethod("toJSON", signature(obj="character", control="ANY"),
+          function(obj, control=NA) {
+            if (length(obj) > 1) {
+              json <- "["
+              sep <- ""
+              for (i in 1:length(obj)) {
+                json <- paste0(json, sep, toJSON(obj[[i]], control))
+                sep <- ","
+              }
+              return(paste0(json, "]"))
+            } else {
+              return(paste0('"', obj, '"'))
+            }
+          }
 )
