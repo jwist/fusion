@@ -266,6 +266,13 @@ setMethod("toJSON", signature(obj="numeric", control="ANY"),
               }
               return(paste0(json, "]"))
             } else {
+              if (is.infinite(obj)) {
+                if (obj < 0) {
+                  return(-2e52) 
+                } else {
+                  return(2e52) 
+                }
+              }
               return(obj)
             }
           }
