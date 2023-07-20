@@ -45,6 +45,7 @@ setMethod("toJSON", signature(obj="NMRPeak1D", control="ANY"),
 #' @slot multiplicity (optional) A compiled NMR multiplicity pattern i.e [s|d|t|q|s,...|dd,...]
 #' @slot shiftRange (optional) Range of x-peaks variation. It is an absolute value. Should be positive
 #' @slot heightRangePer (optional) Proportional range of y-peaks variation. Must be between 0 and 1
+#' @slot widthFactor (optional) Width factor depending on the signal
 #' @slot shape (optional) A peak shape for the different peaks conforming the signal. Internal components overrides this shape
 #' @slot diaIDs (optional) A list of atom ids to which this signal is assigned.
 #' @slot analyte (optional) The name/id of the analyte
@@ -59,6 +60,7 @@ setClass("NMRSignal1D",
                                          multiplicity = "character",
                                          shiftRange = "numeric",
                                          heightRangePer = "numeric",
+                                         widthFactor="numeric",
                                          shape = "list",
                                          diaIDs = "character",
                                          analyte = "character"),
@@ -69,6 +71,7 @@ setClass("NMRSignal1D",
                    multiplicity = NA_character_,
                    shiftRange = NA_real_,
                    heightRangePer = NA_real_,
+                   widthFactor=1,
                    shape = list(),
                    diaIDs = NA_character_,
                    analyte = NA_character_),
@@ -162,6 +165,7 @@ setMethod("toJSON", signature(obj="Analyte", control="ANY"),
 #' @slot experimental Array of y-values from spectrum
 #' @slot fitted Array of y-values given by the optimization
 #' @slot signalsOutput A list of signal inputs with the optimized parameters
+#' @slot shape (optional) A peak shape for the different peaks conforming the signal. Internal components overrides this shape
 #' @slot error A list of different errors. I'll explain later
 #' @return a dataElement
 #' @export
@@ -174,6 +178,7 @@ setClass("NMRSignalModel",
                                          experimental = "numeric",
                                          fitted = "numeric",
                                          signalsOutput = "list",
+                                         shape = "list",
                                          error = "numeric"),
          prototype(signalsInput = list(),
                    from = NA_real_,
@@ -182,6 +187,7 @@ setClass("NMRSignalModel",
                    experimental = NA_real_,
                    fitted = NA_real_,
                    signalsOutput = list(),
+                   shape = list(),
                    error = NA_real_),
          validity = function(object) {
            # Check that peaks are of type NMRSignal1D
@@ -271,6 +277,22 @@ setMethod("toJSON", signature(obj="character", control="ANY"),
               sep <- ""
               for (i in 1:length(obj)) {
                 json <- paste0(json, sep, toJSON(obj[[i]], control))
+                sep <- ","
+              }
+              return(paste0(json, "]"))
+            } else {
+              return(paste0('"', obj, '"'))
+            }
+          }
+)
+
+setMethod("toJSON", signature(obj="matrix", control="ANY"),
+          function(obj, control=NA) {
+            if (length(obj) > 1) {
+              json <- "["
+              sep <- ""
+              for (i in 1:dim(obj)[[1]]) {
+                json <- paste0(json, sep, toJSON(obj[i,], control))
                 sep <- ","
               }
               return(paste0(json, "]"))
