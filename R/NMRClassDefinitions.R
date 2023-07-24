@@ -49,6 +49,7 @@ setMethod("toJSON", signature(obj="NMRPeak1D", control="ANY"),
 #' @slot shape (optional) A peak shape for the different peaks conforming the signal. Internal components overrides this shape
 #' @slot diaIDs (optional) A list of atom ids to which this signal is assigned.
 #' @slot analyte (optional) The name/id of the analyte
+#' @slot validated (optional) Validated by an expert?
 #' @return a dataElement
 #' @export
 #' @importFrom crayon %+%
@@ -63,7 +64,8 @@ setClass("NMRSignal1D",
                                          widthFactor="numeric",
                                          shape = "list",
                                          diaIDs = "character",
-                                         analyte = "character"),
+                                         analyte = "character",
+                                         validated = "numeric"),
          prototype(peaks = list(),
                    nbAtoms = 0,
                    integration = 0,
@@ -74,7 +76,8 @@ setClass("NMRSignal1D",
                    widthFactor=1,
                    shape = list(),
                    diaIDs = NA_character_,
-                   analyte = NA_character_),
+                   analyte = NA_character_,
+                   validated = 0),
          validity = function(object) {
            if (object@nbAtoms < 0) {
              stop(crayon::red("fusion:ClassNMRSignal1D >> nbAtoms must greather or equal than 0"))
@@ -231,7 +234,8 @@ setMethod("toJSON", signature(obj="list", control="ANY"),
               json <- "["
               sep <- ""
               for (i in 1:length(obj)) {
-                json <- paste0(json, sep, toJSON(obj[[i]], control))
+                tmp <- toJSON(obj[[i]], control)
+                json <- paste0(json, sep, tmp)
                 sep <- ","
               }
               return(paste0(json, "]"))
