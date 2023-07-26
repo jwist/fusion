@@ -12,29 +12,15 @@ setClass("NMRPeak1D",
          representation = representation(x = "numeric",
                                          y = "numeric",
                                          fwhm = "numeric",
-                                         shape = "list"),
+                                         shape = "list",
+                                         type = "character"),
          prototype(x = NA_real_,
                    y = NA_real_,
                    fwhm = NA_real_,
-                   shape = list())
+                   shape = list(),
+                   type = "NMRPeak1D")
 )
-setGeneric("toJSON", function(obj, control=NA) standardGeneric("toJSON")) 
 
-setMethod("toJSON", signature(obj="NMRPeak1D", control="ANY"),
-          function(obj, control=NA) {
-            json <- "{"
-            sep <- ""
-            for(slotName in names(getSlots(is(obj)))) {
-              value <- slot(obj, slotName)
-              if (length(value) > 0 && all(!is.na(value))) {
-                json <- paste0(json, sep, '"',slotName, '":', toJSON(value, control))
-                sep <- ","
-              }
-            }
-            
-            return(paste0(json, "}"))
-          }
-)
 
 #' An S4 class for NMRSignal1D
 #'
@@ -65,7 +51,8 @@ setClass("NMRSignal1D",
                                          shape = "list",
                                          diaIDs = "character",
                                          analyte = "character",
-                                         validated = "numeric"),
+                                         validated = "numeric",
+                                         type = "character"),
          prototype(peaks = list(),
                    nbAtoms = 0,
                    integration = 0,
@@ -77,7 +64,8 @@ setClass("NMRSignal1D",
                    shape = list(),
                    diaIDs = NA_character_,
                    analyte = NA_character_,
-                   validated = 0),
+                   validated = 0,
+                   type = "NMRSignal1D"),
          validity = function(object) {
            if (object@nbAtoms < 0) {
              stop(crayon::red("fusion:ClassNMRSignal1D >> nbAtoms must greather or equal than 0"))
@@ -95,22 +83,6 @@ setClass("NMRSignal1D",
          }
 )
 
-setMethod("toJSON", signature(obj="NMRSignal1D", control="ANY"),
-          function(obj, control=NA) {
-            json <- "{"
-            sep <- ""
-            for(slotName in names(getSlots(is(obj)))) {
-              value <- slot(obj, slotName)
-              if (length(value) > 0 && all(!is.na(value))) {
-                json <- paste0(json, sep, '"',slotName, '":', toJSON(value, control))
-                sep <- ","
-                
-              }
-            }
-            return(paste0(json, "}"))
-          }
-)
-
 #' An S4 class for Analyte
 #'
 #' @slot signals a list of NMRSignal1D
@@ -126,12 +98,14 @@ setClass("Analyte",
                                          category = 'character',
                                          name = "character",
                                          inchiKey = "character",
-                                         diaID = "character"),
+                                         diaID = "character",
+                                         type = "character"),
          prototype(signals = list(),
                    category = NA_character_,
                    name = NA_character_,
                    inchiKey = NA_character_,
-                   diaID = NA_character_),
+                   diaID = NA_character_,
+                   type = "Analyte"),
          validity = function(object) {
            # Check that peaks are of type NMRSignal1D
            if (length(object@signals) > 0) {
@@ -141,22 +115,6 @@ setClass("Analyte",
            }
            TRUE
          }
-)
-
-setMethod("toJSON", signature(obj="Analyte", control="ANY"),
-          function(obj, control=NA) {
-            json <- "{"
-            sep <- ""
-            for(slotName in names(getSlots(is(obj)))) {
-              value <- slot(obj, slotName)
-              if (length(value) > 0 && all(!is.na(value))) {
-                json <- paste0(json, sep, '"',slotName, '":', toJSON(value, control))
-                sep <- ","
-                
-              }
-            }
-            return(paste0(json, "}"))
-          }
 )
 
 #' An S4 class for NMRSignalModel
@@ -182,7 +140,8 @@ setClass("NMRSignalModel",
                                          fitted = "numeric",
                                          signalsOutput = "list",
                                          shape = "list",
-                                         error = "numeric"),
+                                         error = "numeric",
+                                         type = "character"),
          prototype(signalsInput = list(),
                    from = NA_real_,
                    to = NA_real_,
@@ -191,7 +150,8 @@ setClass("NMRSignalModel",
                    fitted = NA_real_,
                    signalsOutput = list(),
                    shape = list(),
-                   error = NA_real_),
+                   error = NA_real_,
+                   type = "NMRSignalModel"),
          validity = function(object) {
            # Check that peaks are of type NMRSignal1D
            if (length(object@signalsInput) > 0) {
@@ -201,6 +161,56 @@ setClass("NMRSignalModel",
            }
            TRUE
          }
+)
+
+setGeneric("toJSON", function(obj, control=NA) standardGeneric("toJSON")) 
+
+setMethod("toJSON", signature(obj="NMRPeak1D", control="ANY"),
+          function(obj, control=NA) {
+            json <- "{"
+            sep <- ""
+            for(slotName in names(getSlots(is(obj)))) {
+              value <- slot(obj, slotName)
+              if (length(value) > 0 && all(!is.na(value))) {
+                json <- paste0(json, sep, '"',slotName, '":', toJSON(value, control))
+                sep <- ","
+              }
+            }
+            
+            return(paste0(json, "}"))
+          }
+)
+
+setMethod("toJSON", signature(obj="NMRSignal1D", control="ANY"),
+          function(obj, control=NA) {
+            json <- "{"
+            sep <- ""
+            for(slotName in names(getSlots(is(obj)))) {
+              value <- slot(obj, slotName)
+              if (length(value) > 0 && all(!is.na(value))) {
+                json <- paste0(json, sep, '"',slotName, '":', toJSON(value, control))
+                sep <- ","
+                
+              }
+            }
+            return(paste0(json, "}"))
+          }
+)
+
+setMethod("toJSON", signature(obj="Analyte", control="ANY"),
+          function(obj, control=NA) {
+            json <- "{"
+            sep <- ""
+            for(slotName in names(getSlots(is(obj)))) {
+              value <- slot(obj, slotName)
+              if (length(value) > 0 && all(!is.na(value))) {
+                json <- paste0(json, sep, '"',slotName, '":', toJSON(value, control))
+                sep <- ","
+                
+              }
+            }
+            return(paste0(json, "}"))
+          }
 )
 
 setMethod("toJSON", signature(obj="NMRSignalModel", control="ANY"),
@@ -259,6 +269,7 @@ setMethod("toJSON", signature(obj="vector", control="ANY"),
             return(jsonlite::toJSON(obj, control))
           }
 )
+
 setMethod("toJSON", signature(obj="numeric", control="ANY"),
           function(obj, control=NA) {
             if (length(obj) > 1) {
@@ -281,6 +292,7 @@ setMethod("toJSON", signature(obj="numeric", control="ANY"),
             }
           }
 )
+
 setMethod("toJSON", signature(obj="character", control="ANY"),
           function(obj, control=NA) {
             if (length(obj) > 1) {
@@ -309,6 +321,34 @@ setMethod("toJSON", signature(obj="matrix", control="ANY"),
               return(paste0(json, "]"))
             } else {
               return(paste0('"', obj, '"'))
+            }
+          }
+)
+
+setGeneric("fromVector", function(input) standardGeneric("fromVector")) 
+
+setMethod("fromVector", signature(input="ANY"),
+          function(input) {
+            listNames <- names(input)
+            if (is.null(listNames)) {
+              if (length(input)==1 && any(c("character", "boolean", "numeric") %in%  is(input))) {
+                return(input)
+              } else {
+                return(unlist(lapply(input, function(row) {fromVector(row)})))
+              }
+            }else if ("type" %in% listNames) {
+              output <- new(input[["type"]]);
+              slotNames <- names(getSlots(is(output)))
+              if (all(!is.na(slotNames))) {
+                for (slotName in slotNames) {
+                  if (slotName %in% listNames) {
+                    slot(output, slotName) <- fromVector(input[[slotName]])
+                  }
+                }
+              }
+              return(output)
+            } else {
+              return(lapply(input, function(row) {fromVector(row)}))
             }
           }
 )
