@@ -51,7 +51,7 @@ setClass("NMRSignal1D",
                                          shape = "list",
                                          diaIDs = "character",
                                          analyte = "character",
-                                         validated = "numeric",
+                                         validated = "ANY",
                                          type = "character"),
          prototype(peaks = list(),
                    nbAtoms = 0,
@@ -331,7 +331,7 @@ setMethod("fromVector", signature(input="ANY"),
           function(input) {
             listNames <- names(input)
             if (is.null(listNames)) {
-              if (length(input)==1 && any(c("character", "boolean", "numeric") %in%  is(input))) {
+              if (length(input)==1 && any(c("boolean", "character", "logical", "numeric") %in%  is(input))) {
                 return(input)
               } else {
                 return(unlist(lapply(input, function(row) {fromVector(row)})))
