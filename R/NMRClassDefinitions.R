@@ -293,6 +293,26 @@ setMethod("toJSON", signature(obj="numeric", control="ANY"),
           }
 )
 
+setMethod("toJSON", signature(obj="logical", control="ANY"),
+          function(obj, control=NA) {
+            if (length(obj) > 1) {
+              json <- "["
+              sep <- ""
+              for (i in 1:length(obj)) {
+                json <- paste0(json, sep, toJSON(obj[[i]], control))
+                sep <- ","
+              }
+              return(paste0(json, "]"))
+            } else {
+              if (obj == TRUE) {
+                return(1)
+              } else {
+                return(0)
+              }
+            }
+          }
+)
+
 setMethod("toJSON", signature(obj="character", control="ANY"),
           function(obj, control=NA) {
             if (length(obj) > 1) {
