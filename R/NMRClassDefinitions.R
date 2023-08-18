@@ -313,7 +313,7 @@ setMethod("toJSON", signature(obj="logical", control="ANY"),
               }
               return(paste0(json, "]"))
             } else {
-              if( obj == NA) {
+              if( is.na(obj)) {
                 return("null")
               }
               if (obj == TRUE) {
