@@ -36,6 +36,7 @@ setClass("NMRPeak1D",
 #' @slot diaIDs (optional) A list of atom ids to which this signal is assigned.
 #' @slot analyte (optional) The name/id of the analyte
 #' @slot validated (optional) Validated by an expert?
+#' @slot id (optional) Unique identifier
 #' @return a dataElement
 #' @export
 #' @importFrom crayon %+%
@@ -52,7 +53,8 @@ setClass("NMRSignal1D",
                                          diaIDs = "character",
                                          analyte = "character",
                                          validated = "ANY",
-                                         type = "character"),
+                                         type = "character",
+                                         id = "character"),
          prototype(peaks = list(),
                    nbAtoms = 0,
                    integration = 0,
@@ -65,7 +67,8 @@ setClass("NMRSignal1D",
                    diaIDs = NA_character_,
                    analyte = NA_character_,
                    validated = 0,
-                   type = "NMRSignal1D"),
+                   type = "NMRSignal1D",
+                   id = NA_character_),
          validity = function(object) {
            if (object@nbAtoms < 0) {
              stop(crayon::red("fusion:ClassNMRSignal1D >> nbAtoms must greather or equal than 0"))
@@ -90,6 +93,7 @@ setClass("NMRSignal1D",
 #' @slot name A human readable name for the analyte
 #' @slot inchiKey A string used to identify a molecule
 #' @slot diaID A canonical molecule ID
+#' @slot id (optional) Unique identifier
 #' @return a dataElement
 #' @export
 #' @importFrom crayon %+%
@@ -99,13 +103,15 @@ setClass("Analyte",
                                          name = "character",
                                          inchiKey = "character",
                                          diaID = "character",
-                                         type = "character"),
+                                         type = "character",
+                                         id = "character"),
          prototype(signals = list(),
                    category = NA_character_,
                    name = NA_character_,
                    inchiKey = NA_character_,
                    diaID = NA_character_,
-                   type = "Analyte"),
+                   type = "Analyte",
+                   id = NA_character_),
          validity = function(object) {
            # Check that peaks are of type NMRSignal1D
            if (length(object@signals) > 0) {
@@ -128,6 +134,7 @@ setClass("Analyte",
 #' @slot signalsOutput A list of signal inputs with the optimized parameters
 #' @slot shape (optional) A peak shape for the different peaks conforming the signal. Internal components overrides this shape
 #' @slot error A list of different errors. I'll explain later
+#' @slot id (optional) Unique identifier
 #' @return a dataElement
 #' @export
 #' @importFrom crayon %+%
@@ -140,8 +147,9 @@ setClass("NMRSignalModel",
                                          fitted = "numeric",
                                          signalsOutput = "list",
                                          shape = "list",
-                                         error = "numeric",
-                                         type = "character"),
+                                         error = "list",
+                                         type = "character",
+                                         id = "character"),
          prototype(signalsInput = list(),
                    from = NA_real_,
                    to = NA_real_,
@@ -150,8 +158,9 @@ setClass("NMRSignalModel",
                    fitted = NA_real_,
                    signalsOutput = list(),
                    shape = list(),
-                   error = NA_real_,
-                   type = "NMRSignalModel"),
+                   error = list(),
+                   type = "NMRSignalModel",
+                   id = NA_character_),
          validity = function(object) {
            # Check that peaks are of type NMRSignal1D
            if (length(object@signalsInput) > 0) {
