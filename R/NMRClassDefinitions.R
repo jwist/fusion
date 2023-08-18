@@ -292,12 +292,12 @@ setMethod("toJSON", signature(obj="numeric", control="ANY"),
             } else {
               if (is.infinite(obj)) {
                 if (obj < 0) {
-                  return(-2e52) 
+                  return("-2e52") 
                 } else {
-                  return(2e52) 
+                  return("2e52") 
                 }
               }
-              return(obj)
+              return(as.character(obj))
             }
           }
 )
@@ -314,9 +314,9 @@ setMethod("toJSON", signature(obj="logical", control="ANY"),
               return(paste0(json, "]"))
             } else {
               if (obj == TRUE) {
-                return(1)
+                return("true")
               } else {
-                return(0)
+                return("false")
               }
             }
           }
