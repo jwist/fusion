@@ -180,7 +180,7 @@ setMethod("toJSON", signature(obj="NMRPeak1D", control="ANY"),
             sep <- ""
             for(slotName in names(getSlots(is(obj)))) {
               value <- slot(obj, slotName)
-              if (length(value) > 0 && all(!is.na(value))) {
+              if (length(value) > 0 && !all(is.na(value))) {
                 json <- paste0(json, sep, '"',slotName, '":', toJSON(value, control))
                 sep <- ","
               }
@@ -196,7 +196,7 @@ setMethod("toJSON", signature(obj="NMRSignal1D", control="ANY"),
             sep <- ""
             for(slotName in names(getSlots(is(obj)))) {
               value <- slot(obj, slotName)
-              if (length(value) > 0 && all(!is.na(value))) {
+              if (length(value) > 0 && !all(is.na(value))) {
                 json <- paste0(json, sep, '"',slotName, '":', toJSON(value, control))
                 sep <- ","
                 
@@ -212,7 +212,7 @@ setMethod("toJSON", signature(obj="Analyte", control="ANY"),
             sep <- ""
             for(slotName in names(getSlots(is(obj)))) {
               value <- slot(obj, slotName)
-              if (length(value) > 0 && all(!is.na(value))) {
+              if (length(value) > 0 && !all(is.na(value))) {
                 json <- paste0(json, sep, '"',slotName, '":', toJSON(value, control))
                 sep <- ","
                 
@@ -236,7 +236,7 @@ setMethod("toJSON", signature(obj="NMRSignalModel", control="ANY"),
             
             for(slotName in slotNames) {
               value <- slot(obj, slotName)
-              if (length(value) > 0 && all(!is.na(value))) {
+              if (length(value) > 0 && !all(is.na(value))) {
                 json <- paste0(json, sep, '"',slotName, '":', toJSON(value, control))
                 sep <- ","
                 
