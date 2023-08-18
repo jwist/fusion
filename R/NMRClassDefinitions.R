@@ -290,6 +290,9 @@ setMethod("toJSON", signature(obj="numeric", control="ANY"),
               }
               return(paste0(json, "]"))
             } else {
+              if(is.na(obj)) {
+                return("null")
+              }
               if (is.infinite(obj)) {
                 if (obj < 0) {
                   return("-2e52") 
