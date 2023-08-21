@@ -172,193 +172,227 @@ setClass("NMRSignalModel",
          }
 )
 
-setGeneric("toJSON", function(obj, control=NA) standardGeneric("toJSON")) 
+setGeneric("toJSON", function(obj, control=NA, con="ANY") standardGeneric("toJSON")) 
 
-setMethod("toJSON", signature(obj="NMRPeak1D", control="ANY"),
-          function(obj, control=NA) {
-            json <- "{"
+setMethod("toJSON", signature(obj="NMRPeak1D", control="ANY", con="ANY"),
+          function(obj, control=NA, con) {
+            #print("NMRPeak1D")
+            write("{", con, append = TRUE, sep="")
             sep <- ""
             for(slotName in names(getSlots(is(obj)))) {
               value <- slot(obj, slotName)
               if (length(value) > 0 && !all(is.na(value))) {
-                json <- paste0(json, sep, '"',slotName, '":', toJSON(value, control))
+                write(paste0(sep, '"',slotName, '":'), con, append = TRUE, sep="")
+                toJSON(value, control, con)
                 sep <- ","
               }
             }
-            
-            return(paste0(json, "}"))
+            write("}", con, append = TRUE, sep="")
           }
 )
 
-setMethod("toJSON", signature(obj="NMRSignal1D", control="ANY"),
-          function(obj, control=NA) {
-            json <- "{"
+setMethod("toJSON", signature(obj="NMRSignal1D", control="ANY", con="ANY"),
+          function(obj, control=NA, con) {
+            write("{", con, append = TRUE, sep="")
             sep <- ""
             for(slotName in names(getSlots(is(obj)))) {
               value <- slot(obj, slotName)
               if (length(value) > 0 && !all(is.na(value))) {
-                json <- paste0(json, sep, '"',slotName, '":', toJSON(value, control))
-                sep <- ","
-                
-              }
-            }
-            return(paste0(json, "}"))
-          }
-)
-
-setMethod("toJSON", signature(obj="Analyte", control="ANY"),
-          function(obj, control=NA) {
-            json <- "{"
-            sep <- ""
-            for(slotName in names(getSlots(is(obj)))) {
-              value <- slot(obj, slotName)
-              if (length(value) > 0 && !all(is.na(value))) {
-                json <- paste0(json, sep, '"',slotName, '":', toJSON(value, control))
+                write(paste0(sep, '"',slotName, '":'), con, append = TRUE, sep="")
+                toJSON(value, control, con)
                 sep <- ","
                 
               }
             }
-            return(paste0(json, "}"))
+            write("}", con, append = TRUE, sep="")
           }
 )
 
-setMethod("toJSON", signature(obj="NMRSignalModel", control="ANY"),
-          function(obj, control=NA) {
-            json <- "{"
+setMethod("toJSON", signature(obj="Analyte", control="ANY", con="ANY"),
+          function(obj, control=NA, con) {
+            #print("Analyte")
+            write("{", con, append = TRUE, sep="")
+            sep <- ""
+            for(slotName in names(getSlots(is(obj)))) {
+              value <- slot(obj, slotName)
+              if (length(value) > 0 && !all(is.na(value))) {
+                write(paste0(sep, '"',slotName, '":'), con, append = TRUE, sep="")
+                toJSON(value, control, con)
+                sep <- ","
+                
+              }
+            }
+            write("}", con, append = TRUE, sep="")
+          }
+)
+
+setMethod("toJSON", signature(obj="NMRSignalModel", control="ANY", con="ANY"),
+          function(obj, control=NA, con) {
+            #print("NMRSignalModel")
+            write("{", con, append = TRUE, sep="")
             sep <- ""
             slotNames = names(getSlots(is(obj)))
             
             # A hack to avoid the xy being exported
             if ("no_xy" %in% names(control)) {
               if (control["no_xy"])
-                slotNames <- slotNames[!(slotNames %in% c('experimental', 'ppm'))]
+                slotNames <- slotNames[!(slotNames %in% c('experimental', 'ppm', "fitted"))]
             }
             
             for(slotName in slotNames) {
               value <- slot(obj, slotName)
               if (length(value) > 0 && !all(is.na(value))) {
-                json <- paste0(json, sep, '"',slotName, '":', toJSON(value, control))
+                write(paste0(sep, '"',slotName, '":'), con, append = TRUE, sep="")
+                toJSON(value, control, con)
                 sep <- ","
-                
               }
             }
-            return(paste0(json, "}"))
+            write("}", con, append = TRUE, sep="")
           }
 )
 
-setMethod("toJSON", signature(obj="list", control="ANY"),
-          function(obj, control=NA) {
+setMethod("toJSON", signature(obj="list", control="ANY", con="ANY"),
+          function(obj, control=NA, con) {
             lnames <- names(obj)
             if (is.null(lnames)) {
-              json <- "["
+              write("[", con, append = TRUE, sep="")
               sep <- ""
               for (i in 1:length(obj)) {
-                tmp <- toJSON(obj[[i]], control)
-                json <- paste0(json, sep, tmp)
-                sep <- ","
-              }
-              return(paste0(json, "]"))
-            } else {
-              json <- "{"
-              sep <- ""
-              for (i in 1:length(obj)) {
-                slotName <- lnames[i]
-                if (slotName == "")
-                  slotName = i
-                json <- paste0(json, sep, '"',slotName, '":', toJSON(obj[[i]], control))
-                sep <- ","
-              }
-              return(paste0(json, "}"))
-            }
-          }
-)
-
-setMethod("toJSON", signature(obj="vector", control="ANY"),
-          function(obj, control=NA) {
-            return(jsonlite::toJSON(obj, control))
-          }
-)
-
-setMethod("toJSON", signature(obj="numeric", control="ANY"),
-          function(obj, control=NA) {
-            if (length(obj) > 1) {
-              json <- "["
-              sep <- ""
-              for (i in 1:length(obj)) {
-                json <- paste0(json, sep, toJSON(obj[[i]], control))
-                sep <- ","
-              }
-              return(paste0(json, "]"))
-            } else {
-              if(is.na(obj)) {
-                return("null")
-              }
-              if (is.infinite(obj)) {
-                if (obj < 0) {
-                  return("-2e52") 
-                } else {
-                  return("2e52") 
+                if(!all(is.na(obj[[i]]))) {
+                  write(sep, con, append = TRUE, sep="")
+                  toJSON(obj[[i]], control, con)
+                  sep <- ","
                 }
               }
-              return(as.character(obj))
+              write("]", con, append = TRUE, sep="")
+            } else {
+              write("{", con, append = TRUE, sep="")
+              sep <- ""
+              for (i in 1:length(obj)) {
+                if(!all(is.na(obj[[i]]))) {
+                  slotName <- lnames[i]
+                  if (slotName == "")
+                    slotName = i
+                  write(paste0(sep, '"',slotName, '":'), con, append = TRUE, sep="")
+                  toJSON(obj[[i]], control, con)
+                  sep <- ","
+                }
+              }
+              write("}", con, append = TRUE, sep="")
             }
           }
 )
 
-setMethod("toJSON", signature(obj="logical", control="ANY"),
-          function(obj, control=NA) {
+setMethod("toJSON", signature(obj="vector", control="ANY", con="ANY"),
+          function(obj, control=NA, con) {
+            write(jsonlite::toJSON(obj, control), con, append = TRUE, sep="")
+          }
+)
+
+setMethod("toJSON", signature(obj="numeric", control="ANY", con="ANY"),
+          function(obj, control=NA, con) {
             if (length(obj) > 1) {
-              json <- "["
+              write("[", con, append = TRUE, sep="")
               sep <- ""
               for (i in 1:length(obj)) {
-                json <- paste0(json, sep, toJSON(obj[[i]], control))
-                sep <- ","
+                if(!all(is.na(obj[[i]]))) {
+                  write(sep, con, append = TRUE, sep="")
+                  toJSON(obj[[i]], control, con)
+                  sep <- ","
+                }
               }
-              return(paste0(json, "]"))
+              write("]", con, append = TRUE, sep="")
+            } else {
+              if(is.na(obj)) {
+                write("null", con, append = TRUE, sep="")
+              } else if (is.infinite(obj)) {
+                if (obj < 0) {
+                  write("-2e52", con, append = TRUE, sep="")
+                } else {
+                  write("2e52", con, append = TRUE, sep="")
+                }
+              } else {
+                write(as.character(obj), con, append = TRUE, sep="")
+              }
+            }
+          }
+)
+
+setMethod("toJSON", signature(obj="logical", control="ANY", con="ANY"),
+          function(obj, control=NA, con) {
+            if (length(obj) > 1) {
+              write("[", con, append = TRUE, sep="")
+              sep <- ""
+              for (i in 1:length(obj)) {
+                if(!all(is.na(obj[[i]]))) {
+                  write(sep, con, append = TRUE, sep="")
+                  toJSON(obj[[i]], control, con)
+                  sep <- ","
+                }
+              }
+              write("]", con, append = TRUE, sep="")
             } else {
               if( is.na(obj)) {
-                return("null")
+                write("null", con, append = TRUE, sep="")
               }
               if (obj == TRUE) {
-                return("true")
+                write("true", con, append = TRUE, sep="")
               } else {
-                return("false")
+                write("false", con, append = TRUE, sep="")
               }
             }
           }
 )
 
-setMethod("toJSON", signature(obj="character", control="ANY"),
-          function(obj, control=NA) {
+setMethod("toJSON", signature(obj="character", control="ANY", con="ANY"),
+          function(obj, control=NA, con) {
             if (length(obj) > 1) {
-              json <- "["
               sep <- ""
+              write("[", con, append = TRUE, sep="")
               for (i in 1:length(obj)) {
-                json <- paste0(json, sep, toJSON(obj[[i]], control))
-                sep <- ","
+                if(!all(is.na(obj[[i]]))) {
+                  write(sep, con, append = TRUE, sep="")
+                  toJSON(obj[[i]], control, con)
+                  sep <- ","
+                }
               }
-              return(paste0(json, "]"))
+              write("]", con, append = TRUE, sep="")
             } else {
-              return(paste0('"', obj, '"'))
+              write(paste0('"', obj, '"'), con, append = TRUE, sep="")
             }
           }
 )
 
-setMethod("toJSON", signature(obj="matrix", control="ANY"),
-          function(obj, control=NA) {
+setMethod("toJSON", signature(obj="matrix", control="ANY", con="ANY"),
+          function(obj, control=NA, con) {
             if (length(obj) > 1) {
-              json <- "["
               sep <- ""
+              write("[", con, append = TRUE, sep="")
               for (i in 1:dim(obj)[[1]]) {
-                json <- paste0(json, sep, toJSON(obj[i,], control))
-                sep <- ","
+                if(!all(is.na(obj[[i]]))) {
+                  write(sep, con, append = TRUE, sep="")
+                  toJSON(obj[i,], control, con)
+                  sep <- ","
+                }
               }
-              return(paste0(json, "]"))
+              write("]", con, append = TRUE, sep="")
             } else {
-              return(paste0('"', obj, '"'))
+              write(paste0('"', obj, '"'), con, append = TRUE, sep="")
             }
           }
 )
+# This function save a data element to a file. 
+writeToJSON <- function(data, fileName) {
+  file.create(fileName)
+  fileConn<-file(fileName, "wb")
+  toJSON(data, control=c(no_xy=TRUE), fileConn)
+  close(fileConn)
+  
+  fileLines <-readLines(fileName, encoding="UTF-8")
+  fileConn<-file(fileName,"wb")
+  write(paste(fileLines, collapse = ""), fileConn, sep = "")
+  close(fileConn)
+}
 
 setGeneric("fromVector", function(input) standardGeneric("fromVector")) 
 
