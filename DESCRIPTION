@@ -1,5 +1,5 @@
 Package: fusion
-Title: Fusion: an integrated dataset library for metabolic profiling
+Title: Fusion: Objects class definitions for metabolic profiling
 Version: 0.0.1.0
 Authors@R: 
     person(given = "Julien",
