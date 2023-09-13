@@ -4,7 +4,7 @@
 \name{fusion-package}
 \alias{fusion}
 \alias{fusion-package}
-\title{fusion: Fusion: an integrated dataset library for metabolic profiling}
+\title{fusion: Fusion: Objects class definitions for metabolic profiling}
 \description{
 Classes that allows integration of complex datasets from NMR and MS.
 }

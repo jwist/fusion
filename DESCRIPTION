@@ -20,7 +20,9 @@ BugReports: https://github.com/phenological/fusion/issues
 Config/testthat/edition: 3
 Imports: 
     methods,
-    crayon
+    crayon,
+    data.table,
+    jsonlite
 Depends: 
     R (>= 4.1)
 StagedInstall: no
