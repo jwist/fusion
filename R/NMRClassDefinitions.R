@@ -1,10 +1,12 @@
+usethis::use_package("jsonlite")
+
 #' An S4 class for NMRPeak1D
 #'
 #' @slot x Ordinate of the peak
 #' @slot y height of the peak
 #' @slot fwhm Full width at half maximum of peak
 #' @slot shape (optional) A peak shape for the different peaks conforming the signal. It uses the parent shape if void
-
+#' @slot type The Class Name. Used for moving between S4 and JSON
 #' @return a dataElement
 #' @export
 #' @importFrom crayon %+%
@@ -28,7 +30,7 @@ setClass("NMRPeak1D",
 #' @slot nbAtoms Number of atoms associated with the signal
 #' @slot integration Raw non-normalized integration of the signal
 #' @slot chemicalShift (optional) The chemical shift of the signal. Not always its center
-#' @slot multiplicity (optional) A compiled NMR multiplicity pattern i.e [s|d|t|q|s,...|dd,...]
+#' @slot multiplicity (optional) A compiled NMR multiplicity pattern i.e: s|d|t|q|s,...|dd,...
 #' @slot shiftRange (optional) Range of x-peaks variation. It is an absolute value. Should be positive
 #' @slot heightRangePer (optional) Proportional range of y-peaks variation. Must be between 0 and 1
 #' @slot widthFactor (optional) Width factor depending on the signal
@@ -36,6 +38,7 @@ setClass("NMRPeak1D",
 #' @slot diaIDs (optional) A list of atom ids to which this signal is assigned.
 #' @slot analyte (optional) The name/id of the analyte
 #' @slot validated (optional) Validated by an expert?
+#' @slot type The Class Name. Used for moving between S4 and JSON
 #' @slot id (optional) Unique identifier
 #' @return a dataElement
 #' @export
@@ -89,10 +92,11 @@ setClass("NMRSignal1D",
 #' An S4 class for Analyte
 #'
 #' @slot signals a list of NMRSignal1D
-#' @slot category A string specifying a category for the compound. ie.e: ['metabolite', 'substrate source']
+#' @slot category A string specifying a category for the compound. ie.e: 'metabolite', 'substrate source'
 #' @slot name A human readable name for the analyte
 #' @slot inchiKey A string used to identify a molecule
 #' @slot diaID A canonical molecule ID
+#' @slot type The Class Name. Used for moving between S4 and JSON
 #' @slot id (optional) Unique identifier
 #' @return a dataElement
 #' @export
@@ -125,7 +129,7 @@ setClass("Analyte",
 
 #' An S4 class for NMRSignalModel
 #'
-#' @slot signals a list of NMRSignal1D
+#' @slot signalsInput a list of NMRSignal1D
 #' @slot from start point for ROI
 #' @slot to end point for ROI
 #' @slot ppm Array of x-values from spectrum
@@ -134,6 +138,7 @@ setClass("Analyte",
 #' @slot signalsOutput A list of signal inputs with the optimized parameters
 #' @slot shape (optional) A peak shape for the different peaks conforming the signal. Internal components overrides this shape
 #' @slot error A list of different errors. I'll explain later
+#' @slot type The Class Name. Used for moving between S4 and JSON
 #' @slot id (optional) Unique identifier
 #' @return a dataElement
 #' @export
@@ -172,18 +177,36 @@ setClass("NMRSignalModel",
          }
 )
 
-setGeneric("toJSON", function(obj, control=NA, con="ANY") standardGeneric("toJSON")) 
+#' Method for creating a JSON file out of an object, that contains S4 objects of the types contained in
+#' this file.
+#'
+#' @param obj A data object to be parsed (list, array or S4)
+#' @param control A set of control parameters for the transformation. We use it to avoid export some S4 slots
+#' @param con A connection to the output file
+#' @return void
+#'
+#' @export
+#'
+setGeneric("toJSONFile", function(obj, control=NA, con="ANY") standardGeneric("toJSONFile")) 
 
-setMethod("toJSON", signature(obj="NMRPeak1D", control="ANY", con="ANY"),
+#' Method for creating a JSON file out of an NMRPeak1D
+#'
+#' @param obj A data object to be parsed (list, array or S4)
+#' @param control A set of control parameters for the transformation. We use it to avoid export some S4 slots
+#' @param con A connection to the output file
+#' @return void
+#'
+#' @export
+#'
+setMethod("toJSONFile", signature(obj="NMRPeak1D", control="ANY", con="ANY"),
           function(obj, control=NA, con) {
-            #print("NMRPeak1D")
             write("{", con, append = TRUE, sep="")
             sep <- ""
             for(slotName in names(getSlots(is(obj)))) {
               value <- slot(obj, slotName)
               if (length(value) > 0 && !all(is.na(value))) {
                 write(paste0(sep, '"',slotName, '":'), con, append = TRUE, sep="")
-                toJSON(value, control, con)
+                toJSONFile(value, control, con)
                 sep <- ","
               }
             }
@@ -191,7 +214,16 @@ setMethod("toJSON", signature(obj="NMRPeak1D", control="ANY", con="ANY"),
           }
 )
 
-setMethod("toJSON", signature(obj="NMRSignal1D", control="ANY", con="ANY"),
+#' Method for creating a JSON file out of an NMRSignal1D
+#'
+#' @param obj A data object to be parsed (list, array or S4)
+#' @param control A set of control parameters for the transformation. We use it to avoid export some S4 slots
+#' @param con A connection to the output file
+#' @return void
+#'
+#' @export
+#'
+setMethod("toJSONFile", signature(obj="NMRSignal1D", control="ANY", con="ANY"),
           function(obj, control=NA, con) {
             write("{", con, append = TRUE, sep="")
             sep <- ""
@@ -199,36 +231,50 @@ setMethod("toJSON", signature(obj="NMRSignal1D", control="ANY", con="ANY"),
               value <- slot(obj, slotName)
               if (length(value) > 0 && !all(is.na(value))) {
                 write(paste0(sep, '"',slotName, '":'), con, append = TRUE, sep="")
-                toJSON(value, control, con)
+                toJSONFile(value, control, con)
                 sep <- ","
-                
               }
             }
             write("}", con, append = TRUE, sep="")
           }
 )
 
-setMethod("toJSON", signature(obj="Analyte", control="ANY", con="ANY"),
+#' Method for creating a JSON file out of an Analyte
+#'
+#' @param obj A data object to be parsed (list, array or S4)
+#' @param control A set of control parameters for the transformation. We use it to avoid export some S4 slots
+#' @param con A connection to the output file
+#' @return void
+#'
+#' @export
+#'
+setMethod("toJSONFile", signature(obj="Analyte", control="ANY", con="ANY"),
           function(obj, control=NA, con) {
-            #print("Analyte")
             write("{", con, append = TRUE, sep="")
             sep <- ""
             for(slotName in names(getSlots(is(obj)))) {
               value <- slot(obj, slotName)
               if (length(value) > 0 && !all(is.na(value))) {
                 write(paste0(sep, '"',slotName, '":'), con, append = TRUE, sep="")
-                toJSON(value, control, con)
+                toJSONFile(value, control, con)
                 sep <- ","
-                
               }
             }
             write("}", con, append = TRUE, sep="")
           }
 )
 
-setMethod("toJSON", signature(obj="NMRSignalModel", control="ANY", con="ANY"),
+#' Method for creating a JSON file out of an NMRSignalModel
+#'
+#' @param obj A data object to be parsed (list, array or S4)
+#' @param control A set of control parameters for the transformation. We use it to avoid export some S4 slots
+#' @param con A connection to the output file
+#' @return void
+#'
+#' @export
+#'
+setMethod("toJSONFile", signature(obj="NMRSignalModel", control="ANY", con="ANY"),
           function(obj, control=NA, con) {
-            #print("NMRSignalModel")
             write("{", con, append = TRUE, sep="")
             sep <- ""
             slotNames = names(getSlots(is(obj)))
@@ -243,7 +289,7 @@ setMethod("toJSON", signature(obj="NMRSignalModel", control="ANY", con="ANY"),
               value <- slot(obj, slotName)
               if (length(value) > 0 && !all(is.na(value))) {
                 write(paste0(sep, '"',slotName, '":'), con, append = TRUE, sep="")
-                toJSON(value, control, con)
+                toJSONFile(value, control, con)
                 sep <- ","
               }
             }
@@ -251,16 +297,25 @@ setMethod("toJSON", signature(obj="NMRSignalModel", control="ANY", con="ANY"),
           }
 )
 
-setMethod("toJSON", signature(obj="list", control="ANY", con="ANY"),
+#' Method for creating a JSON file out of a list
+#'
+#' @param obj A data object to be parsed (list, array or S4)
+#' @param control A set of control parameters for the transformation. We use it to avoid export some S4 slots
+#' @param con A connection to the output file
+#' @return void
+#'
+#' @export
+#'
+setMethod("toJSONFile", signature(obj="list", control="ANY", con="ANY"),
           function(obj, control=NA, con) {
             lnames <- names(obj)
             if (is.null(lnames)) {
               write("[", con, append = TRUE, sep="")
               sep <- ""
-              for (i in 1:length(obj)) {
-                if(!all(is.na(obj[[i]]))) {
+              for(element in obj) {
+                if(!all(is.na(element))) {
                   write(sep, con, append = TRUE, sep="")
-                  toJSON(obj[[i]], control, con)
+                  toJSONFile(element, control, con)
                   sep <- ","
                 }
               }
@@ -268,36 +323,55 @@ setMethod("toJSON", signature(obj="list", control="ANY", con="ANY"),
             } else {
               write("{", con, append = TRUE, sep="")
               sep <- ""
-              for (i in 1:length(obj)) {
-                if(!all(is.na(obj[[i]]))) {
-                  slotName <- lnames[i]
-                  if (slotName == "")
-                    slotName = i
+              i <- 0
+              for (slotName in lnames) {
+                if (slotName == "")
+                  slotName = i
+                if(!all(is.na(obj[[slotName]]))) {
                   write(paste0(sep, '"',slotName, '":'), con, append = TRUE, sep="")
-                  toJSON(obj[[i]], control, con)
+                  toJSONFile(obj[[slotName]], control, con)
                   sep <- ","
                 }
+                i <- i + 1
               }
               write("}", con, append = TRUE, sep="")
             }
           }
 )
 
-setMethod("toJSON", signature(obj="vector", control="ANY", con="ANY"),
+#' Method for creating a JSON file out of a vector
+#'
+#' @param obj A data object to be parsed (list, array or S4)
+#' @param control A set of control parameters for the transformation. We use it to avoid export some S4 slots
+#' @param con A connection to the output file
+#' @return void
+#'
+#' @export
+#'
+setMethod("toJSONFile", signature(obj="vector", control="ANY", con="ANY"),
           function(obj, control=NA, con) {
             write(jsonlite::toJSON(obj, control), con, append = TRUE, sep="")
           }
 )
 
-setMethod("toJSON", signature(obj="numeric", control="ANY", con="ANY"),
+#' Method for creating a JSON file out of a numeric
+#'
+#' @param obj A data object to be parsed (list, array or S4)
+#' @param control A set of control parameters for the transformation. We use it to avoid export some S4 slots
+#' @param con A connection to the output file
+#' @return void
+#'
+#' @export
+#'
+setMethod("toJSONFile", signature(obj="numeric", control="ANY", con="ANY"),
           function(obj, control=NA, con) {
             if (length(obj) > 1) {
               write("[", con, append = TRUE, sep="")
               sep <- ""
-              for (i in 1:length(obj)) {
-                if(!all(is.na(obj[[i]]))) {
+              for (element in obj) {
+                if(!all(is.na(element))) {
                   write(sep, con, append = TRUE, sep="")
-                  toJSON(obj[[i]], control, con)
+                  toJSONFile(element, control, con)
                   sep <- ","
                 }
               }
@@ -318,15 +392,24 @@ setMethod("toJSON", signature(obj="numeric", control="ANY", con="ANY"),
           }
 )
 
-setMethod("toJSON", signature(obj="logical", control="ANY", con="ANY"),
+#' Method for creating a JSON file out of a logical
+#'
+#' @param obj A data object to be parsed (list, array or S4)
+#' @param control A set of control parameters for the transformation. We use it to avoid export some S4 slots
+#' @param con A connection to the output file
+#' @return void
+#'
+#' @export
+#'
+setMethod("toJSONFile", signature(obj="logical", control="ANY", con="ANY"),
           function(obj, control=NA, con) {
             if (length(obj) > 1) {
               write("[", con, append = TRUE, sep="")
               sep <- ""
-              for (i in 1:length(obj)) {
-                if(!all(is.na(obj[[i]]))) {
+              for (element in obj) {
+                if(!all(is.na(element))) {
                   write(sep, con, append = TRUE, sep="")
-                  toJSON(obj[[i]], control, con)
+                  toJSONFile(element, control, con)
                   sep <- ","
                 }
               }
@@ -344,15 +427,24 @@ setMethod("toJSON", signature(obj="logical", control="ANY", con="ANY"),
           }
 )
 
-setMethod("toJSON", signature(obj="character", control="ANY", con="ANY"),
+#' Method for creating a JSON file out of a character
+#'
+#' @param obj A data object to be parsed (list, array or S4)
+#' @param control A set of control parameters for the transformation. We use it to avoid export some S4 slots
+#' @param con A connection to the output file
+#' @return void
+#'
+#' @export
+#'
+setMethod("toJSONFile", signature(obj="character", control="ANY", con="ANY"),
           function(obj, control=NA, con) {
             if (length(obj) > 1) {
               sep <- ""
               write("[", con, append = TRUE, sep="")
-              for (i in 1:length(obj)) {
-                if(!all(is.na(obj[[i]]))) {
+              for (element in obj) {
+                  if(!all(is.na(element))) {
                   write(sep, con, append = TRUE, sep="")
-                  toJSON(obj[[i]], control, con)
+                  toJSONFile(element, control, con)
                   sep <- ","
                 }
               }
@@ -363,7 +455,16 @@ setMethod("toJSON", signature(obj="character", control="ANY", con="ANY"),
           }
 )
 
-setMethod("toJSON", signature(obj="matrix", control="ANY", con="ANY"),
+#' Method for creating a JSON file out of a matrix
+#'
+#' @param obj A data object to be parsed (list, array or S4)
+#' @param control A set of control parameters for the transformation. We use it to avoid export some S4 slots
+#' @param con A connection to the output file
+#' @return void
+#'
+#' @export
+#'
+setMethod("toJSONFile", signature(obj="matrix", control="ANY", con="ANY"),
           function(obj, control=NA, con) {
             if (length(obj) > 1) {
               sep <- ""
@@ -371,7 +472,7 @@ setMethod("toJSON", signature(obj="matrix", control="ANY", con="ANY"),
               for (i in 1:dim(obj)[[1]]) {
                 if(!all(is.na(obj[[i]]))) {
                   write(sep, con, append = TRUE, sep="")
-                  toJSON(obj[i,], control, con)
+                  toJSONFile(obj[i,], control, con)
                   sep <- ","
                 }
               }
@@ -381,11 +482,19 @@ setMethod("toJSON", signature(obj="matrix", control="ANY", con="ANY"),
             }
           }
 )
-# This function save a data element to a file. 
+
+#' Create and simplify a JSON file out of a data object.
+#'
+#' @param data A data object to be parsed (list, array or S4)
+#' @param fileName The name of the file for storing the result
+#' @return void
+#'
+#' @export
+#'
 writeToJSON <- function(data, fileName) {
   file.create(fileName)
   fileConn<-file(fileName, "wb")
-  toJSON(data, control=c(no_xy=TRUE), fileConn)
+  toJSONFile(data, control=c(no_xy=TRUE), con=fileConn)
   close(fileConn)
   
   fileLines <-readLines(fileName, encoding="UTF-8")
@@ -394,8 +503,24 @@ writeToJSON <- function(data, fileName) {
   close(fileConn)
 }
 
+#' Introspect a data object and transform any matching structure into the
+#' corresponding S4 object
+#'
+#' @param input A data object to be parsed (list, array or S4)
+#' @return an object
+#'
+#' @export
+#'
 setGeneric("fromVector", function(input) standardGeneric("fromVector")) 
 
+#' Introspect a data object and transform any matching structure into the
+#' corresponding S4 object
+#'
+#' @param input A data object to be parsed (list, array or S4)
+#' @return an object
+#'
+#' @export
+#'
 setMethod("fromVector", signature(input="ANY"),
           function(input) {
             listNames <- names(input)
@@ -403,7 +528,12 @@ setMethod("fromVector", signature(input="ANY"),
               if (length(input)==1 && any(c("boolean", "character", "logical", "numeric") %in%  is(input))) {
                 return(input)
               } else {
-                return(unlist(lapply(input, function(row) {fromVector(row)})))
+                tmp <- lapply(input, function(row) {fromVector(row)})
+                if (length(tmp) > 0 && length(tmp[[1]]) == 1) {
+                  return(unlist(tmp))
+                } else {
+                  return (tmp)
+                }
               }
             }else if ("type" %in% listNames) {
               output <- new(input[["type"]]);
