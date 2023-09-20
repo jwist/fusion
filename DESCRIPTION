@@ -1,5 +1,5 @@
 Package: fusion
-Title: Fusion: an integrated dataset library for metabolic profiling
+Title: Fusion: Objects class definitions for metabolic profiling
 Version: 0.0.1.0
 Authors@R: 
     person(given = "Julien",
@@ -20,7 +20,9 @@ BugReports: https://github.com/phenological/fusion/issues
 Config/testthat/edition: 3
 Imports: 
     methods,
-    crayon
+    crayon,
+    data.table,
+    jsonlite
 Depends: 
     R (>= 4.1)
 StagedInstall: no
