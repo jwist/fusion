@@ -20,5 +20,7 @@ An S4 class for NMRPeak1D
 \item{\code{fwhm}}{Full width at half maximum of peak}
 
 \item{\code{shape}}{(optional) A peak shape for the different peaks conforming the signal. It uses the parent shape if void}
+
+\item{\code{type}}{The Class Name. Used for moving between S4 and JSON}
 }}
 

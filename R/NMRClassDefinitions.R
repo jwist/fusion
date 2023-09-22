@@ -1,5 +1,3 @@
-usethis::use_package("jsonlite")
-
 #' An S4 class for NMRPeak1D
 #'
 #' @slot x Ordinate of the peak
@@ -187,7 +185,7 @@ setClass("NMRSignalModel",
 #'
 #' @export
 #'
-setGeneric("toJSONFile", function(obj, control=NA, con="ANY") standardGeneric("toJSONFile")) 
+setGeneric("toJSONFile", function(obj, control=NA, con="ANY") standardGeneric("toJSONFile"))
 
 #' Method for creating a JSON file out of an NMRPeak1D
 #'
@@ -221,6 +219,7 @@ setMethod("toJSONFile", signature(obj="NMRPeak1D", control="ANY", con="ANY"),
 #' @param con A connection to the output file
 #' @return void
 #'
+#' @importFrom methods getSlots slot
 #' @export
 #'
 setMethod("toJSONFile", signature(obj="NMRSignal1D", control="ANY", con="ANY"),
@@ -278,13 +277,13 @@ setMethod("toJSONFile", signature(obj="NMRSignalModel", control="ANY", con="ANY"
             write("{", con, append = TRUE, sep="")
             sep <- ""
             slotNames = names(getSlots(is(obj)))
-            
+
             # A hack to avoid the xy being exported
             if ("no_xy" %in% names(control)) {
               if (control["no_xy"])
                 slotNames <- slotNames[!(slotNames %in% c('experimental', 'ppm', "fitted"))]
             }
-            
+
             for(slotName in slotNames) {
               value <- slot(obj, slotName)
               if (length(value) > 0 && !all(is.na(value))) {
@@ -496,7 +495,7 @@ writeToJSON <- function(data, fileName) {
   fileConn<-file(fileName, "wb")
   toJSONFile(data, control=c(no_xy=TRUE), con=fileConn)
   close(fileConn)
-  
+
   fileLines <-readLines(fileName, encoding="UTF-8")
   fileConn<-file(fileName,"wb")
   write(paste(fileLines, collapse = ""), fileConn, sep = "")
@@ -511,7 +510,7 @@ writeToJSON <- function(data, fileName) {
 #'
 #' @export
 #'
-setGeneric("fromVector", function(input) standardGeneric("fromVector")) 
+setGeneric("fromVector", function(input) standardGeneric("fromVector"))
 
 #' Introspect a data object and transform any matching structure into the
 #' corresponding S4 object
@@ -519,6 +518,7 @@ setGeneric("fromVector", function(input) standardGeneric("fromVector"))
 #' @param input A data object to be parsed (list, array or S4)
 #' @return an object
 #'
+#' @importFrom methods getSlots slot
 #' @export
 #'
 setMethod("fromVector", signature(input="ANY"),

@@ -21,7 +21,7 @@ An S4 class for NMRSignal1D
 
 \item{\code{chemicalShift}}{(optional) The chemical shift of the signal. Not always its center}
 
-\item{\code{multiplicity}}{(optional) A compiled NMR multiplicity pattern i.e \link{s|d|t|q|s,...|dd,...}}
+\item{\code{multiplicity}}{(optional) A compiled NMR multiplicity pattern i.e: s|d|t|q|s,...|dd,...}
 
 \item{\code{shiftRange}}{(optional) Range of x-peaks variation. It is an absolute value. Should be positive}
 
@@ -36,6 +36,8 @@ An S4 class for NMRSignal1D
 \item{\code{analyte}}{(optional) The name/id of the analyte}
 
 \item{\code{validated}}{(optional) Validated by an expert?}
+
+\item{\code{type}}{The Class Name. Used for moving between S4 and JSON}
 
 \item{\code{id}}{(optional) Unique identifier}
 }}

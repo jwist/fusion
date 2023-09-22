@@ -15,13 +15,15 @@ An S4 class for Analyte
 \describe{
 \item{\code{signals}}{a list of NMRSignal1D}
 
-\item{\code{category}}{A string specifying a category for the compound. ie.e: \link{'metabolite', 'substrate source'}}
+\item{\code{category}}{A string specifying a category for the compound. ie.e: 'metabolite', 'substrate source'}
 
 \item{\code{name}}{A human readable name for the analyte}
 
 \item{\code{inchiKey}}{A string used to identify a molecule}
 
 \item{\code{diaID}}{A canonical molecule ID}
+
+\item{\code{type}}{The Class Name. Used for moving between S4 and JSON}
 
 \item{\code{id}}{(optional) Unique identifier}
 }}

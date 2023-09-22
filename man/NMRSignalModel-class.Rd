@@ -13,7 +13,7 @@ An S4 class for NMRSignalModel
 \section{Slots}{
 
 \describe{
-\item{\code{signals}}{a list of NMRSignal1D}
+\item{\code{signalsInput}}{a list of NMRSignal1D}
 
 \item{\code{from}}{start point for ROI}
 
@@ -30,6 +30,8 @@ An S4 class for NMRSignalModel
 \item{\code{shape}}{(optional) A peak shape for the different peaks conforming the signal. Internal components overrides this shape}
 
 \item{\code{error}}{A list of different errors. I'll explain later}
+
+\item{\code{type}}{The Class Name. Used for moving between S4 and JSON}
 
 \item{\code{id}}{(optional) Unique identifier}
 }}
