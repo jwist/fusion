@@ -518,7 +518,7 @@ setGeneric("fromVector", function(input) standardGeneric("fromVector"))
 #' @param input A data object to be parsed (list, array or S4)
 #' @return an object
 #'
-#' @importFrom methods getSlots
+#' @importFrom methods getSlots slot<-
 #' @export
 #'
 setMethod("fromVector", signature(input="ANY"),

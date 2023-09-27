@@ -25,4 +25,4 @@ Imports:
     jsonlite
 Depends: 
     R (>= 4.1)
-StagedInstall: no
+StagedInstall: yes
