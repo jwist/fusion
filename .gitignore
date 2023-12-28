@@ -7,5 +7,5 @@
 .travis.yml
 .codecov.yml
 *.Rproj
-
+*.daE
 

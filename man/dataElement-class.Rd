@@ -22,6 +22,6 @@ conditions and a field called sampleID that MUST be unique.}
 
 \item{\code{method}}{a name for the method used to acquire the data}
 
-\item{\code{type}}{type can be NMR, MS-U, MS-T, ANN}
+\item{\code{type}}{type can be NMR, U-MS, T-MS, ANN, MRMS}
 }}
 

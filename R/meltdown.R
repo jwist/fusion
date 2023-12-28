@@ -5,12 +5,13 @@
 #' @export
 meltdown <- function() {
   melt <- list(
-    "QUANT" = list(method = c("ivdr",
-                            "lipo",
-                            "spc",
-                            "cytokines",
-                            "antibodies",
-                            "nmrQuant")),
+    "QUANT" = list(method = c("brxsm",
+                              "brxlipo",
+                              "spc",
+                              "brxpacs",
+                              "cytokines",
+                              "antibodies",
+                              "nmrQuant")),
     "NMR" = list(method = c("noesy",
                             "cpmg",
                             "jres",
@@ -96,6 +97,6 @@ meltdown <- function() {
                      "Let8x12",
                      "Num10x10")
   )
-  cat("replicates goes with # (we don't use _ or -)\n")
+  message(cat(crayon::green("replicates goes with # (we don't use _ or -)\n")))
   return(melt)
 }
