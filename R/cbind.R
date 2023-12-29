@@ -9,19 +9,19 @@
 
 cbind.dataElement <- function(...){
   if (!all(sapply(list(...), function(x) is(x)[1] == "dataElement"))) {
-    stop(crayon::red("fusion::rbind >>
+    stop(crayon::red("fusion::cbind >>
 Some are not dataElements"))
   }
 
   if (length(unique(sapply(list(...), function(x) x@type))) > 1) {
-    stop(crayon::red("fusion::rbind >>
+    stop(crayon::red("fusion::cbind >>
 All elements must be of same type"))
   }
   type <- list(...)[[1]]@type
 
   if (type != "ANN") {
     if (length(unique(sapply(list(...), function(x) x@method))) > 1) {
-      stop(crayon::red("fusion::rbind >>
+      stop(crayon::red("fusion::cbind >>
 All elements must be of same method"))
     }
   }

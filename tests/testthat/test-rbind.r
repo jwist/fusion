@@ -2,10 +2,12 @@ test_that("rbind can combine two daE", {
   x = matrix(rep(c(1:10), 10), 10, 10)
   param = list(data.frame(sampleID = paste0("sampleID_", seq(1, 10)),
                           sampleType = rep("sample", 10),
-                          other = paste0("other_", seq(1, 10))),
+                          other = paste0("other_", seq(1, 10)),
+                          dataPath = paste0("/test/", seq(1, 10))),
                data.frame(sampleID2 = paste0("sampleID2_", seq(1, 10)),
                           sampleType = rep("sample", 10),
-                          other2 = paste0("other2_", seq(1, 10))))
+                          other2 = paste0("other2_", seq(1, 10)),
+                          dataPath = paste0("/test/", seq(1, 10))))
   da = new("dataElement", x,
            varName = as.character(seq(1, 10)),
            type = "NMR",
@@ -13,10 +15,12 @@ test_that("rbind can combine two daE", {
            obsDescr = param)
   param = list(data.frame(sampleID = paste0("sampleID_", seq(11, 20)),
                           sampleType = rep("sample", 10),
-                          other = paste0("other_", seq(11, 20))),
+                          other = paste0("other_", seq(11, 20)),
+                          dataPath = paste0("/test/", seq(1, 10))),
                data.frame(sampleID2 = paste0("sampleID2_", seq(11, 20)),
                           sampleType = rep("sample", 10),
-                          other2 = paste0("other2_", seq(11, 20))))
+                          other2 = paste0("other2_", seq(11, 20)),
+                          dataPath = paste0("/test/", seq(1, 10))))
   db = new("dataElement", x,
            varName = as.character(seq(1, 10)),
            type = "NMR",
@@ -27,7 +31,7 @@ test_that("rbind can combine two daE", {
   expect_equal(dim(newDa)[1], 20)
   expect_equal(dim(newDa)[2], 10)
   expect_equal(dim(newDa@obsDescr[[1]])[1], 20)
-  expect_equal(dim(newDa@obsDescr[[1]])[2], 3)
+  expect_equal(dim(newDa@obsDescr[[1]])[2], 4)
   expect_equal(length(newDa@obsDescr), 2)
 })
 
@@ -35,7 +39,8 @@ test_that("rbind can combine two daE with list of length 1", {
   x = matrix(rep(c(1:10), 10), 10, 10)
   param = list(data.frame(sampleID = paste0("sampleID_", seq(1, 10)),
                           sampleType = rep("sample", 10),
-                          other = paste0("other_", seq(1, 10))))
+                          other = paste0("other_", seq(1, 10)),
+                          dataPath = paste0("/test/", seq(1, 10))))
   da = new("dataElement", x,
            varName = as.character(seq(1, 10)),
            type = "NMR",
@@ -43,7 +48,8 @@ test_that("rbind can combine two daE with list of length 1", {
            obsDescr = param)
   param = list(data.frame(sampleID = paste0("sampleID_", seq(11, 20)),
                           sampleType = rep("sample", 10),
-                          other = paste0("other_", seq(11, 20))))
+                          other = paste0("other_", seq(11, 20)),
+                          dataPath = paste0("/test/", seq(1, 10))))
   db = new("dataElement", x,
            varName = as.character(seq(1, 10)),
            type = "NMR",
@@ -54,7 +60,7 @@ test_that("rbind can combine two daE with list of length 1", {
   expect_equal(dim(newDa)[1], 20)
   expect_equal(dim(newDa)[2], 10)
   expect_equal(dim(newDa@obsDescr[[1]])[1], 20)
-  expect_equal(dim(newDa@obsDescr[[1]])[2], 3)
+  expect_equal(dim(newDa@obsDescr[[1]])[2], 4)
   expect_equal(length(newDa@obsDescr), 1)
 })
 
@@ -62,26 +68,30 @@ test_that("rbind can combine two ANN daE", {
   x = matrix(rep(c(1:10), 10), 10, 10)
   param = list(data.frame(sampleID = paste0("sampleID_", seq(1, 10)),
                           sampleType = rep("sample", 10),
-                          other = paste0("other_", seq(1, 10))),
+                          other = paste0("other_", seq(1, 10)),
+                          dataPath = paste0("/test/", seq(1, 10))),
                data.frame(sampleID2 = paste0("sampleID2_", seq(1, 10)),
                           sampleType = rep("sample", 10),
-                          other2 = paste0("other2_", seq(1, 10))))
+                          other2 = paste0("other2_", seq(1, 10)),
+                          dataPath = paste0("/test/", seq(1, 10))))
   da = new("dataElement",
            type = "ANN",
            obsDescr = param)
   param = list(data.frame(sampleID = paste0("sampleID_", seq(11, 20)),
                           sampleType = rep("sample", 10),
-                          other = paste0("other_", seq(11, 20))),
+                          other = paste0("other_", seq(11, 20)),
+                          dataPath = paste0("/test/", seq(1, 10))),
                data.frame(sampleID2 = paste0("sampleID2_", seq(11, 20)),
                           sampleType = rep("sample", 10),
-                          other2 = paste0("other2_", seq(11, 20))))
+                          other2 = paste0("other2_", seq(11, 20)),
+                          dataPath = paste0("/test/", seq(1, 10))))
   db = new("dataElement",
            type = "ANN",
            obsDescr = param)
 
   newDa = rbind(da,db)
   expect_equal(dim(newDa@obsDescr[[1]])[1], 20)
-  expect_equal(dim(newDa@obsDescr[[1]])[2], 3)
+  expect_equal(dim(newDa@obsDescr[[1]])[2], 4)
   expect_equal(length(newDa@obsDescr), 2)
 })
 
@@ -89,20 +99,22 @@ test_that("rbind can combine two ANN daE of length 1", {
   x = matrix(rep(c(1:10), 10), 10, 10)
   param = list(data.frame(sampleID = paste0("sampleID_", seq(1, 10)),
                           sampleType = rep("sample", 10),
-                          other = paste0("other_", seq(1, 10))))
+                          other = paste0("other_", seq(1, 10)),
+                          dataPath = paste0("/test/", seq(1, 10))))
   da = new("dataElement",
            type = "ANN",
            obsDescr = param)
   param = list(data.frame(sampleID = paste0("sampleID_", seq(11, 20)),
                           sampleType = rep("sample", 10),
-                          other = paste0("other_", seq(11, 20))))
+                          other = paste0("other_", seq(11, 20)),
+                          dataPath = paste0("/test/", seq(1, 10))))
   db = new("dataElement",
            type = "ANN",
            obsDescr = param)
 
   newDa = rbind(da,db)
   expect_equal(dim(newDa@obsDescr[[1]])[1], 20)
-  expect_equal(dim(newDa@obsDescr[[1]])[2], 3)
+  expect_equal(dim(newDa@obsDescr[[1]])[2], 4)
   expect_equal(length(newDa@obsDescr), 1)
 })
 
@@ -110,10 +122,12 @@ test_that("rbind throw errors class", {
   x = matrix(rep(c(1:10), 10), 10, 10)
   param = list(data.frame(sampleID = paste0("sampleID_", seq(1, 10)),
                           sampleType = rep("sample", 10),
-                          other = paste0("other_", seq(1, 10))),
+                          other = paste0("other_", seq(1, 10)),
+                          dataPath = paste0("/test/", seq(1, 10))),
                data.frame(sampleID2 = paste0("sampleID2_", seq(1, 10)),
                           sampleType = rep("sample", 10),
-                          other2 = paste0("other2_", seq(1, 10))))
+                          other2 = paste0("other2_", seq(1, 10)),
+                          dataPath = paste0("/test/", seq(1, 10))))
   da = new("dataElement", x,
            varName = as.character(seq(1, 10)),
            type = "NMR",
@@ -121,10 +135,12 @@ test_that("rbind throw errors class", {
            obsDescr = param)
   param = list(data.frame(sampleID = paste0("sampleID_", seq(11, 20)),
                           sampleType = rep("sample", 10),
-                          other = paste0("other_", seq(11, 20))),
+                          other = paste0("other_", seq(11, 20)),
+                          dataPath = paste0("/test/", seq(1, 10))),
                data.frame(sampleID2 = paste0("sampleID2_", seq(11, 20)),
                           sampleType = rep("sample", 10),
-                          other2 = paste0("other2_", seq(11, 20))))
+                          other2 = paste0("other2_", seq(11, 20)),
+                          dataPath = paste0("/test/", seq(1, 10))))
   db = new("dataElement", x,
            varName = as.character(seq(1, 10)),
            type = "NMR",
@@ -138,10 +154,12 @@ test_that("rbind throw errors type", {
   x = matrix(rep(c(1:10), 10), 10, 10)
   param = list(data.frame(sampleID = paste0("sampleID_", seq(1, 10)),
                           sampleType = rep("sample", 10),
-                          other = paste0("other_", seq(1, 10))),
+                          other = paste0("other_", seq(1, 10)),
+                          dataPath = paste0("/test/", seq(1, 10))),
                data.frame(sampleID2 = paste0("sampleID2_", seq(1, 10)),
                           sampleType = rep("sample", 10),
-                          other2 = paste0("other2_", seq(1, 10))))
+                          other2 = paste0("other2_", seq(1, 10)),
+                          dataPath = paste0("/test/", seq(1, 10))))
   da = new("dataElement", x,
            varName = as.character(seq(1, 10)),
            type = "NMR",
@@ -149,13 +167,15 @@ test_that("rbind throw errors type", {
            obsDescr = param)
   param = list(data.frame(sampleID = paste0("sampleID_", seq(11, 20)),
                           sampleType = rep("sample", 10),
-                          other = paste0("other_", seq(11, 20))),
+                          other = paste0("other_", seq(11, 20)),
+                          dataPath = paste0("/test/", seq(1, 10))),
                data.frame(sampleID2 = paste0("sampleID2_", seq(11, 20)),
                           sampleType = rep("sample", 10),
-                          other2 = paste0("other2_", seq(11, 20))))
+                          other2 = paste0("other2_", seq(11, 20)),
+                          dataPath = paste0("/test/", seq(1, 10))))
   db = new("dataElement", x,
            varName = as.character(seq(1, 10)),
-           type = "MS",
+           type = "T-MS",
            method = "1D",
            obsDescr = param)
 
@@ -166,10 +186,12 @@ test_that("rbind throw errors method", {
   x = matrix(rep(c(1:10), 10), 10, 10)
   param = list(data.frame(sampleID = paste0("sampleID_", seq(1, 10)),
                           sampleType = rep("sample", 10),
-                          other = paste0("other_", seq(1, 10))),
+                          other = paste0("other_", seq(1, 10)),
+                          dataPath = paste0("/test/", seq(1, 10))),
                data.frame(sampleID2 = paste0("sampleID2_", seq(1, 10)),
                           sampleType = rep("sample", 10),
-                          other2 = paste0("other2_", seq(1, 10))))
+                          other2 = paste0("other2_", seq(1, 10)),
+                          dataPath = paste0("/test/", seq(1, 10))))
   da = new("dataElement", x,
            varName = as.character(seq(1, 10)),
            type = "NMR",
@@ -177,10 +199,12 @@ test_that("rbind throw errors method", {
            obsDescr = param)
   param = list(data.frame(sampleID = paste0("sampleID_", seq(11, 20)),
                           sampleType = rep("sample", 10),
-                          other = paste0("other_", seq(11, 20))),
+                          other = paste0("other_", seq(11, 20)),
+                          dataPath = paste0("/test/", seq(1, 10))),
                data.frame(sampleID2 = paste0("sampleID2_", seq(11, 20)),
                           sampleType = rep("sample", 10),
-                          other2 = paste0("other2_", seq(11, 20))))
+                          other2 = paste0("other2_", seq(11, 20)),
+                          dataPath = paste0("/test/", seq(1, 10))))
   db = new("dataElement", x,
            varName = as.character(seq(1, 10)),
            type = "NMR",

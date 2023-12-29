@@ -1,14 +1,16 @@
 #' A nrow method for \emph{dataElement} objects
 #'
-#' @param filepath a path to the file to load
-#' @param as name of the variable where to store the content
-#' @param ... parameters of the nrow generic function
+#' @param file a path to the file to load
 #' @return the content of the dataElement
-#' @export loadAs
+#' @export
 #'
-loadAs <- function(filepath){
-  var <- local(get(load(filepath)))
-  return(var)
-  cat(crayon::yellow("your has been loaded into:", as))
+#'
+load.daE <- function(file) {
+  extension <- tools::file_ext(file)
+  if (extension == "daE") {
+    as <- local(get(load(file)))
+    return(as)
+  } else {
+    cat(crayon::yellow("This file is not a daE, use load() instead."))
+  }
 }
-

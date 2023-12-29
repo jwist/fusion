@@ -2,6 +2,7 @@
 #' available via rolodex database.
 #' @param n number of ids
 #' @return a number that is hopefully unique
+#' @importFrom stats runif
 #'
 stamp <- function(n) {
   stps <- sapply(1:n, function(x) {

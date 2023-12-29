@@ -5,7 +5,8 @@
 #' @slot obsDescr a data.frame containing experimental
 #' conditions and a field called sampleID that MUST be unique.
 #' @slot method a name for the method used to acquire the data
-#' @slot type type can be NMR, U-MS, T-MS, ANN, MRMS
+#' @slot type type can be of type (See meltdown())
+#' @slot version versioning
 #' @return a dataElement
 #' @export
 #' @importFrom crayon %+%

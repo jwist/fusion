@@ -3,6 +3,7 @@
 #' @param options - options (what, specOpts(uncalibrate, fromTo, length.out))
 #' @export
 #' @importFrom nmr.parser scanFolder readExperiment
+#' @importFrom rldx rldx_get
 
 parseNMR <- function(folder,
                      options = list(what = c("spec"),
@@ -14,6 +15,7 @@ parseNMR <- function(folder,
                                     specOpts = list(uncalibrate = FALSE,
                                                     fromTo = c(-0.1, 10),
                                                     length.out = 44079))) {
+  .SD <- NULL
 
   if (!("what" %in% names(options))) {
     options$what <- "spec"
@@ -38,7 +40,6 @@ parseNMR <- function(folder,
   if (!("sampleMatrixType" %in% names(options))) {
     options$sampleMatrixType <- ""
   }
-
 
 
   lof <- scanFolder(folder, options)
