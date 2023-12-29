@@ -2,7 +2,8 @@ test_that("creation of dataElement", {
   x = matrix(rep(c(1:10), 10), 10, 10)
   param = data.frame(sampleID = seq(1, 10),
                      sampleType = rep("sample", 10),
-                     testAnn = LETTERS[1:10])
+                     testAnn = LETTERS[1:10],
+                     dataPath = paste0("/test/", seq(1, 10)))
   da = new("dataElement", x,
            varName = as.character(seq(1, 10)),
            type = "NMR",

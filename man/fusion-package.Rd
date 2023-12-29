@@ -4,20 +4,20 @@
 \name{fusion-package}
 \alias{fusion}
 \alias{fusion-package}
-\title{fusion: Fusion: an integrated dataset library for metabolic profiling}
+\title{fusion: Fusion: Objects class definitions for metabolic profiling}
 \description{
 Classes that allows integration of complex datasets from NMR and MS.
 }
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/jwist/fusion}
-  \item Report bugs at \url{https://github.com/jwist/fusion/issues}
+  \item \url{https://github.com/phenological/fusion}
+  \item Report bugs at \url{https://github.com/phenological/fusion/issues}
 }
 
 }
 \author{
-\strong{Maintainer}: Julien Wist \email{julien.wist@correounivalle.edu.co} (\href{https://orcid.org/0000-0002-3416-2572}{ORCID})
+\strong{Maintainer}: Julien Wist \email{julien.wist@murdoch.edu.au} (\href{https://orcid.org/0000-0002-3416-2572}{ORCID})
 
 }
 \keyword{internal}
