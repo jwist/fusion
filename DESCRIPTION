@@ -1,6 +1,6 @@
 Package: fusion
 Title: Fusion: Objects class definitions for metabolic profiling
-Version: 0.0.2
+Version: 0.0.3
 Authors@R: 
     person(given = "Julien",
            family = "Wist",
@@ -23,7 +23,7 @@ Imports:
     crayon,
     data.table,
     jsonlite,
-    nmr.parser (>= 0.1.6),
+    nmr.parser (>= 0.2.0),
     rldx
 Depends: 
     R (>= 4.1)
