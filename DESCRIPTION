@@ -23,7 +23,7 @@ Imports:
     crayon,
     data.table,
     jsonlite,
-    nmr.parser (>= 0.1.6),
+    nmr.parser (>= 0.2.0),
     rldx
 Depends: 
     R (>= 4.1)
