@@ -7,6 +7,12 @@
 .travis.yml
 .codecov.yml
 *.Rproj
+<<<<<<< HEAD
 
 *.nmrium
 *.daE
+=======
+*.daE
+*.nmrium
+
+>>>>>>> 42b67398df45234fbdb89f92ad36496a22e58786

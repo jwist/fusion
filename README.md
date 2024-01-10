@@ -8,6 +8,15 @@
 
 Fusion aim at providing a structure to data produce for metabolic profiling or phenotyping using nuclear magnetic resonance and mass spectrometry. 
 
+## Pre-requisites
+
+You will need to manually install two dependencies:
+
+```r
+remotes::install_url("https://anpc.mylims.org/gitea/jul/rldx/archive/main.tar.gz")
+
+remotes::install_github("phenological/nmr-parser@0.1.9")
+```
 ## Installation
 
 You can install the released version of fusion from github:

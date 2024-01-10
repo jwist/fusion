@@ -22,7 +22,9 @@ Imports:
     methods,
     crayon,
     data.table,
-    jsonlite
+    jsonlite,
+    nmr.parser (>= 0.2.0),
+    rldx
 Depends: 
     R (>= 4.1)
 StagedInstall: yes
