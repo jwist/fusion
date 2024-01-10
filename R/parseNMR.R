@@ -204,12 +204,14 @@ parseNMR <- function(folder,
                       runID,
                       method), collapse = "_")
 
-  assign(fileName, da)
+  return(da)
 
-  save(list=(fileName),
-       file = file.path(".", paste0(fileName, ".daE")))
-  txt <- paste0("daE can be loaded as var <- local(get(load(",
-                file.path(".", paste0(fileName, ".daE")),
-                "))) to rename them on the fly")
-  message(cat(crayon::blue(txt)))
+  # assign(fileName, da)
+  #
+  # save(list=(fileName),
+  #      file = file.path(".", paste0(fileName, ".daE")))
+  # txt <- paste0("daE can be loaded as var <- local(get(load(",
+  #               file.path(".", paste0(fileName, ".daE")),
+  #               "))) to rename them on the fly")
+  # message(cat(crayon::blue(txt)))
 }
