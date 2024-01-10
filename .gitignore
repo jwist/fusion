@@ -8,4 +8,5 @@
 .codecov.yml
 *.Rproj
 
-
+*.nmrium
+*.daE
