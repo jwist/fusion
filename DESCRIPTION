@@ -1,6 +1,6 @@
 Package: fusion
 Title: Fusion: Objects class definitions for metabolic profiling
-Version: 1.0.3
+Version: 1.0.4
 Authors@R: 
     person(given = "Julien",
            family = "Wist",
@@ -27,4 +27,4 @@ Imports:
     rldx
 Depends: 
     R (>= 4.1)
-StagedInstall: yes
+StagedInstall: no
