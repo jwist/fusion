@@ -23,7 +23,9 @@ rbind.dataElement <- function(...){
 
         if (el@type != "ANN") {
           if (el@method != method & method != "init") {
-            stop(crayon::red("fusion::rbind >> All elements must be of same method"))
+            cat(crayon::red("fusion::rbind >> All elements must be of same method"))
+            cat(crayon::red("fusion::rbind >> CHECK THAT THOSE DATA ARE COMPATIBLE"))
+            newData[[counter]] <- el@.Data
           } else {
             newData[[counter]] <- el@.Data
           }

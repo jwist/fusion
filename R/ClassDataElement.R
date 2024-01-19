@@ -36,7 +36,8 @@ setClass("dataElement",
       "U-MS",
       "T-MS",
       "ANN",
-      "MRMS"
+      "MRMS",
+      "QUANT"
     )
     if (!object@type %in% supportedTypes) {
       cat("supportedTypes:", supportedTypes, "\n")
