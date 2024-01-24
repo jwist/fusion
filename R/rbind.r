@@ -13,7 +13,8 @@ rbind.dataElement <- function(...){
   newObs <- list()
   type <- method <- "init"
   counter <- 1
-  for (el in list(...)) {
+  # for (el in list(...)) {
+    for (el in C) {
     if (is(el)[1] != "dataElement"){
       stop(crayon::red("fusion::rbind >> Some are not dataElements"))
     } else {
@@ -40,10 +41,14 @@ rbind.dataElement <- function(...){
 
   obsDescr <- list()
   for (obs in 1:length(el@obsDescr)) {
-    newDescr <- do.call("rbind", do.call("rbind", newObs)[,obs])
-    newDescr$sampleID <- makeUnique(newDescr$sampleID, sep = "#")
-    obsDescr[[obs]] <- newDescr
+    newDescr <- lapply(newObs, function(x) x[[obs]])
+    newDescr <- do.call("rbindlist", list(newDescr, use.names = TRUE, fill = TRUE))
+    if ("sampleID" %in% colnames(newDescr)) {
+      newDescr$sampleID <- makeUnique(newDescr$sampleID, sep = "#")
+    }
+    obsDescr[[obs]] <- data.frame(newDescr, check.names = FALSE)
   }
+
 
   if (el@type != "ANN") {
     .Data <- do.call("rbind", newData)

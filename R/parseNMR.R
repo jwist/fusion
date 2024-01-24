@@ -295,6 +295,29 @@ parseNMR <- function(folder,
     cat(crayon::red("parseNMR >> Non IVDr data, no QC found\n"))
   }
 
+  # tests
+  test_tests_name <- qc[[1]]$testNames[[1]]
+  print(test_tests_name)
+
+  test_tests_comment <- data.frame(do.call("rbind",
+                                           lapply(qc[[1]]$tests,
+                                                  function(x) x$comment)))
+  colnames(test_tests_comment) <- test_tests_name
+
+  test_tests_value <- data.frame(do.call("rbind",
+                                         lapply(qc[[1]]$tests,
+                                                function(x) x$value)))
+  colnames(test_tests_value) <- test_tests_name
+
+  # infos
+  test_infos_name <- qc[[1]]$infoNames[[1]]
+  print(test_infos_name)
+
+  test_infos_value <- data.frame(do.call("rbind",
+                                         lapply(qc[[1]]$infos,
+                                                function(x) x$value)))
+  colnames(test_infos_value) <- test_infos_name
+
 
   # MERGING ##############################################################
 
@@ -337,21 +360,15 @@ parseNMR <- function(folder,
     procs <- list()
   }
 
-  info <- list(info = loe,
-               procs = procs,
-               params = acqus$acqus,
-               test_tests_name = do.call("rbind",
-                                         lapply(qc[[1]]$tests,
-                                                function(x) x$name)),
-               test_tests_comment = do.call("rbind",
-                                            lapply(qc[[1]]$tests,
-                                                   function(x) x$comment)),
-               test_tests_value = do.call("rbind",
-                                          lapply(qc[[1]]$tests,
-                                                 function(x) x$value)))
+  info <- list("info" = loe,
+               "procs" = procs,
+               "params" = acqus$acqus,
+               "test_tests_comment" = test_tests_comment,
+               "test_tests_value" = test_tests_value,
+               "test_infos_value" = test_infos_value)
 
   # store versions
-  version <- paste0(c(paste("rldx:", utils::packageVersion("rldx")),
+  version <- paste0(c(paste("daE: 1.0; rldx:", utils::packageVersion("rldx")),
                       paste("nmr.parser:", utils::packageVersion("nmr.parser")),
                       paste("fusion:", utils::packageVersion("fusion"))),
                     collapse = "; ")
