@@ -150,7 +150,7 @@ parseNMR <- function(folder,
       choices <- c("a timeStamp", choices)
       choice <- menu(choices, title = "Select what part of the path to use as sampleID.")
       if (choice == 1) {
-        sampleID <- stamp(length(lof))
+        sampleID <- stamp(nrow(lof))
         sampleType <- rep("sample", nrow(lof))
       } else {
         sampleID <- sapply(lof$file, function(x) strsplit(x, "/")[[1]][choice - 1])
