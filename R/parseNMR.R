@@ -152,6 +152,9 @@ parseNMR <- function(folder,
       if (choice == 1) {
         sampleID <- stamp(nrow(lof))
         sampleType <- rep("sample", nrow(lof))
+        print(sampleID)
+        print(sampleType)
+        print(lof)
       } else {
         sampleID <- sapply(lof$file, function(x) strsplit(x, "/")[[1]][choice - 1])
         sampleType <- rep("sample", nrow(lof))
@@ -228,9 +231,21 @@ parseNMR <- function(folder,
                  length.out = opts$specOpts$length.out)
       varName <- as.character(ppm)
 
-      dat <- as.matrix(do.call("rbind",
-                               lapply(spec$spec$spec,
-                                      function(x) x$spec$y)))
+      
+      if ("im" %in% names(opts$specOpts)) {
+        
+        dat <- as.matrix(do.call("rbind",
+                                 lapply(spec$spec$spec,
+                                        function(x) complex(real = x$spec$y,
+                                                            imaginary = x$spec$yi))))
+      } else {
+        
+        dat <- as.matrix(do.call("rbind",
+                                 lapply(spec$spec$spec,
+                                        function(x) x$spec$y)))
+        
+      }
+      
 
       type <- "NMR"
     } else {
@@ -292,13 +307,16 @@ parseNMR <- function(folder,
   # qc are only found in IVDr data
   qc <- readExperiment(loe$dataPath, list(what = c("qc")))
 
-  if (all(sapply(qc, function(x) is.null(x)))) {
+  
+  if (all(sapply(qc$qc, function(x) is.null(x)))) {
     cat(crayon::red("parseNMR >> Non IVDr data, no QC found\n"))
+    ivdr <- FALSE
+  } else {
+    ivdr <- TRUE
   }
 
   # tests
   test_tests_name <- qc[[1]]$testNames[[1]]
-  print(test_tests_name)
 
   test_tests_comment <- data.frame(do.call("rbind",
                                            lapply(qc[[1]]$tests,
@@ -312,7 +330,6 @@ parseNMR <- function(folder,
 
   # infos
   test_infos_name <- qc[[1]]$infoNames[[1]]
-  print(test_infos_name)
 
   test_infos_value <- data.frame(do.call("rbind",
                                          lapply(qc[[1]]$infos,
@@ -323,18 +340,6 @@ parseNMR <- function(folder,
   # MERGING ##############################################################
 
   if ("brxlipo" %in% opts$what) {
-    # idx <- unlist(intersect(idx, lipo$lipo$path))
-    # fi <- lipo$lipo$path %in% idx
-    # lipo$lipo <- lipo$lipo[fi,]
-    #
-    # fi <- qc$qc$path %in% idx
-    # qc$qc <- qc$qc[fi,]
-    #
-    # fi <- acqus$acqus$path %in% idx
-    # acqus$acqus <- acqus$acqus[fi,]
-    #
-    # fi <- loe$dataPath %in% idx
-    # loe <- loe[fi,]
 
     idx <- match(acqus$acqus$path, lipo$lipo$path)
     acqus$acqus <- acqus$acqus[!is.na(idx),]
@@ -354,19 +359,45 @@ parseNMR <- function(folder,
 
 
   if ("spec" %in% opts$what) {
+    
+    idx <- match(acqus$acqus$path, spec$spec$path)
+    acqus$acqus <- acqus$acqus[!is.na(idx),]
+    
+    idx <- match(spec$spec$path, acqus$acqus$path)
+    spec$spec <- spec$spec[!is.na(idx),]
+    
+    if (ivdr) {
+      idx <- match(qc$qc$path, spec$spec$path)
+      qc$qc <- qc$qc[!is.na(idx),]
+      
+      idx <- match(spec$spec$path, qc$qc$path)
+      spec$spec <- spec$spec[!is.na(idx),]
+    }
+    
+    idx <- match(loe$dataPath, spec$spec$path)
+    loe <- loe[!is.na(idx),]
+    
     procs <- do.call("rbind",
                      lapply(spec$spec$spec,
                             function(x) x$info))
+    
   } else {
     procs <- list()
   }
 
-  info <- list("info" = loe,
-               "procs" = procs,
-               "params" = acqus$acqus,
-               "test_tests_comment" = test_tests_comment,
-               "test_tests_value" = test_tests_value,
-               "test_infos_value" = test_infos_value)
+  if (ivdr) {
+    info <- list("info" = loe,
+                 "procs" = procs,
+                 "params" = acqus$acqus,
+                 "test_tests_comment" = test_tests_comment,
+                 "test_tests_value" = test_tests_value,
+                 "test_infos_value" = test_infos_value)
+  } else {
+    info <- list("info" = loe,
+                 "procs" = procs,
+                 "params" = acqus$acqus)
+  }
+  
 
   # store versions
   version <- paste0(c(paste("daE: 1.0; rldx:", utils::packageVersion("rldx")),
