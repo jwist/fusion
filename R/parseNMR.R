@@ -168,6 +168,8 @@ parseNMR <- function(folder,
     lof <- scanFolder(folder, opts)
     EXP <- nmr.parser::cleanNames(lof$EXP[1])
     if (!is.na(lof$USERA2[1]) & !(lof$USERA2[1] == "")) {
+      
+      cat(crayon::blue("parseNMR >> ANPC sampleID (USERA2) found\n"))
       sampleID <- lof$USERA2
       sampleID <- sapply(sampleID, function(x) gsub("SLTR", "sltr", x))
       sampleID <- sapply(sampleID, function(x) gsub("LTR", "ltr", x))
@@ -195,8 +197,6 @@ parseNMR <- function(folder,
     # making sampleID unique (in case of repetitions in non anpc folders)
     sampleID <- makeUnique(sampleID)
     
-    
-    
     loe <- data.frame(dataPath = lof$file,
                       sampleID,
                       sampleType,
@@ -204,8 +204,6 @@ parseNMR <- function(folder,
     
     
   }
-  
-  
   ########################################################################
   # READING DATA
   ########################################################################
@@ -214,8 +212,9 @@ parseNMR <- function(folder,
   if ("spec" %in% opts$what) {
     
     if (opts$method == "") {
-      choice <- menu(suppressMessages(meltdown()$NMR$method))
-      method <- suppressMessages(meltdown()$NMR$method[choice])
+      availableMethods <- meltdown()$NMR$method
+      choice <- menu(suppressMessages(availableMethods))
+      method <- suppressMessages(availableMethods[choice])
     } else {
       method <- opts$method
     }
@@ -317,6 +316,77 @@ parseNMR <- function(folder,
     ivdr <- TRUE
   }
   
+  
+  ########################################################################
+  # MERGING
+  ########################################################################
+  
+  if ("brxlipo" %in% opts$what) {
+    
+    arrayList <- lapply(list(lipo$lipo$path, 
+                             acqus$acqus$path,
+                             qc$qc$path,
+                             loe$dataPath), function(x) unlist(x))
+    
+    intersection <- Reduce(intersect, arrayList)
+    
+    idx <- match(acqus$acqus$path, intersection)
+    acqus$acqus <- acqus$acqus[!is.na(idx),]
+    
+    idx <- match(lipo$lipo$path, intersection)
+    lipo$lipo <- lipo$lipo[!is.na(idx),]
+    dat <- dat[!is.na(idx),]
+    
+    idx <- match(qc$qc$path, intersection)
+    qc$qc <- qc$qc[!is.na(idx),]
+    
+    idx <- match(loe$dataPath, intersection)
+    loe <- loe[!is.na(idx),]
+    
+    
+    cat(crayon::yellow("excluded:", setdiff(arrayList[[1]], intersection), "\n"))
+  }
+  
+  
+  if ("spec" %in% opts$what) {
+    
+    
+    arrayList <- lapply(list(spec$spec$path, 
+                      acqus$acqus$path,
+                      qc$qc$path,
+                      loe$dataPath), function(x) unlist(x))
+    
+    intersection <- Reduce(intersect, arrayList)
+    
+    
+    
+    idx <- match(acqus$acqus$path, intersection)
+    acqus$acqus <- acqus$acqus[!is.na(idx),]
+    
+    idx <- match(spec$spec$path, intersection)
+    spec$spec <- spec$spec[!is.na(idx),] # just for the order
+    dat <- dat[!is.na(idx),] # actual data
+    
+    if (ivdr) {
+      idx <- match(qc$qc$path, intersection)
+      qc$qc <- qc$qc[!is.na(idx),]
+    }
+    
+    idx <- match(loe$dataPath, intersection)
+    loe <- loe[!is.na(idx),]
+    
+    procs <- data.frame(do.call("rbind",
+                                lapply(spec$spec$spec,
+                                       function(x) x$info)))
+  
+    
+    cat(crayon::yellow("excluded:", setdiff(arrayList[[1]], intersection), "\n"))
+    
+  } else {
+    procs <- data.frame()
+  }
+  
+  # PREPING TESTS & INFO #################################################
   # tests
   test_tests_name <- qc[[1]]$testNames[[1]]
   
@@ -339,54 +409,7 @@ parseNMR <- function(folder,
   colnames(test_infos_value) <- test_infos_name
   
   
-  # MERGING ##############################################################
-  
-  if ("brxlipo" %in% opts$what) {
-    
-    idx <- match(acqus$acqus$path, lipo$lipo$path)
-    acqus$acqus <- acqus$acqus[!is.na(idx),]
-    
-    idx <- match(lipo$lipo$path, acqus$acqus$path)
-    lipo$lipo <- lipo$lipo[!is.na(idx),]
-    
-    idx <- match(qc$qc$path, lipo$lipo$path)
-    qc$qc <- qc$qc[!is.na(idx),]
-    
-    idx <- match(lipo$lipo$path, qc$qc$path)
-    lipo$lipo <- lipo$lipo[!is.na(idx),]
-    
-    idx <- match(loe$dataPath, lipo$lipo$path)
-    loe <- loe[!is.na(idx),]
-  }
-  
-  
-  if ("spec" %in% opts$what) {
-    
-    idx <- match(acqus$acqus$path, spec$spec$path)
-    acqus$acqus <- acqus$acqus[!is.na(idx),]
-    
-    idx <- match(spec$spec$path, acqus$acqus$path)
-    spec$spec <- spec$spec[!is.na(idx),]
-    
-    if (ivdr) {
-      idx <- match(qc$qc$path, spec$spec$path)
-      qc$qc <- qc$qc[!is.na(idx),]
-      
-      idx <- match(spec$spec$path, qc$qc$path)
-      spec$spec <- spec$spec[!is.na(idx),]
-    }
-    
-    idx <- match(loe$dataPath, spec$spec$path)
-    loe <- loe[!is.na(idx),]
-    
-    procs <- data.frame(do.call("rbind",
-                                lapply(spec$spec$spec,
-                                       function(x) x$info)))
-    
-  } else {
-    procs <- data.frame()
-  }
-  
+  # CREATING DATAELEMENT #################################################
   if (ivdr) {
     info <- list("info" = loe,
                  "procs" = procs,
