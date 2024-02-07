@@ -15,20 +15,20 @@ test_that("test parsing lipo anpc from local folders", {
                                        length.out = 44079),
                        outputDir = "."))
 
-  var <- local(get(load("./covid19_mauritius_SER_COVr49.local_brxlipo.daE")))
+  var <- local(get(load("./covid19_mauritius_SER_COVr49@local_brxlipo.daE")))
 
 
 
   expect_equal(nrow(var), 134)
   expect_equal(ncol(var), 112)
   expect_length(var@obsDescr, 6)
-  expect_equal(names(var@obsDescr[[4]])[22], "isopropanol-in-mmol-l")
-  expect_length(names(var@obsDescr[[4]]), 22)
+  expect_equal(names(var@obsDescr$test_tests_value)[22], "isopropanol-in-mmol-l")
+  expect_length(names(var@obsDescr$test_tests_value), 22)
   expect_equal(names(var@obsDescr[[5]])[22], "isopropanol-in-mmol-l")
   expect_length(names(var@obsDescr[[5]]), 22)
   expect_equal(names(var@obsDescr[[6]])[22], "lb-test")
   expect_length(names(var@obsDescr[[6]]), 24)
-  expect_equal(var@obsDescr[[2]], list())
+  expect_equal(var@obsDescr[[2]], data.frame())
   expect_equal(var@obsDescr[[1]]$sampleID[1], "COV17110")
   expect_equal(var@obsDescr[[1]]$dataPath[1], "/Users/jul/Downloads/F80_ANPC/covid19_mauritius_SER_NMR-PACS_COVr49_COVp294/10")
   expect_equal(as.numeric(var[1,1]), 128.89)
@@ -84,7 +84,7 @@ test_that("test parsing lipo brx from local folder", {
                                           length.out = 44079),
                           outputDir = "."))
 
-  var <- local(get(load("./external_F80Bruker_SER_EXTr12.local_brxlipo.daE")))
+  var <- local(get(load("./external_F80Bruker_SER_EXTr12@local_brxlipo.daE")))
 
   expect_equal(nrow(var), 135)
   expect_equal(ncol(var), 112)
@@ -95,7 +95,7 @@ test_that("test parsing lipo brx from local folder", {
   expect_length(names(var@obsDescr[[5]]), 22)
   expect_equal(names(var@obsDescr[[6]])[22], "lb-test")
   expect_length(names(var@obsDescr[[6]]), 24)
-  expect_equal(var@obsDescr[[2]], list())
+  expect_equal(var@obsDescr[[2]], data.frame())
   expect_equal(var@obsDescr[[1]]$sampleID[1], "32565")
   expect_equal(var@obsDescr[[1]]$dataPath[1], "/Users/jul/Downloads/BRUKER_600_80/600/32565/10")
   expect_equal(as.numeric(var[1,1]), 304.05)
@@ -136,10 +136,10 @@ test_that("test parsing lipo brx from rolodex link", {
 })
 
 
-test_that("test parsing lipo anpc from rolodex link", {
-  A <- local(get(load("./external_F80Bruker_SER_EXTr12.local_brxlipo.daE")))
+test_that("test rbinding", {
+  A <- local(get(load("./external_F80Bruker_SER_EXTr12@local_brxlipo.daE")))
 
-  B <- local(get(load("./covid19_mauritius_SER_COVr49.local_brxlipo.daE")))
+  B <- local(get(load("./covid19_mauritius_SER_COVr49@local_brxlipo.daE")))
 
   expect_equal(names(A@obsDescr[[4]])[22], "isopropanol-in-mmol-l")
   expect_length(names(A@obsDescr[[4]]), 22)

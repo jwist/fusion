@@ -7,14 +7,14 @@
 #' @export
 #' @importFrom methods hasArg
 #' @importFrom crayon %+%
+#' @importFrom data.table rbindlist
 
 rbind.dataElement <- function(...){
   newData <- list()
   newObs <- list()
   type <- method <- "init"
   counter <- 1
-  # for (el in list(...)) {
-    for (el in C) {
+  for (el in list(...)) {
     if (is(el)[1] != "dataElement"){
       stop(crayon::red("fusion::rbind >> Some are not dataElements"))
     } else {
