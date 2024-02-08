@@ -310,9 +310,10 @@ parseNMR <- function(folder,
 
 
   if (any(sapply(qc$qc, function(x) !is.null(x)))) {
-    cat(crayon::red("parseNMR >> Non IVDr data, no QC found\n"))
     ivdr <- TRUE
   } else {
+    
+    cat(crayon::red("parseNMR >> Non IVDr data, no QC found\n"))
     ivdr <- FALSE
   }
 
@@ -349,17 +350,21 @@ parseNMR <- function(folder,
 
 
   if ("spec" %in% opts$what) {
-
-
-    arrayList <- lapply(list(spec$spec$path,
-                      acqus$acqus$path,
-                      qc$qc$path,
-                      loe$dataPath), function(x) unlist(x))
-
+    
+    if (ivdr) {
+      arrayList <- lapply(list(spec$spec$path,
+                               acqus$acqus$path,
+                               qc$qc$path,
+                               loe$dataPath), function(x) unlist(x))
+    } else {
+      arrayList <- lapply(list(spec$spec$path,
+                               acqus$acqus$path,
+                               loe$dataPath), function(x) unlist(x))
+    }
     intersection <- Reduce(intersect, arrayList)
-
-
-
+    
+    
+    
     idx <- match(acqus$acqus$path, intersection)
     acqus$acqus <- acqus$acqus[!is.na(idx),]
 
