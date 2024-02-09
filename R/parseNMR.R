@@ -289,7 +289,7 @@ parseNMR <- function(folder,
 
     brxsm <- readExperiment(loe$dataPath, list(what = c("quant")))
 
-    if (length(brxms) > 0) {
+    if (length(brxsm) > 0) {
       dat <- as.matrix(brxsm$quant[,.SD, .SDcols = grep("value", names(brxsm$quant))])
       varName <- gsub("value.", "", colnames(dat))
       opts$method <- "brxsm"
@@ -321,7 +321,63 @@ parseNMR <- function(folder,
   ########################################################################
   # MERGING
   ########################################################################
-
+  
+  
+  if ("brxpacs" %in% opts$what) {
+    
+    arrayList <- lapply(list(brxpacs$pacs$path,
+                             acqus$acqus$path,
+                             qc$qc$path,
+                             loe$dataPath), function(x) unlist(x))
+    
+    intersection <- Reduce(intersect, arrayList)
+    
+    idx <- match(acqus$acqus$path, intersection)
+    acqus$acqus <- acqus$acqus[!is.na(idx),]
+    
+    idx <- match(brxpacs$pacs$path, intersection)
+    brxpacs$pacs <- brxpacs$pacs[!is.na(idx),]
+    dat <- dat[!is.na(idx),]
+    
+    idx <- match(qc$qc$path, intersection)
+    qc$qc <- qc$qc[!is.na(idx),]
+    
+    idx <- match(loe$dataPath, intersection)
+    loe <- loe[!is.na(idx),]
+    
+    
+    cat(crayon::yellow("excluded:", setdiff(arrayList[[1]], intersection), "\n"))
+  }
+  
+  
+  
+  if ("brxsm" %in% opts$what) {
+    
+    arrayList <- lapply(list(brxsm$quant$path,
+                             acqus$acqus$path,
+                             qc$qc$path,
+                             loe$dataPath), function(x) unlist(x))
+    
+    intersection <- Reduce(intersect, arrayList)
+    
+    idx <- match(acqus$acqus$path, intersection)
+    acqus$acqus <- acqus$acqus[!is.na(idx),]
+    
+    idx <- match(brxsm$quant$path, intersection)
+    brxsm$quant <- brxsm$quant[!is.na(idx),]
+    dat <- dat[!is.na(idx),]
+    
+    idx <- match(qc$qc$path, intersection)
+    qc$qc <- qc$qc[!is.na(idx),]
+    
+    idx <- match(loe$dataPath, intersection)
+    loe <- loe[!is.na(idx),]
+    
+    
+    cat(crayon::yellow("excluded:", setdiff(arrayList[[1]], intersection), "\n"))
+  }
+  
+  
   if ("brxlipo" %in% opts$what) {
 
     arrayList <- lapply(list(lipo$lipo$path,
