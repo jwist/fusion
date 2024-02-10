@@ -211,6 +211,6 @@ test_that("rbind throw errors method", {
            method = "2D",
            obsDescr = param)
 
-  expect_error(rbind(da,db), "*method*")
+  expect_warning(rbind(da,db), "*CHECK*")
 })
 
