@@ -24,7 +24,7 @@ Imports:
     data.table,
     jsonlite
 Remotes:
-    url::https://anpc.mylims.org/gitea/jul/rldx/archive/0.0.4.tar.gz
+    url::https://anpc.mylims.org/gitea/jul/rldx/archive/0.0.4.tar.gz,
     phenological/nmr-parser
 Depends: 
     R (>= 4.1)
