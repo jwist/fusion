@@ -175,3 +175,31 @@
 #   expect_equal(names(M@obsDescr[[6]])[23], "lb-test")
 #   expect_length(names(M@obsDescr[[6]]), 25)
 # })
+
+
+# test_that("test when qc are missing completely", {
+#   folder <- c("/exports/nmr/IVDR02/data/covvac_C1_SER_NMR-PLA_IVDR02_VAXp13_070921",
+#               "/exports/nmr/IVDR02/data/covvac_C1_SER_NMR-PLA_IVDR02_VAXp14_290921",
+#               "/exports/nmr/IVDR05/data/covvac_C1_SER_NMR-PLA_IVDR05_VAXp11_070921",
+#               "/exports/nmr/IVDR05/data/covvac_C1_SER_NMR-PLA_IVDR05_VAXp12_290921")
+#   parseNMR(folder,
+#            opts = list(what = c("brxlipo"),
+#                        projectName = "covvax2",
+#                        cohortName = "C4",
+#                        runID = "VAXrXX",
+#                        method = "noesy",
+#                        sampleMatrixType = "SER",
+#                        specOpts = list(uncalibrate = FALSE,
+#                                        fromTo = c(-0.1, 10),
+#                                        length.out = 44079,
+#                                        im = TRUE),
+#                        outputDir = "."))
+#   var <- local(get(load("./covvax2_C4_SER_VAXrXX@local_brxlipo.daE")))
+#   
+#   expect_equal(nrow(var), 267)
+#   expect_equal(ncol(var), 112)
+#   expect_length(var@obsDescr, 3)
+#   
+# })
+# 
+# 
