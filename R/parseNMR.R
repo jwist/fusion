@@ -311,8 +311,9 @@ parseNMR <- function(folder,
 
   if (any(sapply(qc$qc, function(x) !is.null(x)))) {
     ivdr <- TRUE
+
   } else {
-    
+
     cat(crayon::red("parseNMR >> Non IVDr data, no QC found\n"))
     ivdr <- FALSE
   }
@@ -321,68 +322,68 @@ parseNMR <- function(folder,
   ########################################################################
   # MERGING
   ########################################################################
-  
-  
+
+
   if ("brxpacs" %in% opts$what) {
-    
+
     arrayList <- lapply(list(brxpacs$pacs$path,
                              acqus$acqus$path,
                              qc$qc$path,
                              loe$dataPath), function(x) unlist(x))
-    
+
     intersection <- Reduce(intersect, arrayList)
-    
+
     idx <- match(acqus$acqus$path, intersection)
     acqus$acqus <- acqus$acqus[!is.na(idx),]
-    
+
     idx <- match(brxpacs$pacs$path, intersection)
     brxpacs$pacs <- brxpacs$pacs[!is.na(idx),]
     dat <- dat[!is.na(idx),]
-    
+
     idx <- match(qc$qc$path, intersection)
     qc$qc <- qc$qc[!is.na(idx),]
-    
+
     idx <- match(loe$dataPath, intersection)
     loe <- loe[!is.na(idx),]
-    
-    
+
+
     cat(crayon::yellow("excluded:", setdiff(arrayList[[1]], intersection), "\n"))
   }
-  
-  
-  
+
+
+
   if ("brxsm" %in% opts$what) {
-    
+
     arrayList <- lapply(list(brxsm$quant$path,
                              acqus$acqus$path,
                              qc$qc$path,
                              loe$dataPath), function(x) unlist(x))
-    
+
     intersection <- Reduce(intersect, arrayList)
-    
+
     idx <- match(acqus$acqus$path, intersection)
     acqus$acqus <- acqus$acqus[!is.na(idx),]
-    
+
     idx <- match(brxsm$quant$path, intersection)
     brxsm$quant <- brxsm$quant[!is.na(idx),]
     dat <- dat[!is.na(idx),]
-    
+
     idx <- match(qc$qc$path, intersection)
     qc$qc <- qc$qc[!is.na(idx),]
-    
+
     idx <- match(loe$dataPath, intersection)
     loe <- loe[!is.na(idx),]
-    
-    
+
+
     cat(crayon::yellow("excluded:", setdiff(arrayList[[1]], intersection), "\n"))
   }
-  
-  
+
+
   if ("brxlipo" %in% opts$what) {
 
     arrayList <- lapply(list(lipo$lipo$path,
                              acqus$acqus$path,
-                             qc$qc$path,
+                             # qc$qc$path,
                              loe$dataPath), function(x) unlist(x))
 
     intersection <- Reduce(intersect, arrayList)
@@ -394,8 +395,8 @@ parseNMR <- function(folder,
     lipo$lipo <- lipo$lipo[!is.na(idx),]
     dat <- dat[!is.na(idx),]
 
-    idx <- match(qc$qc$path, intersection)
-    qc$qc <- qc$qc[!is.na(idx),]
+    # idx <- match(qc$qc$path, intersection)
+    # qc$qc <- qc$qc[!is.na(idx),]
 
     idx <- match(loe$dataPath, intersection)
     loe <- loe[!is.na(idx),]
@@ -406,7 +407,7 @@ parseNMR <- function(folder,
 
 
   if ("spec" %in% opts$what) {
-    
+
     if (ivdr) {
       arrayList <- lapply(list(spec$spec$path,
                                acqus$acqus$path,
@@ -418,9 +419,9 @@ parseNMR <- function(folder,
                                loe$dataPath), function(x) unlist(x))
     }
     intersection <- Reduce(intersect, arrayList)
-    
-    
-    
+
+
+
     idx <- match(acqus$acqus$path, intersection)
     acqus$acqus <- acqus$acqus[!is.na(idx),]
 
@@ -449,26 +450,34 @@ parseNMR <- function(folder,
 
   # PREPING TESTS & INFO #################################################
   # tests
-  test_tests_name <- qc[[1]]$testNames[[1]]
+  test_tests_name <- makeUnique(qc[[1]]$testNames[[1]])
 
   test_tests_comment <- data.frame(do.call("rbind",
                                            lapply(qc[[1]]$tests,
                                                   function(x) x$comment)))
   colnames(test_tests_comment) <- test_tests_name
+  test_tests_comment$path <- unname(unlist(qc[[1]]$path))
+
+  test_tests_comment <- leftJoinWithAcqus(acqus$acqus, test_tests_comment, by = "path")
 
   test_tests_value <- data.frame(do.call("rbind",
                                          lapply(qc[[1]]$tests,
                                                 function(x) x$value)))
-  colnames(test_tests_value) <- test_tests_name
+  colnames(test_tests_value) <- makeUnique(test_tests_name)
+  test_tests_value$path <- unname(unlist(qc[[1]]$path))
+
+  test_tests_value <- leftJoinWithAcqus(acqus$acqus, test_tests_value, by = "path")
 
   # infos
-  test_infos_name <- qc[[1]]$infoNames[[1]]
+  test_infos_name <- makeUnique(qc[[1]]$infoNames[[1]])
 
   test_infos_value <- data.frame(do.call("rbind",
                                          lapply(qc[[1]]$infos,
                                                 function(x) x$value)))
   colnames(test_infos_value) <- test_infos_name
+  test_infos_value$path <- unname(unlist(qc[[1]]$path))
 
+  test_infos_value <- leftJoinWithAcqus(acqus$acqus, test_infos_value, by = "path")
 
   # CREATING DATAELEMENT #################################################
   if (ivdr) {
