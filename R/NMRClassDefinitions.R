@@ -312,11 +312,11 @@ setMethod("toJSONFile", signature(obj="list", control="ANY", con="ANY"),
               write("[", con, append = TRUE, sep="")
               sep <- ""
               for(element in obj) {
-                if(!all(is.na(element))) {
+                #if(!all(is.na(element))) {
                   write(sep, con, append = TRUE, sep="")
                   toJSONFile(element, control, con)
                   sep <- ","
-                }
+                #}
               }
               write("]", con, append = TRUE, sep="")
             } else {
@@ -326,11 +326,11 @@ setMethod("toJSONFile", signature(obj="list", control="ANY", con="ANY"),
               for (slotName in lnames) {
                 if (slotName == "")
                   slotName = i
-                if(!all(is.na(obj[[slotName]]))) {
+                #if(!all(is.na(obj[[slotName]]))) {
                   write(paste0(sep, '"',slotName, '":'), con, append = TRUE, sep="")
                   toJSONFile(obj[[slotName]], control, con)
                   sep <- ","
-                }
+                #}
                 i <- i + 1
               }
               write("}", con, append = TRUE, sep="")
@@ -368,11 +368,11 @@ setMethod("toJSONFile", signature(obj="numeric", control="ANY", con="ANY"),
               write("[", con, append = TRUE, sep="")
               sep <- ""
               for (element in obj) {
-                if(!all(is.na(element))) {
+                #if(!all(is.na(element))) {
                   write(sep, con, append = TRUE, sep="")
                   toJSONFile(element, control, con)
                   sep <- ","
-                }
+                #}
               }
               write("]", con, append = TRUE, sep="")
             } else {
@@ -406,21 +406,22 @@ setMethod("toJSONFile", signature(obj="logical", control="ANY", con="ANY"),
               write("[", con, append = TRUE, sep="")
               sep <- ""
               for (element in obj) {
-                if(!all(is.na(element))) {
+                #if(!all(is.na(element))) {
                   write(sep, con, append = TRUE, sep="")
                   toJSONFile(element, control, con)
                   sep <- ","
-                }
+                #}
               }
               write("]", con, append = TRUE, sep="")
             } else {
               if( is.na(obj)) {
                 write("null", con, append = TRUE, sep="")
-              }
-              if (obj == TRUE) {
-                write("true", con, append = TRUE, sep="")
               } else {
-                write("false", con, append = TRUE, sep="")
+                if (obj == TRUE) {
+                  write("true", con, append = TRUE, sep="")
+                } else {
+                  write("false", con, append = TRUE, sep="")
+                }
               }
             }
           }
@@ -441,18 +442,18 @@ setMethod("toJSONFile", signature(obj="character", control="ANY", con="ANY"),
               sep <- ""
               write("[", con, append = TRUE, sep="")
               for (element in obj) {
-                  if(!all(is.na(element))) {
+                  #if(!all(is.na(element))) {
                   write(sep, con, append = TRUE, sep="")
                   toJSONFile(element, control, con)
                   sep <- ","
-                }
+                #}
               }
               write("]", con, append = TRUE, sep="")
             } else {
               write(paste0('"', obj, '"'), con, append = TRUE, sep="")
             }
           }
-)
+)         
 
 #' Method for creating a JSON file out of a matrix
 #'
@@ -469,11 +470,11 @@ setMethod("toJSONFile", signature(obj="matrix", control="ANY", con="ANY"),
               sep <- ""
               write("[", con, append = TRUE, sep="")
               for (i in 1:dim(obj)[[1]]) {
-                if(!all(is.na(obj[[i]]))) {
+                #if(!all(is.na(obj[[i]]))) {
                   write(sep, con, append = TRUE, sep="")
                   toJSONFile(obj[i,], control, con)
                   sep <- ","
-                }
+                #}
               }
               write("]", con, append = TRUE, sep="")
             } else {
@@ -538,13 +539,13 @@ setMethod("fromVector", signature(input="ANY"),
             }else if ("type" %in% listNames) {
               output <- new(input[["type"]]);
               slotNames <- names(getSlots(is(output)))
-              if (all(!is.na(slotNames))) {
+              #if (all(!is.na(slotNames))) {
                 for (slotName in slotNames) {
                   if (slotName %in% listNames) {
                     slot(output, slotName) <- fromVector(input[[slotName]])
                   }
                 }
-              }
+              #}
               return(output)
             } else {
               return(lapply(input, function(row) {fromVector(row)}))
