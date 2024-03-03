@@ -244,5 +244,16 @@ test_that("Check that writeToJSON and fromVector works for a NMRSignalModel", {
   expect_equal(model1, model1_resurrected)
 })
 
+test_that("Check that writeToJSON works for lists of list with NAs", {
+  input <- list(1, 2, NA, 4, list(NA, 1, "2"))
+  input_expected <- list(1, 2, NULL, 4, list(NULL, 1, "2"))
+  
+  fileName = "/tmp/list.json"
+  writeToJSON(input, fileName)
+  input_resurrected <- jsonlite::fromJSON(fileName, simplifyVector = FALSE)
+  
+  expect_equal(input_expected, input_resurrected)
+})
+
 
 
