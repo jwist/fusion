@@ -408,15 +408,10 @@ parseNMR <- function(folder,
 
   if ("spec" %in% opts$what) {
 
-    if (ivdr) {
-      arrayList <- lapply(list(spec$spec$path,
+    arrayList <- lapply(list(spec$spec$path,
                                acqus$acqus$path,
                                loe$dataPath), function(x) unlist(x))
-    } else {
-      arrayList <- lapply(list(spec$spec$path,
-                               acqus$acqus$path,
-                               loe$dataPath), function(x) unlist(x))
-    }
+    
     intersection <- Reduce(intersect, arrayList)
 
 
@@ -450,13 +445,7 @@ parseNMR <- function(folder,
   # tests
   
   
-  if (is.null(unname(unlist(qc[[1]]$path)))) {
-    # if no qc are found, then nothing is returned we need to create empty tables
-    test_tests_name <- data.frame()
-    test_tests_comment <- data.frame()
-    test_infos_value <- data.frame()
-    
-  } else {
+  if (ivdr) {
     # else we make a left join
     rowName <- unname(unlist(qc[[1]]$path))
     
