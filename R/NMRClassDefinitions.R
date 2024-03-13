@@ -524,9 +524,11 @@ setGeneric("fromVector", function(input) standardGeneric("fromVector"))
 #'
 setMethod("fromVector", signature(input="ANY"),
           function(input) {
+            if (is.null(input)) return(NA)
             listNames <- names(input)
             if (is.null(listNames)) {
               if (length(input)==1 && any(c("boolean", "character", "logical", "numeric") %in%  is(input))) {
+                if (input == "NA") return(NA)
                 return(input)
               } else {
                 tmp <- lapply(input, function(row) {fromVector(row)})
@@ -537,15 +539,21 @@ setMethod("fromVector", signature(input="ANY"),
                 }
               }
             }else if ("type" %in% listNames) {
-              output <- new(input[["type"]]);
-              slotNames <- names(getSlots(is(output)))
-              #if (all(!is.na(slotNames))) {
+              output <- tryCatch(new(input[["type"]])
+                                 ,error=function(e){
+                                   lapply(input, function(row) fromVector(row))
+                                   }
+                                 )
+              if(is.object(output)){
+                slotNames <- names(getSlots(is(output)))
+                #if (all(!is.na(slotNames))) {
                 for (slotName in slotNames) {
                   if (slotName %in% listNames) {
                     slot(output, slotName) <- fromVector(input[[slotName]])
                   }
                 }
-              #}
+                #}  
+              }
               return(output)
             } else {
               return(lapply(input, function(row) {fromVector(row)}))
